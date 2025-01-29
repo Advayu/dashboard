@@ -10,6 +10,7 @@ import { BrandUser } from "@/Types/type";
 import { RootState } from "@/store/store";
 import { get } from "http";
 import { toast } from "@/hooks/use-toast";
+import axiosInstance from "@/utils/axiosInstance";
 
 const Auth = () => {
   const dispatch = useDispatch();
@@ -45,11 +46,10 @@ const Auth = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${LAMBDA_URL}/auth/login`,
-        { email, password },
-        { withCredentials: true }
-      );
+      const response = await axiosInstance.post(`${LAMBDA_URL}/auth/login`, {
+        email,
+        password,
+      });
 
       // Store brand ID in localStorage
       if (response.data?.id) {

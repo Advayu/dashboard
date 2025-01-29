@@ -41,11 +41,11 @@ export default function Page() {
     (state: RootState) => state.brandUser?.brand_id
   );
   // const brandId = reduxBrandId || localStorage.getItem("brandId");
-  const brandId = reduxBrandId;
+  const brandId = reduxBrandId || "";
 
   return (
     <div className="w-[93%] flex flex-col pl-[2.5rem] mt-[4rem] pr-[1rem]">
-      <div className="flex flex-col md:flex-row justify-between">
+      <div className="flex items-center md:flex-row justify-between">
         <h1 className="text-3xl font-bold">Settings</h1>
         <div className="flex space-x-[1.5rem] items-center mt-[1rem] md:mt-0">
           <div className="flex items-center relative">

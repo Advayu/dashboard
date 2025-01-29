@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { RootState } from "@/store/store";
 import Link from "next/link";
+import axiosInstance from "@/utils/axiosInstance";
 
 const ShimmerLoader: React.FC = () => (
   <div className="embla__slide w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
@@ -30,60 +31,64 @@ const Dashboard = () => {
   const [error, setError] = useState<string | null>(null); // New state for error handling
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
+  const [brandUserName, setBrandUserName] = useState<string>("");
 
   const brandUser = useSelector((state: RootState) => state.brandUser);
   const router = useRouter();
 
   // Helper function to get brand ID (either from Redux or localStorage)
-  const getBrandId = useCallback(() => {
-    return brandUser?.brand_id || localStorage.getItem("brandId");
-  }, [brandUser?.brand_id]);
+  // const getBrandId = useCallback(() => {
+  //   return brandUser?.brand_id;
+  // }, [brandUser?.brand_id]);
 
   useEffect(() => {
-    const brandId = getBrandId();
-    if (!brandId) {
-      router.push(`/auth`);
-      return;
-    }
-
-    const fetchOffers = async () => {
-      setIsLoading(true); // Set loading to true
-      const brand_id = getBrandId();
-      try {
-        const response = await axios.get(`${LAMBDA_URL}/offers`, {
-          params: { brand_id },
-          withCredentials: true, // Include cookies
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const data = response.data;
-        const now = new Date();
-        const ongoing = data.filter(
-          (offer: any) =>
-            new Date(offer.start_date) <= now && new Date(offer.end_date) > now
-        );
-        setOffers(ongoing);
-      } catch (error) {
-        setError("Failed to load offers");
-        if (
-          axios.isAxiosError(error) &&
-          error.response &&
-          error.response.status === 401
-        ) {
-          console.log("Unauthorized: Redirecting to login...");
-          router.push("/auth");
-        } else {
-          console.error("An error occurred", error);
-        }
-      } finally {
-        setIsLoading(false);
+    if (typeof window !== "undefined") {
+      const brandId = brandUser.brand_id;
+      if (!brandId) {
+        router.push(`/auth`);
+        return;
       }
-    };
 
-    fetchOffers();
-  }, [getBrandId, router]); // Only run once on mount
+      setBrandUserName(brandUser?.name);
+      const fetchOffers = async () => {
+        setIsLoading(true); // Set loading to true
+        const brand_id = brandUser.brand_id;
+        try {
+          const response = await axiosInstance.get(`${LAMBDA_URL}/offers`, {
+            params: { brand_id },
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = response.data;
+          const now = new Date();
+          const ongoing = data.filter(
+            (offer: any) =>
+              new Date(offer.start_date) <= now &&
+              new Date(offer.end_date) > now
+          );
+          setOffers(ongoing);
+        } catch (error) {
+          setError("Failed to load offers");
+          if (
+            axios.isAxiosError(error) &&
+            error.response &&
+            error.response.status === 401
+          ) {
+            console.log("Unauthorized: Redirecting to login...");
+            // router.push("/auth");
+          } else {
+            console.error("An error occurred", error);
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchOffers();
+    }
+  }, [router]); // Only run once on mount
 
   const handleLogoutClick = () => {
     console.log("Logout clicked");
@@ -148,7 +153,7 @@ const Dashboard = () => {
     <>
       <div className="pl-10 mt-16">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Advayu X {brandUser?.name}</h1>
+          <h1 className="text-3xl font-bold">Advayu X {brandUserName}</h1>
           <button
             onClick={toggleMenu}
             className="md:block hidden mr-6 bg-gray-100 rounded-full p-2">
@@ -163,7 +168,7 @@ const Dashboard = () => {
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  router.push("partner/profile");
+                  router.push("/profile");
                 }}>
                 Profile
               </li>
