@@ -35,3 +35,5 @@
      ```bash
      npm run build
      ```
+
+# DEPLOYMENT 1.0.1
