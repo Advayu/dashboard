@@ -115,9 +115,10 @@ const Auth = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
+        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md"
+      >
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
-          Advayu X {brandName}
+          Advayu X Brands
         </h2>
 
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
@@ -139,7 +140,8 @@ const Auth = () => {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-semibold">
+            className="block mb-2 text-sm font-semibold"
+          >
             Password
           </label>
           <input
@@ -157,7 +159,8 @@ const Auth = () => {
           className={`w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 ${
             loading && "cursor-not-allowed opacity-50"
           }`}
-          disabled={loading}>
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Sign In"}
         </button>
       </form>

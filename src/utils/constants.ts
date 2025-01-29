@@ -35,6 +35,7 @@ export const LAMBDA_URL =
   "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/stage";
 // export const LAMBDA_URL = "http://localhost:4200";
 
-export const AWS_IMAGE_UPLOAD_URL = "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/default/upload/image"
+export const AWS_IMAGE_UPLOAD_URL =
+  "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/stage/upload/image";
 
 export const OUTLET_BUCKET_NAME = "advayu-onboarding-assets/outlet-assets";

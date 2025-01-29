@@ -85,7 +85,7 @@ const Dashboard = () => {
     fetchOffers();
   }, [getBrandId, router]); // Only run once on mount
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     console.log("Logout clicked");
 
     // Clear localStorage items
@@ -94,8 +94,17 @@ const Dashboard = () => {
     localStorage.removeItem("brandName");
     localStorage.removeItem("selectedOutletId");
 
+    const response = await axios.post(
+      `${LAMBDA_URL}/auth/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
     // Redirect to login
-    // router.push("/auth");
+    if (response.status === 200) {
+      router.push("/auth");
+    }
   };
 
   // Toggles the menu visibility
@@ -151,28 +160,33 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold">Advayu X {brandUser?.name}</h1>
           <button
             onClick={toggleMenu}
-            className="md:block hidden mr-6 bg-gray-100 rounded-full p-2">
+            className="md:block hidden mr-6 bg-gray-100 rounded-full p-2"
+          >
             <UserRound size={32} />
           </button>
         </div>
         {isMenuVisible && (
           <div
             ref={menuRef}
-            className="absolute right-[2rem]  mt-1 w-[8rem] bg-white border rounded-lg shadow-lg z-50 md:block hidden ">
+            className="absolute right-[2rem]  mt-1 w-[8rem] bg-white border rounded-lg shadow-lg z-50 md:block hidden "
+          >
             <ul className="text-gray-700">
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
                   router.push("partner/profile");
-                }}>
+                }}
+              >
                 Profile
               </li>
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
                   console.log("Logout clicked");
+                  handleLogoutClick();
                   // Handle logout logic here
-                }}>
+                }}
+              >
                 Logout
               </li>
             </ul>
