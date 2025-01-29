@@ -1,0 +1,433 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  .active{
+    @apply underline decoration-tealBlue underline-offset-4	 decoration-dashed;
+    /* create an animation */
+    @apply transition-transform duration-500;
+
+
+  }
+}
+
+ @layer utilities { 
+   /* Todo: fix border of coupon card */ 
+   .notched-border {
+    @apply  border relatiave  border-teal-400 ; /* Adjust width, height, and border color as needed */
+ 
+
+      -webkit-mask-image: radial-gradient(circle at 8px 50%, transparent 13px, black 13.5px);
+      -webkit-mask-position: -13px 0 0 0;
+      -webkit-mask-border: blue; 
+ };
+} 
+
+
+
+.line{
+  background-image: url('../../public/image/line.svg');
+  background-size: cover; /* Ensure the image covers the entire element */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+border: 2px solid yellow;
+  width: 100%;
+  height: 100%;
+}
+
+.shape{
+  background-image: url('../../public/shape.png');
+  border-radius: 0% 20% 20% 0% / 50% 50% 50% 50%;
+  width: 60%;
+  position: relative;
+}
+
+.shape-horizontal{
+
+}
+
+.shape-horizontal::before{
+  content: '';
+  background-image: url('../../public/shape.png');
+  border-radius: 0% 20% 20% 0% / 50% 50% 50% 50%;
+  width: 60%;
+  position: absolute;
+  transform: rotate(90deg);
+}
+
+
+
+
+
+/* testimonial  */
+.testimonial-bg {
+  background-image: url('../../public/image/Vector.svg');
+  /* background-image: url('../../public/image/Vector.png'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+/* radius right  */
+.rounded-right-corner {
+  border-top-right-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+  background-color: #c2e1e5;
+  background: linear-gradient(to right, white, #c2e1e5);
+}
+.rounded-left-corner {
+  border-top-left-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  background-color: #c2e1e5;
+  background: linear-gradient(to right, #c2e1e5,white);
+}
+
+.shape{
+  background-image: url('../../public//shape (1).png') no-repeat center center;
+  /* bacground gradiant */
+}
+.shapeReverse{
+  background-image: url("../../public/shape\ \(4\).png") no-repeat ;
+}
+
+.bg-logo{
+  background: url("../../public/image/Vector.svg") no-repeat center center;
+  /* background: url("../../public/image/Vector.png") no-repeat center center; */
+  border: 2px solid yellow;
+  
+}
+
+.shape__top {
+  top: -210px;
+  /* right: -48px; */
+
+
+}
+
+
+.mx-12{
+  margin-left: 12px !important;
+}
+
+.h-48{
+  font-size: 48px !important;
+}
+
+.h-24{
+  font-size: 24px !important;
+}
+
+.pt-66{
+  padding-top: 30px  !important;
+}
+
+.p0{
+  padding: 0px !important;
+}
+
+.bg-right-rounded{
+  background-image: url("../../public/waitlistshape.png") no-repeat center center;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+/* Custom css for ribon used in expires soon offer card */
+.clip-cut {
+  position: absolute;
+  top: -10px; /* Adjust as needed */
+  left: -10px; /* Adjust as needed */
+  width: 20px; /* Size of the clip */
+  height: 20px; /* Size of the clip */
+  clip-path: path('M 0 200 L 0,75 A 5,5 0,0,1 150,75 L 200 200 z'); /* Custom path */
+}
+.ribbon {
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+ .ribbon {
+  --f: .5em; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 1.8;
+  padding-inline: 1lh;
+  padding-bottom: var(--f);
+  border-image: conic-gradient(#0008 0 0) 51%/var(--f);
+  clip-path: polygon(
+    100% calc(100% - var(--f)),100% 100%,calc(100% - var(--f)) calc(100% - var(--f)),var(--f) calc(100% - var(--f)), 0 100%,0 calc(100% - var(--f)),999px calc(100% - var(--f) - 999px),calc(100% - 999px) calc(100% - var(--f) - 999px));
+  transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg);
+  transform-origin: 100% 100%;
+  background-color: #EB0000; 
+  opacity: 63%;
+}  
+
+
+
+
+/* material ui stepper overwrite css */
+.css-14yr603-MuiStepContent-root {
+  display: none !important;
+    margin-left: 12px;
+    padding-left: 20px;
+    padding-right: 8px;
+    border-left-style: dashed;
+    border-left-width: 3px;
+
+    font-size: 1.25rem; /* 16px / 16px */
+}
+
+.css-15lbqqq-MuiStepConnector-root.MuiStepConnector-alternativeLabel {
+  margin-left: 1rem;
+}
+
+.css-vnkopk-MuiStepLabel-iconContainer.MuiStepLabel-alternativeLabel {
+  padding-left: 0.7rem !important;
+}
+
+.css-1hv8oq8-MuiStepLabel-label.Mui-active {
+  color: black !important;
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px / 16px */
+}
+
+/* Font size for small devices */
+@media (max-width: 600px) {
+  .css-1hv8oq8-MuiStepLabel-label.Mui-active {
+    font-size: 0.75rem; /* 12px / 16px */
+  }
+}
+.css-1hv8oq8-MuiStepLabel-label.Mui-completed{
+  color:rgb(25, 158, 173) !important;
+  font-weight: 700;
+  /* font-size: 20px; */
+}
+
+.css-1twozzw-MuiStepConnector-root {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin-left: 7px;
+}
+
+
+.css-8t49rw-MuiStepConnector-line {
+  display: block;
+  /* border-color: #bdbdbd; */
+  border-left-style: dashed;
+  border-left-width: 2px;
+  
+  min-height: 2rem;
+}
+
+.css-14yr603-MuiStepContent-root{
+  border-left-style: dashed;
+  border-left-width: 3px;
+}
+
+.css-15lbqqq-MuiStepConnector-root .MuiStepConnector-line{
+  border-top-style: dashed;
+  border-top-width: 3px;
+}
+
+.css-15lbqqq-MuiStepConnector-root.Mui-completed{
+  border-top-style: dashed;
+  border-top-width: 3px;
+  border-top-color: rgb(25, 158, 173);
+}
+
+.css-12eb3rq-MuiStepLabel-label{
+  font-size: 1rem!important;
+}
+
+.css-12eb3rq-MuiStepLabel-label.MuiStepLabel-alternativeLabel{
+  margin-top: 8px !important;
+}
+
+
+/* material ui stepper overwrite css */
+/* end */
+
+
+
+/* custom crasoul */
+.embla {
+  position: relative;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  /* Optional: Adjust spacing between slides dynamically */
+  gap: 1rem; /* Adds spacing between slides */
+}
+
+.embla__slide {
+  flex: 0 0 17rem; /* Default for larger screens */
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  min-width: 0;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .embla__slide {
+    flex: 0 0 18rem; /* Slides take up more space on smaller screens */
+  }
+}
+
+.embla__container-vertical {
+  display: flex;
+  flex-direction: column;
+  height: 35rem;
+}
+
+/* Responsive height adjustments for vertical container */
+@media (max-width: 768px) {
+  .embla__container-vertical {
+    height: 25rem; /* Reduce height for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .embla__slide {
+    flex: 0 0 18rem; /* Slides take up even more space on very small screens */
+  }
+
+  .embla__container-vertical {
+    height: 20rem; /* Further reduce height for extra small screens */
+  }
+}
+
+/* Todo: uncomment it for home page  */
+/* for crasoual */
+
+/* .embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  align-items: center;
+}
+.embla__slide:nth-child(n) { */
+  /* //Slide covers 30% of the viewport */
+  /* flex: 0 0 30%;  */
+  /* min-width: 0; */
+/* }  */
+
+
+
+/* arc for progress bar */
+
+
+.arc {
+ 
+  transform: rotate(275deg);
+  --b: 37px;
+  --a: 174deg;
+  width: 250px;
+  aspect-ratio: 1;
+  padding: var(--b);
+  border-radius: 50%;
+  background: conic-gradient(from 270deg at 50% 50%, #D8EBED 0deg, #a0e2e9 130deg, #45c4d2 180deg, #199EAD 360deg);
+  --_g: /var(--b) var(--b) no-repeat radial-gradient(closest-side at 50% 50%, #D8EBED 97%, transparent);
+  -webkit-mask: top var(--_g), calc(50% + 50%* sin(var(--a))) calc(50% - 50%* cos(var(--a))) var(--_g), linear-gradient(#0000 0 0) content-box, conic-gradient(#000 var(--a), #0000 0);
+  -webkit-mask-composite: source-in, xor;
+  mask: top var(--_g), calc(50% + 49%* sin(var(--a))) calc(50% - 50%* cos(var(--a))) var(--_g), linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#00D var(--a), #0000 0);
+}
+
+
+/* progress bar  */
+
+.css-168byw8-MuiLinearProgress-root.MuiLinearProgress-colorPrimary {
+  background-color: #D9D9D9;
+}
+
+/* fix nav bar bottom nav bar drop shadow  */
+
+.custom-shadow {
+box-shadow: 32px 8px 5px 14px rgb(118 113 113 / 10%);
+}
+
+
+.needle {
+  width: 114px;
+  height: 7px;
+  background: black;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 5px;
+  position: absolute;
+  bottom: 5px;
+  left: 20px;
+  transform-origin: 95% 10px;
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .38);
+  transition: transform 0.8s;
+  transition-timing-function: cubic-bezier(.65, 1.95, .03, .32);
+}
