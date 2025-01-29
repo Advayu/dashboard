@@ -1,7 +1,5 @@
 "use client";
 
-import { Separator } from "@radix-ui/react-select";
-import axios from "axios";
 // CouponCard.tsx
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -124,7 +122,9 @@ const CouponCard: React.FC<CouponCardProps> = ({
       {/* Coupon content */}
       <div className="grid grid-cols-[15rem_3rem] w-full ">
         <div className="flex flex-col   w-full pl-[24px] ">
-          <h3 className="text-sm font-bold text-gray-900 pb-[16px] truncate mt-[6px]  ">
+          <h3
+            className="text-sm font-bold text-gray-900 pb-[16px] truncate mt-[6px]"
+            title={title}>
             {title}
           </h3>
 

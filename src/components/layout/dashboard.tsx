@@ -56,9 +56,6 @@ const Dashboard = () => {
         try {
           const response = await axiosInstance.get(`${LAMBDA_URL}/offers`, {
             params: { brand_id },
-            headers: {
-              "Content-Type": "application/json",
-            },
           });
 
           const data = response.data;
@@ -136,7 +133,7 @@ const Dashboard = () => {
       return (
         <div className="m-auto">
           <h1 className="text-2xl font-bold">No Active offers found!</h1>
-          <Link href="partner/offers/add" className="underline">
+          <Link href="offers/add" className="underline">
             Create an offer
           </Link>
         </div>

@@ -27,7 +27,7 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
                         title: "Unauthorized",
                         description: "Unauthorized access. Please log in again.",
                     })
-                    window.location.href = '/auth'; // Redirect to login page
+                    // window.location.href = '/auth'; // Redirect to login page
                 } else {
                     console.error("API error:", error.response);
                 }
