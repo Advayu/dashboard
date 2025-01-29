@@ -36,4 +36,4 @@
      npm run build
      ```
 
-# DEPLOYMENT 1.0.1
+# DEPLOYMENT1.0.1
