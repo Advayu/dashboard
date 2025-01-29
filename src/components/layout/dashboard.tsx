@@ -90,7 +90,7 @@ const Dashboard = () => {
     }
   }, [router]); // Only run once on mount
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     console.log("Logout clicked");
 
     // Clear localStorage items
@@ -99,8 +99,17 @@ const Dashboard = () => {
     localStorage.removeItem("brandName");
     localStorage.removeItem("selectedOutletId");
 
+    const response = await axios.post(
+      `${LAMBDA_URL}/auth/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
     // Redirect to login
-    // router.push("/auth");
+    if (response.status === 200) {
+      router.push("/auth");
+    }
   };
 
   // Toggles the menu visibility
@@ -176,6 +185,7 @@ const Dashboard = () => {
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
                   console.log("Logout clicked");
+                  handleLogoutClick();
                   // Handle logout logic here
                 }}>
                 Logout
