@@ -71,7 +71,7 @@ const Auth = () => {
       }
 
       // Redirect to partner page
-      router.push(`/partner`);
+      router.push(`/`);
     } catch (error: any) {
       if (error.response?.status === 401) {
         setError("Incorrect email or password.");

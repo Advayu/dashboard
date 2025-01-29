@@ -110,10 +110,10 @@ export default function Page() {
               name: "Outlets",
               link: `store/all`,
             },
-            {
-              name: "Inventory",
-              link: "",
-            },
+            // {
+            //   name: "Inventory",
+            //   link: "",
+            // },
           ].map((item, idx) => (
             <Link
               href={item.link}
