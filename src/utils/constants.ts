@@ -32,10 +32,10 @@ export const URLREGEX =
   /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/g;
 
 export const LAMBDA_URL =
-  "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/stage";
+  "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/dashboard";
 // export const LAMBDA_URL = "http://localhost:4200";
 
 export const AWS_IMAGE_UPLOAD_URL =
-  "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/stage/upload/image";
+  "https://z5y61k807h.execute-api.us-east-1.amazonaws.com/dashboard/upload/image";
 
 export const OUTLET_BUCKET_NAME = "advayu-onboarding-assets/outlet-assets";
