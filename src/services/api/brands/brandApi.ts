@@ -62,7 +62,6 @@ export const putBrandUser = async (
         name: data.name,
         email: data.email,
         phone: data.phone,
-        password_hash: data.password,
       },
       {
         headers: {

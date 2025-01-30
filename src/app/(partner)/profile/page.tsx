@@ -40,7 +40,7 @@ function Page() {
         title: "Profile updated successfully",
       });
       setIsLoading(false);
-      router.replace("partner");
+      router.replace("/");
     } catch (error: unknown) {
       console.error("Error updating profile:", error);
       setIsLoading(false);
@@ -61,7 +61,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Name
           </Label>
           <Input
@@ -79,7 +80,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </Label>
           <Input
@@ -97,7 +99,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="phone"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Phone
           </Label>
           <Input
@@ -134,7 +137,7 @@ function Page() {
 
         <div className="flex justify-between items-center">
           <Button type="submit" className=" text-white px-4 py-2 rounded-md ">
-            {isLoading ? "Updating..." : "update Profile"}
+            {isLoading ? "Updating..." : "Update"}
           </Button>
         </div>
       </form>
