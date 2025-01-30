@@ -33,26 +33,21 @@ const Dashboard = () => {
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
   const [brandUserName, setBrandUserName] = useState<string>("");
 
-  const brandUser = useSelector((state: RootState) => state.brandUser);
+  const brand = useSelector((state: RootState) => state.brand);
   const router = useRouter();
-
-  // Helper function to get brand ID (either from Redux or localStorage)
-  // const getBrandId = useCallback(() => {
-  //   return brandUser?.brand_id;
-  // }, [brandUser?.brand_id]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const brandId = brandUser.brand_id;
+      const brandId = brand.id;
       if (!brandId) {
         router.push(`/auth`);
         return;
       }
 
-      setBrandUserName(brandUser?.name);
+      setBrandUserName(brand?.name);
       const fetchOffers = async () => {
         setIsLoading(true); // Set loading to true
-        const brand_id = brandUser.brand_id;
+        const brand_id = brand.id;
         try {
           const response = await axiosInstance.get(`${LAMBDA_URL}/offers`, {
             params: { brand_id },

@@ -11,6 +11,8 @@ import { RootState } from "@/store/store";
 import { get } from "http";
 import { toast } from "@/hooks/use-toast";
 import axiosInstance from "@/utils/axiosInstance";
+import { BrandDetail } from "../partner-with-us/validationSchema";
+import { setBrandData } from "@/store/globalSlice/brandSlice";
 
 const Auth = () => {
   const dispatch = useDispatch();
@@ -63,11 +65,16 @@ const Auth = () => {
       });
 
       // Fetch brand details
-      const brand = await getBrandByEmail(email);
-      if (brand) {
+      const brandUser = await getBrandByEmail(email);
+      const brandDetail = await getBrandDetails(brandUser?.brand_id || "");
+      if (brandUser) {
         // Handle brand details if fetched
-        dispatch(setBrandUser(brand));
-        setBrandName(brand.name);
+        dispatch(setBrandUser(brandUser));
+        setBrandName(brandUser.name);
+      }
+      if (brandDetail) {
+        console.log("brandDetail", brandDetail);
+        dispatch(setBrandData(brandDetail));
       }
 
       // Redirect to partner page
@@ -105,6 +112,19 @@ const Auth = () => {
 
       console.warn("No brand found for the given email.");
       return null;
+    } catch (error) {
+      console.error("Error fetching brand details:", error);
+      return null;
+    }
+  };
+
+  const getBrandDetails = async (id: string) => {
+    try {
+      const response = await axios.get(`${LAMBDA_URL}/v1/brands/${id}`, {
+        withCredentials: true,
+      });
+      console.log("edit brand response", response.data);
+      return response.data;
     } catch (error) {
       console.error("Error fetching brand details:", error);
       return null;

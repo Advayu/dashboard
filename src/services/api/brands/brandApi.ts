@@ -54,22 +54,27 @@ export const putBrandUser = async (
 ): Promise<BrandUserResponse> => {
   const apiUrl = `${LAMBDA_URL}/brand-users/${brand_id}`;
   console.log("Brand ID:", brand_id);
+  console.log("data>", data);
+
+  // Create an object to send in the API request
+  const requestData: any = {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+  };
+
+  // Add the password to requestData only if it's provided
+  if (data.password) {
+    requestData.password_hash = data.password;
+  }
 
   try {
-    const response = await axiosInstance.put(
-      apiUrl,
-      {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
+    const response = await axiosInstance.put(apiUrl, requestData, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      }
-    );
+    });
 
     console.log("API Response:", response.data);
     return response.data as BrandUserResponse;

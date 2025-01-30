@@ -46,6 +46,7 @@ const brandDetailsSlice = createSlice({
   initialState,
   reducers: {
     setBrandDetails(state, action: PayloadAction<Partial<BrandDetailsState>>) {
+      console.log("action.payload:", action.payload);
       return { ...state, ...action.payload };
     },
     setAgeGroup(state, action: PayloadAction<string[]>) {
@@ -76,6 +77,6 @@ const brandDetailsSlice = createSlice({
 });
 
 export const { setBrandDetails,
-   setAgeGroup, 
-   setWebsiteLinks,setSocialLinks, setImageUrl, setBannerImageUrl, clearBannerImageUrl, clearImageUrl } = brandDetailsSlice.actions;
+  setAgeGroup,
+  setWebsiteLinks, setSocialLinks, setImageUrl, setBannerImageUrl, clearBannerImageUrl, clearImageUrl } = brandDetailsSlice.actions;
 export default brandDetailsSlice.reducer;

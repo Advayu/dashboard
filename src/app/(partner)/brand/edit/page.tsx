@@ -28,8 +28,11 @@ import {
   deleteImageFromBucket,
   getFileFromBucket,
 } from "@/services/ImageService";
+import { useDispatch } from "react-redux";
+import { setBrandData } from "@/store/globalSlice/brandSlice";
 
 const BrandDetails: React.FC<any> = () => {
+  const dispatch = useDispatch();
   const [brandDetails, setBrandDetails] = useState<any | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -155,6 +158,7 @@ const BrandDetails: React.FC<any> = () => {
         { withCredentials: true }
       );
       if (response.status === 200) {
+        dispatch(setBrandData(response.data));
         toast({
           variant: "success",
           title: "Success",

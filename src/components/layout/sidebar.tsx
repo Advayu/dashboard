@@ -157,7 +157,7 @@ const Sidebar: FC = () => {
         {/* <LogoIcon fill={isActive ? "#199EAD" : "black"} /> */}
         <ul className="list-none flex justify-around items-center w-full bg-white">
           <li>
-            <Link href="/partner">
+            <Link href="/">
               <LogoIcon fill={isActive ? "#199EAD" : "black"} />
             </Link>
           </li>

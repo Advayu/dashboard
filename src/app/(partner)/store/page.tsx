@@ -60,7 +60,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export default function Page() {
-  const brandUser = useSelector((state: any) => state.brandUser);
+  const brand = useSelector((state: any) => state.brand);
   const [outlet, setOultet] = useState<any>([]);
   const [filteredOutlets, setFilteredOutlets] = useState<any[]>([]); // For filtered outlets
   const [searchQuery, setSearchQuery] = useState<string>(""); // For search quer
@@ -76,9 +76,7 @@ export default function Page() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(
-          `${LAMBDA_URL}/v1/outlets?searchType=Exact&brand_id=${
-            brandUser.brand_id
-          }`,
+          `${LAMBDA_URL}/v1/outlets?searchType=Exact&brand_id=${brand.id}`,
           { withCredentials: true }
         );
         console.log("Outlet data:", response.data);
@@ -102,7 +100,7 @@ export default function Page() {
     };
 
     fetchData();
-  }, [brandUser.brand_id]); // Dependency array to ensure fetch happens only when `brand.id` changes
+  }, [brand.id]); // Dependency array to ensure fetch happens only when `brand.id` changes
 
   const fetchOutletOfferDetailsByOutletId = async (id: string) => {
     if (offerByOutletId[id]) {
@@ -162,7 +160,7 @@ export default function Page() {
     setFilteredOutlets(filtered);
   };
 
-  const brandName = brandUser.name;
+  const brandName = brand.name;
   return (
     // <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className="w-[93%] flex flex-col pl-10 mt-16 pr-4">

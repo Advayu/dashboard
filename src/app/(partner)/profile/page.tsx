@@ -5,11 +5,14 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { putBrandUser } from "@/services/api/brands/brandApi";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
+import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
+import { BrandUser } from "@/Types/type";
 
 function Page() {
+  const dispatch = useDispatch();
   const brandUser = useSelector((state: RootState) => state.brandUser);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -18,6 +21,7 @@ function Page() {
     email: brandUser.email,
     phone: brandUser.phone,
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,38 +35,53 @@ function Page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        variant: "destructive",
+        title: "Password does not match",
+        description: "Please try again later.",
+        duration: 7000,
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const saveData = await putBrandUser(formData, brandUser.id);
+      const { confirmPassword, ...formDataWithoutPassword } = formData;
+      const saveData = await putBrandUser(
+        formDataWithoutPassword,
+        brandUser.id
+      );
+      dispatch(setBrandUser(saveData as BrandUser));
       console.log("saveData", saveData);
       toast({
         variant: "success",
         title: "Profile updated successfully",
       });
-      setIsLoading(false);
       router.replace("/");
     } catch (error: unknown) {
       console.error("Error updating profile:", error);
-      setIsLoading(false);
-      // Optionally, show an error toast or other feedback
-      toast({
-        variant: "destructive",
-        title: "Failed to update profile",
-        description: "Please try again later.",
-      });
+      // Optionally, check if it's an instance of Error before logging
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "Failed to update profile",
+          description: error.message || "Please try again later.",
+        });
+      }
+    } finally {
+      setIsLoading(false); // This ensures loading state is always cleared
     }
   };
-
   return (
-    <div className="w-[40%] px-10 mt-10">
+    <div className="md:w-[40%] w-full px-10 mt-10">
       <h2 className="text-2xl font-semibold mb-4">Profile Settings</h2>
       <form onSubmit={handleSubmit}>
         {/* Name Field */}
         <div className="mb-4">
           <Label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
+            className="block text-sm font-medium text-gray-700">
             Name
           </Label>
           <Input
@@ -80,8 +99,7 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
+            className="block text-sm font-medium text-gray-700">
             Email
           </Label>
           <Input
@@ -99,8 +117,7 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="phone"
-            className="block text-sm font-medium text-gray-700"
-          >
+            className="block text-sm font-medium text-gray-700">
             Phone
           </Label>
           <Input
@@ -118,7 +135,7 @@ function Page() {
         </div>
 
         {/* Reset Password */}
-        {/* <div className="mb-4">
+        <div className="mb-4">
           <Label
             htmlFor="password"
             className="block text-sm font-medium text-gray-700">
@@ -133,7 +150,23 @@ function Page() {
             onChange={handleChange}
             className="w-full px-3 py-2 mt-1 border rounded-md"
           />
-        </div> */}
+        </div>
+        <div className="mb-4">
+          <Label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700">
+            Confirm Password
+          </Label>
+          <Input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Enter your new password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full px-3 py-2 mt-1 border rounded-md"
+          />
+        </div>
 
         <div className="flex justify-between items-center">
           <Button type="submit" className=" text-white px-4 py-2 rounded-md ">

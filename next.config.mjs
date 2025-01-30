@@ -8,9 +8,10 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [
+    
       {
         protocol: 'https',
-        hostname: 'advayu-onboarding-assets.s3.amazonaws.com',
+        hostname: 's3.amazonaws.com', // Add this hostname
         pathname: '/**',
       },
     ],

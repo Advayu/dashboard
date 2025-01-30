@@ -11,14 +11,23 @@ import outletReducer2 from "./globalSlice/outletSlice";
 import brandUserReducer from "./globalSlice/brandUserSlice";
 import OfferDetails from "./offerSlice/offerDetailsSlice";
 
+// Persist configuration for brand
+const brandPersistConfig = {
+  key: "brand",
+  storage,
+
+};
 
 // Persist configuration for brandUser
 const brandUserPersistConfig = {
   key: "brandUser",
   storage,
+  whitelist: ["brand_id", "name", "email", "phone"], // Only persist `name` and `email` fields
+
 };
 
-// Wrap brandUserReducer with persistReducer
+// Wrap brandReducer and brandUserReducer with persistReducer
+const persistedBrandReducer = persistReducer(brandPersistConfig, brandReducer);
 const persistedBrandUserReducer = persistReducer(
   brandUserPersistConfig,
   brandUserReducer
@@ -26,14 +35,13 @@ const persistedBrandUserReducer = persistReducer(
 
 // Combine all reducers
 const rootReducer = combineReducers({
-  brand: brandReducer,
+  brand: persistedBrandReducer, // Persist this slice
   user: userReducer,
   outlets: outletReducer,
   offerDetails: offerDetailsReducer,
   outlet2: outletReducer2,
   brandUser: persistedBrandUserReducer, // Persist only this slice
-  offer: OfferDetails
-
+  offer: OfferDetails,
 });
 
 // Configure store

@@ -45,7 +45,7 @@ export default function Page() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const brandUser = useSelector((state: any) => state.brandUser);
+  const brand = useSelector((state: any) => state.brand);
 
   // Fetch outlets when component mounts
   const getLocalStorageItem = (key: string) => {
@@ -57,7 +57,7 @@ export default function Page() {
 
   useEffect(() => {
     const fetchOutlets = async () => {
-      const brandId = brandUser?.brand_id || getLocalStorageItem("brandId");
+      const brandId = brand?.id || getLocalStorageItem("brandId");
       console.log("brandId:", brandId);
 
       if (!brandId) {
@@ -101,7 +101,7 @@ export default function Page() {
     };
 
     fetchOutlets();
-  }, [brandUser?.brand_id]); // Dependency on brandUser's brand_id
+  }, [brand?.id]); // Dependency on brand's brand_id
 
   useEffect(() => {
     if (!outletId) return;
@@ -186,9 +186,9 @@ export default function Page() {
     setFilteredOffers(filtered);
   };
 
-  // let brandName = brandUser.name || localStorage.getItem("brandName");
+  // let brandName = brand.name || localStorage.getItem("brandName");
 
-  let brandName = brandUser.name;
+  let brandName = brand.name;
 
   const router = useRouter();
   const handleAddOffer = () => {
