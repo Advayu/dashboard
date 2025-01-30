@@ -73,6 +73,7 @@ const Page = () => {
             withCredentials: true,
           });
 
+          console.log("offer details", response);
           setOffer(response.data); // Store the data in state
         } else {
           console.log("Offer ID is missing in the URL.");
@@ -84,7 +85,7 @@ const Page = () => {
           title: "Error",
           description: "Failed to fetch offer details.",
         });
-        router.push("/partner/offers");
+        router.push("/offers");
         // Handle any error that occurs during the request
         console.log("Error fetching offer detail:", err);
         // setError("Failed to fetch offer details.");
@@ -117,7 +118,7 @@ const Page = () => {
           variant: "success",
           title: "Offer deleted successfully",
         });
-        router.push("/partner/offers");
+        router.push("/offers");
       } else {
         toast({
           variant: "destructive",
@@ -239,6 +240,7 @@ const Page = () => {
               defaultValue={offer.total_limit}
             />
           </div>
+          {/* <div>
           <Label>
             Maximum offer redemption{" "}
             <span className="underline"> per user </span>
@@ -249,7 +251,8 @@ const Page = () => {
             type="text"
             defaultValue={""}
           />
-          <div className="my-4">
+          </div> */}
+          {/* <div className="my-4">
             <Label>Duration between redemption days</Label>
             <Input
               disabled
@@ -257,7 +260,7 @@ const Page = () => {
               type="text"
               defaultValue={""}
             />
-          </div>
+          </div> */}
           <ToggleGroup
             type="multiple"
             value={offer.applicable_days}
@@ -337,12 +340,12 @@ const Page = () => {
               variant={"outline"}>
               Delete
             </Button>
-            <Button className="px-4" size={"thin"} variant={"outline"}>
+            {/* <Button className="px-4" size={"thin"} variant={"outline"}>
               Duplicate
             </Button>
             <Button className="px-4" size={"thin"} variant={"outline"}>
               Disable
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>

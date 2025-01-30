@@ -13,6 +13,9 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Power } from "lucide-react";
+import axios from "axios";
+import { LAMBDA_URL } from "@/utils/constants";
+import { useRouter } from "next/navigation";
 
 interface SettingProps {
   // Define your props here
@@ -37,11 +40,34 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export default function Page() {
+  const router = useRouter();
   const reduxBrandId = useSelector(
     (state: RootState) => state.brandUser?.brand_id
   );
   // const brandId = reduxBrandId || localStorage.getItem("brandId");
   const brandId = reduxBrandId || "";
+
+  const handleLogoutClick = async () => {
+    console.log("Logout clicked");
+
+    // Clear localStorage items
+    localStorage.removeItem("brandId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("brandName");
+    localStorage.removeItem("selectedOutletId");
+
+    const response = await axios.post(
+      `${LAMBDA_URL}/auth/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    // Redirect to login
+    if (response.status === 200) {
+      router.push("/auth");
+    }
+  };
 
   return (
     <div className="w-[93%] flex flex-col pl-[2.5rem] mt-[4rem] pr-[1rem]">
@@ -59,7 +85,9 @@ export default function Page() {
               height={16}
               className="text-gray-500 absolute left-[0.75rem] top-1/2 transform -translate-y-1/2"
             /> */}
-            <button className="flex gap-2 items-center bg-gray-100 px-4 py-2 rounded-lg cursor-pointer">
+            <button
+              onClick={handleLogoutClick}
+              className="flex gap-2 items-center bg-gray-100 px-4 py-2 rounded-lg cursor-pointer">
               <Power /> Logout
             </button>
           </div>
