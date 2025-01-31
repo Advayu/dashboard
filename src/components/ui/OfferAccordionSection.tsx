@@ -26,7 +26,7 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
       </AccordionTrigger>
       <AccordionContent className="flex space-x-2">
         {offers.length === 0 ? (
-          <div className="flex flex-col items-center justify-center w-full h-full text-center">
+          <div className="flex flex-col md:items-center md:justify-center w-full h-full md:text-center">
             <h1 className="text-xl text-gray-500 font-bold">
               No {title} found!
             </h1>

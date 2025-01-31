@@ -154,7 +154,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="md:pl-10 mt-16">
+      <div className="md:pl-10 md:mt-16 mt-[2rem]">
         <div className="flex justify-between items-center">
           <h1 className="md:text-3xl text-xl font-bold">
             Advayu X {brandUserName}
