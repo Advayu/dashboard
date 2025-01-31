@@ -304,7 +304,7 @@ const BrandDetails: React.FC<any> = () => {
           <Loading />
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center w-full md:mx-0 mx-0">
+        <div className="flex flex-col items-center justify-center w-full md:px-0 px-0">
           <div>
             <h1 className="text-4xl font-bold">Brand Details</h1>
             <p>Enter your brand details</p>
