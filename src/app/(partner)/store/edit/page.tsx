@@ -71,48 +71,50 @@ export default function Page() {
   const [images, setImages] = useState<{ images: string[] }>({ images: [] });
 
   useEffect(() => {
-    console.log("useeffect called");
-    // get id from the path
+    console.log("useEffect called");
+
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
-      //   console.log("URL Params:", urlParams.get("brandId"));
       const outletId = urlParams.get("outlet_id");
-      // console.log("outletId", outletId);
       setOutletId(outletId);
       setLoadingStates((prev) => ({ ...prev, fetchingData: true }));
+
       const getOutlet = async () => {
         try {
           const response = await axiosInstance.get(
             `${LAMBDA_URL}/v1/outlets/${outletId}`,
             { withCredentials: true }
           );
+
           if (response.status === 200) {
             console.log("response.data", response.data);
 
-            // get file key from the response and  fetch the file from the s3 bucket
-            const fileKeys = response.data?.images;
-
-            if (fileKeys) {
-              fileKeys.forEach(async (key: any) => {
-                const imageUrl = await getImageURlByFileKey(
+            // Get file keys and fetch URLs
+            const fileKeys = response.data?.images || [];
+            const imageUrls = await Promise.all(
+              fileKeys.map((key: any) =>
+                getImageURlByFileKey(
                   key,
                   OUTLET_BUCKET_NAME,
                   `${LAMBDA_URL}/upload/url`
-                );
-                setImages((prev) => ({
-                  ...prev,
-                  images: [...prev.images, imageUrl.fileUrl],
-                }));
-                setLoadingStates((prev) => ({ ...prev, fetchingData: false }));
-              });
+                ).then((res) => res.fileUrl)
+              )
+            );
+            setImages((prev) => ({ ...prev, images: imageUrls }));
+
+            // Extract opening hours
+            const openingHours = response.data?.opening_hours || {};
+            const days = Object.keys(openingHours);
+            let openTime = "";
+            let closeTime = "";
+
+            if (Object.values(openingHours).length > 0) {
+              [openTime, closeTime] = (Object.values(openingHours)[0] as string)
+                .split("-")
+                .map((time) => time.trim());
             }
 
-            const openingdays = response.data?.opening_hours;
-            const days = Object.keys(openingdays);
-
-            const opening_hours = Object.values(openingdays) as string[];
-            const openTime = opening_hours[0].split("-")[0].trim();
-            const closeTime = opening_hours[0].split("-")[1].trim();
+            // Update outlet details
             setOutletDetails((prev: any) => ({
               ...response.data,
               days_open: days,
@@ -121,21 +123,19 @@ export default function Page() {
             }));
           }
         } catch (err) {
-          setLoadingStates((prev) => ({ ...prev, fetchingData: false }));
+          console.error("Error fetching outlet detail:", err);
           toast({
             duration: 5000,
             variant: "destructive",
             title: "Failed to fetch outlet details. Please try again.",
           });
           router.push("/");
-          console.log("Error fetching outlet detail:", err);
         } finally {
           setLoadingStates((prev) => ({ ...prev, fetchingData: false }));
         }
       };
 
       getOutlet();
-      console.log("outletDetails", outletDetails);
     }
   }, []);
 
