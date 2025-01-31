@@ -16,10 +16,10 @@ import { notification as dummyNotification } from "@/dummydata/notification";
 
 export default function Page() {
   return (
-    <div className="md:w-[93%] w-full ">
+    <div className="md:w-[93%] w-full mx-4">
       <Dashboard />
 
-      <div className="flex flex-row  ml-10 mt-16 md:mb-0 mb-20">
+      <div className="flex flex-row  md:ml-10 mt-16 md:mb-0 mb-20">
         <NotificationCard notification={dummyNotification} />
 
         <div>

@@ -195,7 +195,7 @@ const BrandDetails: React.FC<any> = () => {
 
     try {
       const url = AWS_IMAGE_UPLOAD_URL;
-      const bucket_name = "advayu-onboarding-assets/outlet-assets";
+      const bucket_name = OUTLET_BUCKET_NAME;
       // Upload the file using the function
       const response = await uploadImageToBucket({
         file,
@@ -284,7 +284,7 @@ const BrandDetails: React.FC<any> = () => {
   // advayu-onboarding-assets/outlet-assets
   return (
     <div className="w-full">
-      <div className="flex justify-between my-10 mx-8 items-center">
+      <div className="flex justify-between my-10 md:mx-8 mx-6 items-center">
         <div className="flex items-center">
           <button
             className="flex items-center"
@@ -304,7 +304,7 @@ const BrandDetails: React.FC<any> = () => {
           <Loading />
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center w-full">
+        <div className="flex flex-col items-center justify-center w-full md:mx-0 mx-6">
           <div>
             <h1 className="text-4xl font-bold">Brand Details</h1>
             <p>Enter your brand details</p>

@@ -126,8 +126,10 @@ const Dashboard = () => {
   const renderOfferCards = () => {
     if (offers.length === 0) {
       return (
-        <div className="m-auto">
-          <h1 className="text-2xl font-bold">No Active offers found!</h1>
+        <div className="md:m-auto">
+          <h1 className="md:text-2xl text-xl font-bold">
+            No Active offers found!
+          </h1>
           <Link href="offers/add" className="underline">
             Create an offer
           </Link>
@@ -152,19 +154,21 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="pl-10 mt-16">
+      <div className="md:pl-10 mt-16">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Advayu X {brandUserName}</h1>
+          <h1 className="md:text-3xl text-xl font-bold">
+            Advayu X {brandUserName}
+          </h1>
           <button
             onClick={toggleMenu}
-            className="md:block hidden mr-6 bg-gray-100 rounded-full p-2">
+            className=" md:mr-6 bg-gray-100 rounded-full p-2">
             <UserRound size={32} />
           </button>
         </div>
         {isMenuVisible && (
           <div
             ref={menuRef}
-            className="absolute right-[2rem]  mt-1 w-[8rem] bg-white border rounded-lg shadow-lg z-50 md:block hidden ">
+            className="absolute md:right-[2rem] right-0  mt-1 w-[8rem] bg-white border rounded-lg shadow-lg z-50  ">
             <ul className="text-gray-700">
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -204,7 +208,7 @@ const Dashboard = () => {
 
       <div className="md:hidden">
         <GaugeComponent />
-        <div className="ml-[16.3px]">
+        <div className="md:ml-[16.3px]">
           <h2 className="text-xl font-bold mb-4">
             Active offers ({offers.length})
           </h2>

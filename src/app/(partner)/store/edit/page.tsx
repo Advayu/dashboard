@@ -515,7 +515,7 @@ export default function Page() {
   return (
     <>
       <div className="grid grid-cols-1 w-[100%]">
-        <div className="flex justify-between my-10 mx-8 items-center">
+        <div className="flex justify-between my-10 md:mx-8 mx-5 items-center">
           <div className="flex items-center">
             <button className="flex  items-center" onClick={handleBackClick}>
               <ChevronLeft />
@@ -529,7 +529,7 @@ export default function Page() {
           <Image className="md:hidden block" src={Support} alt="support" />
         </div>
 
-        <div className="flex md:flex-row flex-col min-h-screen ml-10 justify-center">
+        <div className="flex md:flex-row flex-col min-h-screen md:ml-10 ml-5 justify-center">
           {loadingStates.fetchingData ? (
             <div>
               <Loading />

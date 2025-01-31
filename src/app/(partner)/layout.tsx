@@ -21,7 +21,7 @@ const PartnerDashboard = ({
   return (
     <Provider store={store}>
       <Toaster />
-      <div className="flex ">
+      <div className="flex pb-[calc(3rem+16px)]">
         {!condition && <Sidebar />}
         {children}
       </div>

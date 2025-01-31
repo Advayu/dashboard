@@ -163,16 +163,16 @@ export default function Page() {
   const brandName = brand.name;
   return (
     // <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <div className="w-[93%] flex flex-col pl-10 mt-16 pr-4">
+    <div className="md:w-[93%] w-full flex flex-col md:pl-10 md:mt-16 md:pr-4 mt-10 px-5">
       <div className="flex justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{brandName}</h1>
+          <h1 className="md:text-3xl text-xl font-bold">{brandName}</h1>
         </div>
-        <div className="md:flex space-x-6 items-center hidden">
+        <div className="flex space-x-6 items-center">
           <Button onClick={handleAddOutletClick} variant={"outline"}>
             + Add Outlet
           </Button>
-          <div className="flex space-x-2 items-center relative">
+          <div className="md:flex space-x-2 items-center relative hidden">
             <Input
               type="text"
               placeholder="Search by outlet name"
@@ -189,6 +189,23 @@ export default function Page() {
               <Filter width={16} height={16} />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="md:hidden space-x-2 items-center relative flex  mt-4">
+        <Input
+          type="text"
+          placeholder="Search by outlet name"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="pl-10 w-72 py-5 border-gray-400"
+        />
+        <Search
+          width={16}
+          height={16}
+          className="text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+        />
+        <div>
+          <Filter width={16} height={16} />
         </div>
       </div>
 
@@ -257,7 +274,9 @@ export default function Page() {
                     <div className="">
                       <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-4 md:items-center">
                         <div className="flex space-x-4">
-                          <h3 className="text-lg">Sales with Advayu</h3>
+                          <h3 className="md:text-lg text-sm">
+                            Sales with Advayu
+                          </h3>
                           <Select>
                             <SelectTrigger className="w-[180px] border border-black">
                               <SelectValue placeholder="Select your year" />
@@ -277,11 +296,11 @@ export default function Page() {
                         </div>
                       </div>
                       {/* sales with advayu */}
-                      <div className="grid md:grid-cols-[1fr_4fr]  items-center mt-[16px]">
-                        <p className="text-[#2AA000] text-3xl font-bold">
+                      <div className="grid md:grid-cols-[1fr_4fr] gap-[1.5rem]  items-center mt-[16px]">
+                        <p className="text-[#2AA000] md:text-3xl text-xl font-bold">
                           +888.8%
                         </p>
-                        <div className="w-full">
+                        <div className="w-[95%] ">
                           <Stack spacing={2} sx={{ flexGrow: 1 }}>
                             <BorderLinearProgress
                               variant="determinate"
@@ -292,7 +311,7 @@ export default function Page() {
                       </div>
                       <div className="flex justify-between md:ml-40 items-center">
                         <p className="">Other</p>
-                        <p className="">Advayu</p>
+                        <p className=" md:mr-[1.6rem] mr-[1rem]">Advayu</p>
                       </div>
                       <div className="md:block hidden">
                         <LineGraph dataset={dataset} />

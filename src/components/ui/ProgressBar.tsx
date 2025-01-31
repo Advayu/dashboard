@@ -45,7 +45,7 @@ const GaugeComponent = ({
 
   return (
     <div
-      className={` p-6 text-center bg-[#F3F3F3] mx-4 mt-6 mb-10 ${className}`}>
+      className={` p-6 text-center bg-[#F3F3F3] md:mx-4 mt-6 mb-10 ${className}`}>
       {/* Title */}
       <h2 className="text-xl font-bold mb-4">{title}</h2>
 
