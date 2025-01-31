@@ -70,7 +70,7 @@ export default function Page() {
   };
 
   return (
-    <div className="w-[93%] flex flex-col pl-[2.5rem] mt-[4rem] pr-[1rem]">
+    <div className="md:w-[93%] w-full flex flex-col md:pl-[2.5rem] mt-[4rem] md:pr-[1rem] px-5">
       <div className="flex items-center md:flex-row justify-between">
         <h1 className="text-3xl font-bold">Settings</h1>
         <div className="flex space-x-[1.5rem] items-center mt-[1rem] md:mt-0">

@@ -529,7 +529,7 @@ export default function Page() {
           <Image className="md:hidden block" src={Support} alt="support" />
         </div>
 
-        <div className="flex md:flex-row flex-col min-h-screen md:ml-10 ml-5 justify-center">
+        <div className="flex md:flex-row flex-col min-h-screen md:ml-10 ml-5 justify-center items-center">
           {loadingStates.fetchingData ? (
             <div>
               <Loading />

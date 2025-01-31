@@ -217,7 +217,7 @@ const OutletDetails = () => {
             const fileData = await getFileFromBucket(
               fileKey,
               bucket_name,
-              `${LAMBDA_URL}/upload/url`
+              AWS_IMAGE_UPLOAD_URL
             );
 
             const imageUrl = fileData.fileUrl;
@@ -535,7 +535,7 @@ const OutletDetails = () => {
         <div className="flex items-center">
           <button className="flex  items-center" onClick={handleBackClick}>
             <ChevronLeft />
-            <h1 className="md:text-3xl	font-black"> New offer</h1>
+            <h1 className="md:text-3xl	font-black"> New Outlet</h1>
           </button>
         </div>
         <div className=" md:flex hidden flex-col md:flex-row space-x-4 mx-2 items-center">
@@ -545,7 +545,7 @@ const OutletDetails = () => {
         <Image className="md:hidden block" src={Support} alt="support" />
       </div>
 
-      <div className="flex md:flex-row flex-col min-h-screen ml-10">
+      <div className="flex md:flex-row flex-col min-h-screen md:ml-10 mx-auto md:mx-0">
         <div className="w-full md:max-w-2xl  px-4">
           <h1 className="text-2xl md:text-4xl font-bold">Outlet Details</h1>
           <p className="mt-2 text-sm md:text-base">Name, store, and address</p>

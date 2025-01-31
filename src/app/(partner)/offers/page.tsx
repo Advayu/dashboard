@@ -200,15 +200,15 @@ export default function Page() {
       <Loading />
     </div>
   ) : (
-    <div className="flex flex-col md:mt-16 md:pl-10 mt-10 px-5 w-[93%] h-full tranition-all fade-in  duration-300">
-      <div className="flex justify-between pr-8 ">
-        <h1 className="text-3xl font-bold">{brandName} Offers</h1>
-        <div className="md:flex  hidden space-x-6 items-center">
+    <div className="flex flex-col md:mt-16 md:pl-10 mt-10 px-5 md:w-[93%] w-full h-full tranition-all fade-in  duration-300 mb-28">
+      <div className="flex justify-between  md:pr-8 ">
+        <h1 className=" md:text-3xl text-xl font-bold">{brandName} Offers</h1>
+        <div className="flex   space-x-6 items-center">
           {/* drop down to select outlet  */}
-          <Button onClick={handleAddOffer} variant={"outline"}>
+          <Button className="" onClick={handleAddOffer} variant={"outline"}>
             + Add Offer
           </Button>
-          <div className="flex  space-x-2 items-center relative">
+          <div className="md:flex hidden  space-x-2 items-center relative">
             <Input
               type="text"
               placeholder="Search by offer code"
@@ -244,7 +244,7 @@ export default function Page() {
         </select>
       </div>
 
-      <div>
+      <div className="">
         <Accordion
           type="multiple"
           defaultValue={["item-1", "item-2"]}
