@@ -1,9 +1,14 @@
 "use client";
 
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
 // CouponCard.tsx
 import { useRouter } from "next/navigation";
 import React from "react";
-
+dayjs.extend(utc);
+dayjs.extend(timezone);
 interface CouponCardProps {
   id: number;
   title: string;
@@ -85,18 +90,14 @@ const CouponCard: React.FC<CouponCardProps> = ({
     new Date(expiry_date).getTime() - Date.now() < 86400000 * 7;
 
   // start date convert to months and date only
-  var start_date_months = new Date(start_date)
-    .toDateString()
-    .split(" ")
-    .slice(1, 3)
-    .join(" ");
+  var start_date_months = dayjs(start_date)
+    .tz("Asia/Kolkata")
+    .format("DD MMM YYYY");
 
   // expiry date convert to months and date only
-  var expiry_date_months = new Date(expiry_date)
-    .toDateString()
-    .split(" ")
-    .slice(1, 3)
-    .join(" ");
+  var expiry_date_months = dayjs(expiry_date)
+    .tz("Asia/Kolkata")
+    .format("DD MMM YYYY");
 
   // console.log(Number(new Date(expiry_date)));
 
@@ -178,6 +179,10 @@ const Couponbig = ({
   title,
   discountCode,
 }: CouponbigProps) => {
+  const startDateIST = dayjs(startDate)
+    .tz("Asia/Kolkata")
+    .format("DD MMM YYYY");
+  const endDateIST = dayjs(endDate).tz("Asia/Kolkata").format("DD MMM YYYY");
   return (
     <div className="border border-blueTilt rounded-xl my-2 flex  relative bg-white">
       {/* Coupon effect */}
@@ -204,11 +209,13 @@ const Couponbig = ({
             <span className="mr-4 w-4">
               <Calander />
             </span>
-            <p className="text-xs text-gray-700">{startDate.split("T")[0]}</p>
+            <p className="text-xs text-gray-700">
+              {startDateIST.split("T")[0]}
+            </p>
             <span className="mx-2">
               <Arrow />
             </span>
-            <p className="text-xs text-gray-700">{endDate.split("T")[0]}</p>
+            <p className="text-xs text-gray-700">{endDateIST.split("T")[0]}</p>
           </div>
         </div>
 

@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "resolutions": {
+    "@mui/system": "5.16.13"
+  },
   "dependencies": {
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.0",
@@ -44,6 +47,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
+    "dayjs-plugin-utc": "^0.1.2",
     "embla-carousel-auto-scroll": "^8.1.7",
     "embla-carousel-autoplay": "^8.1.7",
     "embla-carousel-react": "^8.1.7",

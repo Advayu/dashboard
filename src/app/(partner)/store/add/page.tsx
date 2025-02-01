@@ -49,6 +49,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { set } from "date-fns";
 
 const OutletDetails = () => {
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ const OutletDetails = () => {
     uploadingImages: false,
     savingData: false,
   });
-
+  const [isFetching, setIsFetching] = useState(false);
   const currentOutlet = useSelector(
     (state: RootState) => state.outlets.currenOutlet
   );
@@ -69,6 +70,7 @@ const OutletDetails = () => {
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
+  const locationRef = useRef<HTMLInputElement>(null);
   // const outletDetails = useSelector((state: any) => state.outlet);
   //Todo: do better logic
   // const [isVerified, setIsVerified] = useState(false);
@@ -102,6 +104,9 @@ const OutletDetails = () => {
     ) {
       newErrors.phoneNumber = "Phone number must be valid.";
     }
+    if (!currentOutlet.latitude || !currentOutlet.longitude) {
+      newErrors.location = "Location is required.";
+    }
 
     return newErrors;
   };
@@ -115,35 +120,24 @@ const OutletDetails = () => {
   // >([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // get url from params
-      const url = new URL(window.location.href);
-      const name = url.searchParams.get("name");
-
-      dispatch(setCurrentOutlet({ ...currentOutlet, name: name || "" }));
-      // window.scrollTo({
-      //   top: 0,
-      //   behavior: "smooth", // Optional for smooth scrolling
-      // });
-      if (errors.name && nameRef.current) {
-        nameRef.current.scrollIntoView({ behavior: "smooth" });
-        nameRef.current.focus();
-      } else if (errors.phoneNumber) {
-        phoneNumberRef.current?.scrollIntoView({ behavior: "smooth" });
-        phoneNumberRef.current?.focus();
-      } else if (errors.postal_code) {
-        postalCodeRef.current?.scrollIntoView({ behavior: "smooth" });
-        postalCodeRef.current?.focus();
-      }
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional for smooth scrolling
+    });
+    if (errors.name && nameRef.current) {
+      // nameRef.current.scrollIntoView({ behavior: "smooth" });
+      nameRef.current.focus();
+    } else if (errors.phoneNumber) {
+      // phoneNumberRef.current?.scrollIntoView({ behavior: "smooth" });
+      phoneNumberRef.current?.focus();
+    } else if (errors.postal_code) {
+      // postalCodeRef.current?.scrollIntoView({ behavior: "smooth" });
+      postalCodeRef.current?.focus();
+    } else if (errors.location) {
+      // locationRef.current?.scrollIntoView({ behavior: "smooth" });
+      locationRef.current?.focus();
     }
-  }, [
-    errors.name,
-    nameRef,
-    errors.phoneNumber,
-    phoneNumberRef,
-    errors.postal_code,
-    errors.postalCodeRef,
-  ]);
+  }, []);
 
   const handleLoadingState = (key: string, value: boolean) => {
     setLoadingStates((prev) => ({ ...prev, [key]: value }));
@@ -155,6 +149,7 @@ const OutletDetails = () => {
     console.log("name:", name, "value:", value);
 
     // check contans numbar should be number
+    setErrors((prev) => ({ ...prev, [name]: "" }));
 
     dispatch(setCurrentOutlet({ ...currentOutlet, [name]: value }));
   };
@@ -189,6 +184,18 @@ const OutletDetails = () => {
   const handleDaysOpenChange = (selectedDays: string[]) => {
     console.log("Selected Days:", selectedDays);
     dispatch(setCurrentOutlet({ ...currentOutlet, days_open: selectedDays }));
+  };
+  const isAllSelected =
+    currentOutlet.days_open &&
+    daysOfWeek.every((day) => currentOutlet.days_open.includes(day.value));
+  // Function to toggle selection of all days
+  const toggleSelectAll = () => {
+    const allDays = daysOfWeek.map((day) => day.value);
+    const isAllSelected =
+      currentOutlet.days_open &&
+      daysOfWeek.every((day) => currentOutlet.days_open.includes(day.value));
+
+    handleDaysOpenChange(isAllSelected ? [] : allDays);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,7 +288,11 @@ const OutletDetails = () => {
 
   // handle get geo location
   const handleLocationUpdate = (coords?: [number, number]) => {
-    console.log("cords in parent", coords);
+    console.log("coords in parent", coords);
+    setIsFetching(true); // Start fetching indicator
+    // remove error on change of input
+    setErrors((prev) => ({ ...prev, location: "" }));
+
     if (coords) {
       // Update location based on provided coordinates
       const [latitude, longitude] = coords;
@@ -293,6 +304,7 @@ const OutletDetails = () => {
         })
       );
       console.log("Updated Coordinates in Parent Component:", coords);
+      setIsFetching(false); // Stop fetching indicator
     } else {
       // Get current location using Geolocation API
       console.log("handleLocationClick clicked");
@@ -308,34 +320,52 @@ const OutletDetails = () => {
               })
             );
             console.log("Current Location:", { latitude, longitude });
+            setIsFetching(false); // Stop fetching indicator on success
           },
           (error) => {
             console.error("Error getting location:", error);
+            setIsFetching(false); // Stop fetching indicator on error
           }
         );
       } else {
         console.error("Geolocation is not supported by this browser.");
+        setIsFetching(false); // Stop fetching if geolocation is unsupported
       }
     }
   };
 
   const addOutletHandler = () => {
-    const newErrors = validateFields(); // Assuming validateFields is implemented
-    console.log("newErros", newErrors);
-    setErrors(newErrors);
+    const newErrors = validateFields(); // Validate all fields
+    console.log("newErrors", newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      // If no validation errors, dispatch actions to set the current outlet and add it to the outlet list
-      dispatch(setCurrentOutlet(currentOutlet)); // Update the current outlet in Redux
-      dispatch(addOutlet(currentOutlet)); // Add the current outlet to the outlet list in Redux
-      //clear the currentOutlet state
-      dispatch(clearCurrentOutlet());
-      console.log("Current Outlet added:", currentOutlet);
-      // window.scrollTo({
-      //   top: 0,
-      //   behavior: "smooth", // Adds a smooth scrolling effect
-      // });
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+
+      // Focus on the first field with an error
+      const firstErrorKey = Object.keys(newErrors)[0];
+      const errorFieldRef = {
+        name: nameRef,
+        postal_code: postalCodeRef,
+        manager_phone: phoneNumberRef,
+        location: locationRef,
+      }[firstErrorKey];
+
+      if (errorFieldRef && errorFieldRef.current) {
+        errorFieldRef.current.focus();
+      }
+      return;
     }
+
+    // If no validation errors, proceed with the rest of the logic
+    dispatch(setCurrentOutlet(currentOutlet));
+    dispatch(addOutlet(currentOutlet));
+    dispatch(clearCurrentOutlet());
+
+    console.log("Current Outlet added:", currentOutlet);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
   const handleSave = async () => {
     try {
@@ -517,6 +547,29 @@ const OutletDetails = () => {
     dispatch(toggleAccessibilityFeature({ feature, value: updatedValue }));
   };
 
+  const areAllFeaturesSelected = Object.values(
+    currentOutlet.accessibility_features
+  ).every((value) => value);
+
+  const handleToggleAllFeatures = () => {
+    const updatedFeatures = Object.keys(
+      currentOutlet.accessibility_features
+    ).map((key) => {
+      const feature = key as AccessibilityFeatureKey; // Explicitly assert the type
+      return {
+        feature,
+        value: !areAllFeaturesSelected,
+      };
+    });
+
+    console.log("Updated features:", updatedFeatures);
+
+    // Dispatch each feature update individually
+    updatedFeatures.forEach(({ feature, value }) =>
+      dispatch(toggleAccessibilityFeature({ feature, value }))
+    );
+  };
+
   function handleBackClick(event: React.MouseEvent<HTMLButtonElement>) {
     if (typeof window !== "undefined") {
       event.preventDefault();
@@ -596,8 +649,11 @@ const OutletDetails = () => {
               </Label>
               <div className="relative mt-2">
                 <Input
+                  ref={locationRef}
                   id="location"
-                  className="pr-10 w-full my-2"
+                  className={`pr-10 w-full my-2 ${
+                    errors.location ? "border-red-500" : ""
+                  }`}
                   placeholder="Locate on the map"
                   value={
                     currentOutlet.latitude && currentOutlet.longitude
@@ -606,21 +662,48 @@ const OutletDetails = () => {
                   }
                   readOnly
                 />
-                <LocateFixed
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => handleLocationUpdate()}
-                />
+                <div
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center ${
+                    isFetching ? "opacity-50 pointer-events-none" : ""
+                  } ${errors.location ? "border-red-500" : ""}`}>
+                  <LocateFixed
+                    className={`cursor-pointer ${
+                      isFetching ? "opacity-50 pointer-events-none" : ""
+                    }`}
+                    onClick={() => handleLocationUpdate()}
+                  />
+                  {isFetching && (
+                    <span className="ml-2 flex items-center text-sm text-gray-600">
+                      <svg
+                        className="animate-spin h-4 w-4 mr-1 text-blue-500"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"></path>
+                      </svg>
+                      Fetching location...
+                    </span>
+                  )}
+                </div>
               </div>
-              {/* <div className="mt-4 relative pb-[56.25%] w-full h-0"> */}
+              {errors.location && (
+                <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+              )}
               <Map
                 lat={currentOutlet.latitude || 12.9774047}
                 long={currentOutlet.longitude || 77.5742339}
                 onLocationChange={handleLocationUpdate}
-
-                // updateLocationChange={handleLocationUpdate}
               />
-
-              {/* </div> */}
             </div>
             {/* neighborhood */}
             <div className="my-3">
@@ -876,7 +959,16 @@ const OutletDetails = () => {
             {/* accessibility feature */}
             <div>
               <h2 className="text-xl font-semibold">Accessibility Features</h2>
-
+              <Button
+                onClick={handleToggleAllFeatures}
+                size={"thin"}
+                className={`mt-4 ${
+                  areAllFeaturesSelected
+                    ? "bg-blueTilt text-white"
+                    : " bg-gray-400 text-white "
+                }`}>
+                {areAllFeaturesSelected ? "Deselect All" : "Select All"}
+              </Button>
               <div className="mt-2">
                 {Object.entries(currentOutlet.accessibility_features).map(
                   ([feature, value]) => {
@@ -960,18 +1052,39 @@ const OutletDetails = () => {
               <Label className="text-base md:text-lg font-bold">
                 Days Open in a Week
               </Label>
+              <Button
+                onClick={toggleSelectAll}
+                className={`ml-4 ${
+                  isAllSelected
+                    ? "bg-blueTilt text-white"
+                    : " bg-gray-400 text-white "
+                }`}
+                size="thin">
+                {currentOutlet.days_open &&
+                daysOfWeek.every((day) =>
+                  currentOutlet.days_open.includes(day.value)
+                )
+                  ? "Deselect All"
+                  : "Select All"}
+              </Button>
+              <div className="mt-2 flex flex-wrap gap-2 items-center">
+                <ToggleGroup
+                  type="multiple"
+                  className="flex flex-wrap gap-2"
+                  value={currentOutlet.days_open || []}
+                  onValueChange={handleDaysOpenChange}>
+                  {daysOfWeek.map(({ display, value }) => (
+                    <ToggleGroupItem
+                      key={value}
+                      value={value}
+                      className="cursor-pointer">
+                      {display}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
 
-              <ToggleGroup
-                type="multiple"
-                className="mt-2 flex flex-wrap gap-2"
-                value={currentOutlet.days_open || []}
-                onValueChange={handleDaysOpenChange}>
-                {daysOfWeek.map(({ display, value }) => (
-                  <ToggleGroupItem key={value} value={value}>
-                    {display}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+                {/* Select All Button */}
+              </div>
             </div>
             {/* customer capacity */}
             {/* <div>

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { resetOfferDetails } from "@/store/offerSlice/offerDetailsSlice";
 import axios from "axios";
+import dayjs from "dayjs";
 interface TermsConditionsProps {
   // Define your props here
   handleNext: () => void;
@@ -23,7 +24,7 @@ const TermsConditions: React.FC<TermsConditionsProps> = ({
 }) => {
   // Add your component logic here
   const offerDetail = useSelector((state: RootState) => state.offerDetails);
-  const brandUser = useSelector((state: RootState) => state.brandUser);
+  const brand = useSelector((state: RootState) => state.brand);
   const dispatch = useDispatch();
   const [loadingState, setLoadingState] = useState({
     saveDraft: false,
@@ -33,23 +34,24 @@ const TermsConditions: React.FC<TermsConditionsProps> = ({
 
   const { toast } = useToast();
   useEffect(() => {
-    console.log("brand details", brandUser);
+    console.log("brand details", brand);
+    console.log("offer details", offerDetail);
   }, []);
 
   // const brandName = brandUser?.name || localStorage.getItem("brandName");
-  const brandName = brandUser?.name;
+  const brandName = brand?.name;
   const termsAndConditions = [
     { id: 1, text: `Offer is valid at <b>${brandName}</b>'s outlets` },
     // { id: 2, text: "Coupon code can be applied only once in n hours" },
     { id: 3, text: `Offer valid on <b>${offerDetail.applicableDays}</b>` },
     {
       id: 4,
-      text: `Offer valid till <b>${offerDetail.endDate.split("T")[0]}</b>`,
+      text: `Offer valid till <b>${dayjs(offerDetail.endDate).tz("Asia/Kolkata").format("DD MMM YYYY")}</b>`,
     },
     // { id: 5, text: "Offer is applicable on Enter items" },
     {
       id: 6,
-      text: `Discount can only be availed when paying your bill at <b>${brandUser?.name}</b>`,
+      text: `Discount can only be availed when paying your bill at <b>${brand?.name}</b>`,
     },
     // {
     //   id: 7,
@@ -68,7 +70,7 @@ const TermsConditions: React.FC<TermsConditionsProps> = ({
 
   const handleDraft = async () => {
     // const brandId = localStorage.getItem("brandId") || offerDetail.brandId;
-    const brandId = brandUser.brand_id;
+    const brandId = brand.id;
     const outletId = offerDetail.outletId;
     setLoadingState({ ...loadingState, saveDraft: true });
     try {

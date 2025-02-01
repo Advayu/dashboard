@@ -14,6 +14,8 @@ import {
 import { useDispatch } from "react-redux";
 // import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { daysOfWeek } from "@/app/Constants/constant";
@@ -50,7 +52,8 @@ const InfoTooltip: React.FC<{ message: string }> = ({ message }) => (
 
 // Reusable Button Component for Days
 const currentDate = dayjs(); // Get the current date
-
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
   handleNext,
 }) => {
@@ -77,20 +80,55 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
   const handleStartDateChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const newValue = dayjs(event.target.value).startOf("day");
+    // Parse the selected date, adjusting to IST (Indian Standard Time)
+    const newValue = dayjs(event.target.value)
+      .tz("Asia/Kolkata", true)
+      .startOf("day");
+
+    // Log the IST date (for debugging purposes)
+    console.log(
+      "IST Date:",
+      newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
+    );
+
+    // Convert the date to UTC, keeping it as a consistent time moment, and store it in UTC
+    const utcDate = newValue.utc().toISOString();
+
+    // Log the final UTC date (for debugging purposes)
+    console.log("start date in UTC:", utcDate);
+
+    // Dispatch the value as UTC, which will be stored in the database correctly
     dispatch(
       setOfferfield({
         field: "startDate",
-        value: newValue.toISOString(),
+        value: utcDate,
       })
     );
   };
+
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = dayjs(event.target.value).startOf("day");
+    // Parse the selected end date, adjusting to IST (Indian Standard Time)
+    const newValue = dayjs(event.target.value)
+      .tz("Asia/Kolkata", true)
+      .startOf("day");
+
+    // Log the IST date (for debugging purposes)
+    console.log(
+      "IST Date:",
+      newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
+    );
+
+    // Convert the date to UTC, keeping it as a consistent time moment, and store it in UTC
+    const utcDate = newValue.utc().toISOString();
+
+    // Log the final UTC date (for debugging purposes)
+    console.log("end date in UTC:", utcDate);
+
+    // Dispatch the value as UTC, which will be stored in the database correctly
     dispatch(
       setOfferfield({
         field: "endDate",
-        value: newValue.toISOString(),
+        value: utcDate,
       })
     );
   };
