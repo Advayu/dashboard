@@ -66,6 +66,7 @@ export const putBrandUser = async (
   // Add the password to requestData only if it's provided
   if (data.password) {
     requestData.password_hash = data.password;
+    requestData.is_password_changed = true;
   }
 
   try {
