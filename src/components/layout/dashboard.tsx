@@ -20,6 +20,7 @@ import axios from "axios";
 import { RootState } from "@/store/store";
 import Link from "next/link";
 import axiosInstance from "@/utils/axiosInstance";
+import { toast } from "@/hooks/use-toast";
 
 const ShimmerLoader: React.FC = () => (
   <div className="embla__slide w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
@@ -32,11 +33,35 @@ const Dashboard = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
   const [brandUserName, setBrandUserName] = useState<string>("");
-
+  const is_password_changed = useSelector(
+    (state: RootState) => state.brandUser.is_password_changed
+  );
   const brand = useSelector((state: RootState) => state.brand);
   const router = useRouter();
 
   useEffect(() => {
+    if (!is_password_changed) {
+      const toastId = toast({
+        action: (
+          <Link
+            href="/profile"
+            onClick={() => {
+              toastId.dismiss(); // Dismiss the toast when the button is clicked
+            }}>
+            <Button>Change Password</Button>
+          </Link>
+        ),
+        title: "Change Password",
+        description: "Please change your password to continue.",
+        className: "bg-white text-black",
+        duration: 50000, // Keeps the toast visible for 50 seconds unless manually dismissed
+      });
+
+      // Redirect to the change password page after showing the toast
+      setTimeout(() => {
+        router.push("/profile");
+      }, 3000); // Redirect after 3 seconds
+    }
     if (typeof window !== "undefined") {
       const brandId = brand.id;
       if (!brandId) {

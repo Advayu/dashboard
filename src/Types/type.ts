@@ -10,6 +10,7 @@ export type BrandUser = {
     view_orders: boolean;
     manage_products: boolean;
   };
+  is_password_changed: boolean;
   is_active: boolean;
   created_at: string;
   updated_at: string;

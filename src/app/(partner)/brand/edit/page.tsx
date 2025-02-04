@@ -30,6 +30,10 @@ import {
 } from "@/services/ImageService";
 import { useDispatch } from "react-redux";
 import { setBrandData } from "@/store/globalSlice/brandSlice";
+import {
+  getAllIndustry,
+  getCategoriesByIndustryName,
+} from "@/services/api/industry/industry";
 
 const BrandDetails: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -43,6 +47,8 @@ const BrandDetails: React.FC<any> = () => {
   const [logoImage, setLogoImage] = useState("");
   const [bannerImage, setBannerImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [industries, setIndustries] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -98,13 +104,42 @@ const BrandDetails: React.FC<any> = () => {
     };
 
     getBrandDetails();
+    GetAllIndusty();
   }, []);
 
-  const handleInputChange = (
+  const GetAllIndusty = async () => {
+    try {
+      const response = await getAllIndustry();
+      setIndustries(response);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to get industries",
+      });
+      console.error(error);
+    }
+  };
+
+  const handleInputChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setBrandDetails((prev: any) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (name === "category_name") {
+      setBrandDetails({ [name]: value });
+
+      console.log("name:", name, "value:", value);
+      const GetAllcategories = await getCategoriesByIndustryName(value);
+      console.log("GetAllcategories", GetAllcategories);
+      setCategories(GetAllcategories);
+    }
+
+    // console.log(name, value);
+    // setFormData({ ...formData, [name]: value });
+
+    setBrandDetails({ [name]: value });
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -348,11 +383,11 @@ const BrandDetails: React.FC<any> = () => {
                     <option value={brandDetails?.category_name}>
                       {brandDetails?.category_name}
                     </option>
-                    <option value="fashion">Fashion</option>
-                    <option value="technology">Technology</option>
-                    <option value="home">Home</option>
-                    <option value="jewelry">Jewelry</option>
-                    <option value="accessories">Accessories</option>
+                    {industries.map((industry, index) => (
+                      <option key={index} value={industry}>
+                        {industry}
+                      </option>
+                    ))}
                   </select>
                   {errors.category_name && (
                     <p className="text-red-500">{errors.category_name}</p>
@@ -369,12 +404,11 @@ const BrandDetails: React.FC<any> = () => {
                     <option value="" disabled>
                       Select a category
                     </option>
-                    {brandDetails?.category_name === "fashion" && (
-                      <>
-                        <option value="clothing">Clothing</option>
-                        <option value="footwear">Footwear</option>
-                      </>
-                    )}
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))}
                   </select>
                   {errors.category && (
                     <p className="text-red-500">{errors.category}</p>

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // enable React Strict Mode explicitly
+  reactStrictMode: true, // Enable React Strict Mode explicitly
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -11,6 +11,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'advayu-onboarding-assets.s3.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.amazonaws.com', // Fixed hostname
         pathname: '/**',
       },
     ],

@@ -15,6 +15,7 @@ const initialState: BrandUser = {
         view_orders: false,
         manage_products: false,
     },
+    is_password_changed: false,
     is_active: false,
     created_at: "",
     updated_at: "",
