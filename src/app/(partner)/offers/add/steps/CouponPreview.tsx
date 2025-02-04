@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { resetOfferDetails } from "@/store/offerSlice/offerDetailsSlice";
 import { LAMBDA_URL } from "@/utils/constants";
+import dayjs from "dayjs";
 
 interface CouponPreviewProps {
   handleNext: () => void;
@@ -58,6 +59,8 @@ const CouponPreview: React.FC<CouponPreviewProps> = ({
       total_limit: Number(offerDetail.totalLimit),
       is_active: true,
     };
+
+    console.log("data", data);
 
     try {
       const response = await axios.post(`${LAMBDA_URL}/offers`, data, {

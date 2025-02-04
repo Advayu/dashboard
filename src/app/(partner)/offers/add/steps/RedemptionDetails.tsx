@@ -81,23 +81,23 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Parse the selected date, adjusting to IST (Indian Standard Time)
-    const newValue = dayjs(event.target.value)
-      .tz("Asia/Kolkata", true)
-      .startOf("day");
+    // const newValue = dayjs(event.target.value)
+    //   .tz("Asia/Kolkata", true)
+    //   .startOf("day");
 
-    // Log the IST date (for debugging purposes)
-    console.log(
-      "IST Date:",
-      newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
-    );
+    // Add one day to the date
+    // const updatedValue = newValue.add(1, "day");
 
-    // Convert the date to UTC, keeping it as a consistent time moment, and store it in UTC
-    const utcDate = newValue.utc().toISOString();
+    // Convert the updated date to UTC
+    // const utcDate = updatedValue.utc().toISOString();
+
+    // const utcDate = event.target.value;
+    const utcDate = dayjs(event.target.value).endOf("day").toISOString();
 
     // Log the final UTC date (for debugging purposes)
-    console.log("start date in UTC:", utcDate);
+    console.log("Updated start date in UTC:", utcDate);
 
-    // Dispatch the value as UTC, which will be stored in the database correctly
+    // Dispatch the updated date in UTC format
     dispatch(
       setOfferfield({
         field: "startDate",
@@ -108,18 +108,20 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
 
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Parse the selected end date, adjusting to IST (Indian Standard Time)
-    const newValue = dayjs(event.target.value)
-      .tz("Asia/Kolkata", true)
-      .startOf("day");
+    // const newValue = dayjs(event.target.value)
+    //   .tz("Asia/Kolkata", true)
+    //   .startOf("day");
 
     // Log the IST date (for debugging purposes)
-    console.log(
-      "IST Date:",
-      newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
-    );
+    // console.log(
+    //   "IST Date:",
+    //   newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
+    // );
 
     // Convert the date to UTC, keeping it as a consistent time moment, and store it in UTC
-    const utcDate = newValue.utc().toISOString();
+    // const utcDate = newValue.utc().toISOString();
+
+    const utcDate = dayjs(event.target.value).endOf("day").toISOString();
 
     // Log the final UTC date (for debugging purposes)
     console.log("end date in UTC:", utcDate);
@@ -190,6 +192,7 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
     const brandId = brand.brand_id;
     console.log("brandId", brandId);
     setLoadingState({ ...loadingState, saveDraft: true });
+
     try {
       const responseCode: any = await saveOfferAsDraft(
         offerDetail, // Pass the updated details
