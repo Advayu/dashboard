@@ -111,18 +111,9 @@ const Dashboard = () => {
     console.log("Logout clicked");
 
     // Clear localStorage items
-    localStorage.removeItem("brandId");
-    localStorage.removeItem("token");
-    localStorage.removeItem("brandName");
-    localStorage.removeItem("selectedOutletId");
+    localStorage.clear();
 
-    const response = await axios.post(
-      `${LAMBDA_URL}/auth/logout`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await axiosInstance.post(`${LAMBDA_URL}/auth/logout`);
     // Redirect to login
     if (response.status === 200) {
       router.push("/auth");
