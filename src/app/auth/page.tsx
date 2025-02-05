@@ -63,10 +63,11 @@ const Auth = () => {
         variant: "success",
         title: "Login successful",
       });
-
+      router.push(`/`);
       // Fetch brand details
       const brandUser = await getBrandByEmail(email);
       const brandDetail = await getBrandDetails(brandUser?.brand_id || "");
+
       if (brandUser) {
         // Handle brand details if fetched
         dispatch(setBrandUser(brandUser));
@@ -78,7 +79,6 @@ const Auth = () => {
       }
 
       // Redirect to partner page
-      router.push(`/`);
     } catch (error: any) {
       if (error.response?.status === 401) {
         setError("Incorrect email or password.");
