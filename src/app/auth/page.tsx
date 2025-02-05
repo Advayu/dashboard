@@ -83,7 +83,7 @@ const Auth = () => {
         dispatch(setBrandData(brandDetail));
       }
 
-      router.replace(`profile`);
+      router.replace(`/`);
 
       // Redirect to partner page
     } catch (error: any) {
