@@ -57,7 +57,7 @@ export default function Page() {
     const response = await axiosInstance.post(`${LAMBDA_URL}/auth/logout`, {});
     // Redirect to login
     if (response.status === 200) {
-      router.push("/auth");
+      router.replace("/auth");
     }
   };
 

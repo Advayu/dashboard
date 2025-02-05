@@ -54,6 +54,7 @@
     "embla-carousel-wheel-gestures": "^8.0.1",
     "formidable": "^3.5.1",
     "input-otp": "^1.4.1",
+    "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.424.0",
     "mime": "^4.0.4",
@@ -77,6 +78,7 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.15",

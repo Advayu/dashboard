@@ -40,28 +40,6 @@ const Dashboard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!is_password_changed) {
-      const toastId = toast({
-        action: (
-          <Link
-            href="/profile"
-            onClick={() => {
-              toastId.dismiss(); // Dismiss the toast when the button is clicked
-            }}>
-            <Button>Change Password</Button>
-          </Link>
-        ),
-        title: "Change Password",
-        description: "Please change your password to continue.",
-        className: "bg-white text-black",
-        duration: 50000, // Keeps the toast visible for 50 seconds unless manually dismissed
-      });
-
-      // Redirect to the change password page after showing the toast
-      setTimeout(() => {
-        router.push("/profile");
-      }, 3000); // Redirect after 3 seconds
-    }
     if (typeof window !== "undefined") {
       const brandId = brand.id;
       if (!brandId) {
@@ -86,6 +64,7 @@ const Dashboard = () => {
               new Date(offer.end_date) > now
           );
           setOffers(ongoing);
+          forcePasswordChange();
         } catch (error) {
           setError("Failed to load offers");
           if (
@@ -117,6 +96,31 @@ const Dashboard = () => {
     // Redirect to login
     if (response.status === 200) {
       router.push("/auth");
+    }
+  };
+
+  const forcePasswordChange = () => {
+    if (!is_password_changed) {
+      const toastId = toast({
+        action: (
+          <Link
+            href="/profile"
+            onClick={() => {
+              toastId.dismiss(); // Dismiss the toast when the button is clicked
+            }}>
+            <Button>Change Password</Button>
+          </Link>
+        ),
+        title: "Change Password",
+        description: "Please change your password to continue.",
+        className: "bg-white text-black",
+        duration: 50000, // Keeps the toast visible for 50 seconds unless manually dismissed
+      });
+
+      // Redirect to the change password page after showing the toast
+      setTimeout(() => {
+        router.push("/profile");
+      }, 3000); // Redirect after 3 seconds
     }
   };
 

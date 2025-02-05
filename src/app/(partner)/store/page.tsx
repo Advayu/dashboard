@@ -72,6 +72,9 @@ export default function Page() {
 
   useEffect(() => {
     // Fetch outlet data only once
+    if (!brand.id) {
+      router.forward();
+    }
 
     const fetchData = async () => {
       try {
