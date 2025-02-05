@@ -63,11 +63,10 @@ const Auth = () => {
       }
 
       // Show success toast
-      // toast({
-      //   variant: "success",
-      //   title: "Login successful",
-      // });
-      router.push(`/`);
+      toast({
+        variant: "success",
+        title: "Login successful",
+      });
 
       console.log("logged in user", response.data);
       // Fetch brand details
@@ -83,6 +82,8 @@ const Auth = () => {
         console.log("brandDetail", brandDetail);
         dispatch(setBrandData(brandDetail));
       }
+
+      router.replace(`/`);
 
       // Redirect to partner page
     } catch (error: any) {
