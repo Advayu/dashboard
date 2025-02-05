@@ -63,6 +63,7 @@ const Auth = () => {
         variant: "success",
         title: "Login successful",
       });
+      console.log("logged in user", response.data);
       router.push(`/`);
       // Fetch brand details
       const brandUser = await getBrandByEmail(email);
