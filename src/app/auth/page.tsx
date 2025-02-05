@@ -48,10 +48,14 @@ const Auth = () => {
     }
 
     try {
-      const response = await axiosInstance.post(`${LAMBDA_URL}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${LAMBDA_URL}/auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       // Store brand ID in localStorage
       if (response.data?.id) {
@@ -59,12 +63,13 @@ const Auth = () => {
       }
 
       // Show success toast
-      toast({
-        variant: "success",
-        title: "Login successful",
-      });
-      console.log("logged in user", response.data);
+      // toast({
+      //   variant: "success",
+      //   title: "Login successful",
+      // });
       router.push(`/`);
+
+      console.log("logged in user", response.data);
       // Fetch brand details
       const brandUser = await getBrandByEmail(email);
       const brandDetail = await getBrandDetails(brandUser?.brand_id || "");
