@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
     const accessToken = request.cookies.get("access_token")?.value;
 
-    // console.log("accessToken >>>", accessToken);
+    console.log("accessToken >>>", accessToken);
     console.log("request headers >>>", request.headers);
     // if(request.)
     // console.log("request headers >>>", request.cookies.clear());
