@@ -6,8 +6,8 @@ export function middleware(request: NextRequest) {
     const accessToken = request.cookies.get("access_token")?.value;
 
     console.log("accessToken >>>", accessToken);
-    console.log("request headers >>>", request.headers.get("cookie"));
-    console.log('Request Headers: entiries', [...request.headers.entries()]);
+    // console.log("request headers >>>", request.headers.get("cookie"));
+    // console.log('Request Headers: entiries', [...request.headers.entries()]);
 
 
     // if(request.)
@@ -32,6 +32,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
+        "/auth",
         "/brand",
         "/offers",
         "/profile",
