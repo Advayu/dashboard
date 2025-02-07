@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -5,7 +6,10 @@ export function middleware(request: NextRequest) {
     const accessToken = request.cookies.get("access_token")?.value;
 
     console.log("accessToken >>>", accessToken);
-    console.log("request headers >>>", request.headers);
+    console.log("request headers >>>", request.headers.get("cookie"));
+    console.log('Request Headers: entiries', [...request.headers.entries()]);
+
+
     // if(request.)
     // console.log("request headers >>>", request.cookies.clear());
 
