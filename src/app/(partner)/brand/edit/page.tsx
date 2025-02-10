@@ -71,24 +71,29 @@ const BrandDetails: React.FC<any> = () => {
         });
         console.log("edit brand response", response.data);
 
-        const logoImageUrl = await getImageURlByFileKey(
-          response.data.logo_url,
-          OUTLET_BUCKET_NAME,
-          `${LAMBDA_URL}/upload/url`
-        );
+        if (!(response.data.logo_url === "")) {
+          const logoImageUrl = await getImageURlByFileKey(
+            response.data.logo_url,
+            OUTLET_BUCKET_NAME,
+            `${LAMBDA_URL}/upload/url`
+          );
+          console.log("logoImageUrl", logoImageUrl.fileUrl);
+          setLogoImage(logoImageUrl.fileUrl);
+        }
 
-        console.log("logoImageUrl", logoImageUrl.fileUrl);
-        setLogoImage(logoImageUrl.fileUrl);
-
-        const bannerImageUrl = await getImageURlByFileKey(
-          response.data.banner_url,
-          OUTLET_BUCKET_NAME,
-          `${LAMBDA_URL}/upload/url`
-        );
-        console.log("bannerImageUrl", bannerImageUrl.fileUrl);
-        setBannerImage(bannerImageUrl.fileUrl);
+        if (!(response.data.banner_url === "")) {
+          const bannerImageUrl = await getImageURlByFileKey(
+            response.data.banner_url,
+            OUTLET_BUCKET_NAME,
+            `${LAMBDA_URL}/upload/url`
+          );
+          console.log("bannerImageUrl", bannerImageUrl.fileUrl);
+          setBannerImage(bannerImageUrl.fileUrl);
+        }
 
         setBrandDetails(response.data);
+        GetAllIndusty();
+        GetCategiesByIndustryName(response.data.category_name);
       } catch (error) {
         toast({
           variant: "destructive",
@@ -104,13 +109,28 @@ const BrandDetails: React.FC<any> = () => {
     };
 
     getBrandDetails();
-    GetAllIndusty();
   }, []);
 
   const GetAllIndusty = async () => {
     try {
       const response = await getAllIndustry();
+      console.log("response", response);
       setIndustries(response);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to get industries",
+      });
+      console.error(error);
+    }
+  };
+
+  const GetCategiesByIndustryName = async (industryName: string) => {
+    try {
+      const response = await getCategoriesByIndustryName(industryName);
+      console.log("response", response);
+      setCategories(response);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -128,7 +148,7 @@ const BrandDetails: React.FC<any> = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
     if (name === "category_name") {
-      setBrandDetails({ [name]: value });
+      setBrandDetails({ ...brandDetails, [name]: value });
 
       console.log("name:", name, "value:", value);
       const GetAllcategories = await getCategoriesByIndustryName(value);
@@ -139,7 +159,7 @@ const BrandDetails: React.FC<any> = () => {
     // console.log(name, value);
     // setFormData({ ...formData, [name]: value });
 
-    setBrandDetails({ [name]: value });
+    setBrandDetails({ ...brandDetails, [name]: value });
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -176,15 +196,16 @@ const BrandDetails: React.FC<any> = () => {
 
   const handleSave = useCallback(async () => {
     console.log("brandDetails", brandDetails);
-    // const validationErrors = brandDetailsSchema.safeParse(brandDetails);
-    // if (!validationErrors.success) {
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Error",
-    //     description: validationErrors.error.message,
-    //   });
-    //   return;
-    // }
+    const validationErrors = brandDetailsSchema.safeParse(brandDetails);
+    console.log("validationErrors", validationErrors);
+    if (!validationErrors.success) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: validationErrors.error.issues[0].message,
+      });
+      return;
+    }
     try {
       setLoading(true);
       const response = await axios.put(
@@ -372,46 +393,61 @@ const BrandDetails: React.FC<any> = () => {
                   <select
                     id="category_name"
                     name="category_name"
-                    defaultValue={brandDetails?.category_name}
+                    value={brandDetails?.category_name || ""}
                     onChange={handleInputChange}
-                    className={`w-full py-1 px-3 border border-black rounded-md ${
-                      errors.category_name ? "border-red-500" : ""
+                    className={`w-full py-1 px-3 border rounded-md ${
+                      errors.category_name ? "border-red-500" : "border-black"
                     }`}>
                     <option value="" disabled>
                       Select an industry
                     </option>
-                    <option value={brandDetails?.category_name}>
-                      {brandDetails?.category_name}
-                    </option>
-                    {industries.map((industry, index) => (
-                      <option key={index} value={industry}>
-                        {industry}
+                    {industries.length > 0 ? (
+                      industries.map((industry, index) => (
+                        <option key={index} value={industry}>
+                          {industry}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        No industries available
                       </option>
-                    ))}
+                    )}
                   </select>
                   {errors.category_name && (
-                    <p className="text-red-500">{errors.category_name}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.category_name}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <select
-                    id="category"
+                    id="subcategories"
                     name="subcategories"
-                    defaultChecked={brandDetails?.category}
+                    value={brandDetails?.subcategories || ""}
                     onChange={handleInputChange}
-                    className="w-full py-1 px-3 border border-black rounded-md">
+                    className={`w-full py-1 px-3 border rounded-md ${
+                      errors.category ? "border-red-500" : "border-black"
+                    }`}>
                     <option value="" disabled>
                       Select a category
                     </option>
-                    {categories.map((category, index) => (
-                      <option key={index} value={category}>
-                        {category}
+                    {categories.length > 0 ? (
+                      categories.map((category, index) => (
+                        <option key={index} value={category}>
+                          {category}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        No categories available
                       </option>
-                    ))}
+                    )}
                   </select>
                   {errors.category && (
-                    <p className="text-red-500">{errors.category}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.category}
+                    </p>
                   )}
                 </div>
               </div>

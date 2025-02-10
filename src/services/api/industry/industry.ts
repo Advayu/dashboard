@@ -26,6 +26,9 @@ export const getAllIndustry = async () => {
 
 export const getCategoriesByIndustryName = async (name: string) => {
     console.log("industry name", name);
+    if (!name) {
+        return []
+    }
     const response = await axios.get(
         `${LAMBDA_URL}/industries/${name}/categories`
     );
