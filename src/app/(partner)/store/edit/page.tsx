@@ -293,7 +293,7 @@ export default function Page() {
       // Call the API to delete the image from the bucket
       const deleteImageResponse = await deleteImageFromBucket(
         fileKey,
-        "advayu-onboarding-assets/outlet-assets",
+        "advayu-onboard-assets/outlet-assets",
         `${LAMBDA_URL}/upload/file`
       );
 
@@ -546,7 +546,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="name">
+                    htmlFor="name"
+                  >
                     Name of the outlet <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -567,7 +568,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="address">
+                    htmlFor="address"
+                  >
                     Address of the outlet
                   </Label>
                   <Input
@@ -616,7 +618,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="neighborhood">
+                    htmlFor="neighborhood"
+                  >
                     Neighborhood
                   </Label>
                   <Input
@@ -633,7 +636,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="street">
+                    htmlFor="street"
+                  >
                     Street
                   </Label>
                   <Input
@@ -650,7 +654,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="postal_code">
+                    htmlFor="postal_code"
+                  >
                     Postal code
                     <span className="text-red-500"> *</span>
                   </Label>
@@ -675,7 +680,8 @@ export default function Page() {
                   <div className="flex-1">
                     <Label
                       className="text-base md:text-lg font-bold "
-                      htmlFor="phoneNumber">
+                      htmlFor="phoneNumber"
+                    >
                       Manager mobile number
                     </Label>
 
@@ -697,7 +703,8 @@ export default function Page() {
                 <div className="my-3">
                   <Label
                     className="text-base md:text-lg font-bold"
-                    htmlFor="manager_name">
+                    htmlFor="manager_name"
+                  >
                     Manager name
                   </Label>
                   <Input
@@ -745,7 +752,8 @@ export default function Page() {
                     />
                     <button
                       onClick={handleServiceAdd}
-                      className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                      className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r"
+                    >
                       Add
                     </button>
                   </div>
@@ -760,20 +768,23 @@ export default function Page() {
                         (link: string, index: number) => (
                           <div
                             key={index}
-                            className="relative flex items-center max-w-sm">
+                            className="relative flex items-center max-w-sm"
+                          >
                             <span className=" px-2 py-1 border border-black w-full overflow-auto rounded">
                               {link}
                             </span>
                             <button
                               onClick={() => handleRemoveService(index)}
-                              className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]">
+                              className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]"
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-4 w-4 text-black"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
-                                strokeWidth={2}>
+                                strokeWidth={2}
+                              >
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -826,7 +837,8 @@ export default function Page() {
                     />
                     <button
                       onClick={handleAddAmenity}
-                      className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                      className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r"
+                    >
                       Add
                     </button>
                   </div>
@@ -838,20 +850,23 @@ export default function Page() {
                         (link: string, index: number) => (
                           <div
                             key={index}
-                            className="relative flex items-center max-w-sm">
+                            className="relative flex items-center max-w-sm"
+                          >
                             <span className=" px-2 py-1 border border-black w-full overflow-auto rounded">
                               {link}
                             </span>
                             <button
                               onClick={() => handleRemoveAmenity(index)}
-                              className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]">
+                              className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]"
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-4 w-4 text-black"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
-                                strokeWidth={2}>
+                                strokeWidth={2}
+                              >
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -884,7 +899,8 @@ export default function Page() {
                           return (
                             <div
                               key={feature}
-                              className="flex items-center space-x-4 my-2">
+                              className="flex items-center space-x-4 my-2"
+                            >
                               <Checkbox
                                 checked={value as boolean}
                                 onCheckedChange={() =>
@@ -914,7 +930,8 @@ export default function Page() {
                         name="opening_time"
                         className="mt-1  p-2 border rounded"
                         value={outletDetails?.opening_time || ""} // Use value for controlled component
-                        onChange={handleInputChange}>
+                        onChange={handleInputChange}
+                      >
                         <option value="">Opening Time</option>
 
                         {times.map((time) => (
@@ -925,7 +942,8 @@ export default function Page() {
                         {times.map((time) => (
                           <option
                             key={`open-${time}-pm`}
-                            value={`${time}:00 PM`}>
+                            value={`${time}:00 PM`}
+                          >
                             {time}:00 PM
                           </option>
                         ))}
@@ -940,7 +958,8 @@ export default function Page() {
                         name="closing_time"
                         className="mt-1  p-2 border rounded"
                         value={outletDetails?.closing_time}
-                        onChange={handleInputChange}>
+                        onChange={handleInputChange}
+                      >
                         <option value="">Closing Time</option>
                         {times.map((time) => (
                           <option key={`close-${time}`} value={`${time}:00 AM`}>
@@ -950,7 +969,8 @@ export default function Page() {
                         {times.map((time) => (
                           <option
                             key={`close-${time}-pm`}
-                            value={`${time}:00 PM`}>
+                            value={`${time}:00 PM`}
+                          >
                             {time}:00 PM
                           </option>
                         ))}
@@ -968,7 +988,8 @@ export default function Page() {
                     type="multiple"
                     className="mt-2 flex flex-wrap gap-2"
                     value={outletDetails?.days_open || []}
-                    onValueChange={handleDaysOpenChange}>
+                    onValueChange={handleDaysOpenChange}
+                  >
                     {daysOfWeek.map(({ display, value }) => (
                       <ToggleGroupItem key={value} value={value}>
                         {display}
@@ -1028,7 +1049,8 @@ export default function Page() {
                   <label
                     aria-disabled={!loadingStates.uploadingImages}
                     htmlFor="fileInput"
-                    className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit">
+                    className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit"
+                  >
                     Attach image
                   </label>
 
@@ -1054,14 +1076,16 @@ export default function Page() {
                         />
                         <button
                           onClick={() => removeImage(src, index)}
-                          className="absolute right-0 top-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2">
+                          className="absolute right-0 top-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4 text-black"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            strokeWidth={2}>
+                            strokeWidth={2}
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -1089,7 +1113,8 @@ export default function Page() {
                     disabled={loadingStates.savingData}
                     className="w-28"
                     size="thin"
-                    onClick={handleSave}>
+                    onClick={handleSave}
+                  >
                     {loadingStates.savingData ? "Updating..." : "Update"}
                   </Button>
                 </div>

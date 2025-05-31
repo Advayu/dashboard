@@ -314,7 +314,7 @@ const BrandDetails: React.FC<any> = () => {
 
       const deleteImageResponse = await deleteImageFromBucket(
         fileKey,
-        "advayu-onboarding-assets/outlet-assets",
+        "advayu-onboard-assets/outlet-assets",
         `${LAMBDA_URL}/upload/file`
       );
 
@@ -337,14 +337,15 @@ const BrandDetails: React.FC<any> = () => {
       console.error("Error deleting image:", error);
     }
   };
-  // advayu-onboarding-assets/outlet-assets
+  // advayu-onboard-assets/outlet-assets
   return (
     <div className="w-full">
       <div className="flex justify-between my-10 md:mx-8 mx-5 items-center">
         <div className="flex items-center">
           <button
             className="flex items-center"
-            onClick={navigateToPreviousPage}>
+            onClick={navigateToPreviousPage}
+          >
             <ChevronLeft />
             <h1 className="md:text-3xl font-black"> Edit Brand</h1>
           </button>
@@ -385,7 +386,8 @@ const BrandDetails: React.FC<any> = () => {
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="category_name">
+                htmlFor="category_name"
+              >
                 Select your industry <span className="text-red-500">*</span>
               </Label>
               <div className="flex space-x-2">
@@ -397,7 +399,8 @@ const BrandDetails: React.FC<any> = () => {
                     onChange={handleInputChange}
                     className={`w-full py-1 px-3 border rounded-md ${
                       errors.category_name ? "border-red-500" : "border-black"
-                    }`}>
+                    }`}
+                  >
                     <option value="" disabled>
                       Select an industry
                     </option>
@@ -428,7 +431,8 @@ const BrandDetails: React.FC<any> = () => {
                     onChange={handleInputChange}
                     className={`w-full py-1 px-3 border rounded-md ${
                       errors.category ? "border-red-500" : "border-black"
-                    }`}>
+                    }`}
+                  >
                     <option value="" disabled>
                       Select a category
                     </option>
@@ -496,7 +500,8 @@ const BrandDetails: React.FC<any> = () => {
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="description">
+                htmlFor="description"
+              >
                 Description
               </Label>
               <Input
@@ -573,7 +578,8 @@ const BrandDetails: React.FC<any> = () => {
                   />
                   <label
                     htmlFor="logo_url"
-                    className="border border-black text-black px-4 rounded cursor-pointer my-1">
+                    className="border border-black text-black px-4 rounded cursor-pointer my-1"
+                  >
                     Attach image
                   </label>
                 </div>
@@ -588,14 +594,16 @@ const BrandDetails: React.FC<any> = () => {
                     />
                     <button
                       onClick={() => removeImage(logoImage, "logo_url")}
-                      className="absolute top-0 right-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2">
+                      className="absolute top-0 right-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 text-black"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
-                        strokeWidth={2}>
+                        strokeWidth={2}
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -625,7 +633,8 @@ const BrandDetails: React.FC<any> = () => {
                   />
                   <label
                     htmlFor="banner_url"
-                    className="border border-black text-black px-4 rounded cursor-pointer my-1">
+                    className="border border-black text-black px-4 rounded cursor-pointer my-1"
+                  >
                     Attach branch image
                   </label>
                 </div>
@@ -640,14 +649,16 @@ const BrandDetails: React.FC<any> = () => {
                     />
                     <button
                       onClick={() => removeImage(bannerImage, "banner_url")}
-                      className="absolute top-0 right-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2">
+                      className="absolute top-0 right-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 text-black"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
-                        strokeWidth={2}>
+                        strokeWidth={2}
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -709,7 +720,8 @@ const BrandDetails: React.FC<any> = () => {
                 />
                 <button
                   onClick={handleSocialLinkUrlUpload}
-                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r"
+                >
                   Add Link
                 </button>
               </div>
@@ -723,20 +735,23 @@ const BrandDetails: React.FC<any> = () => {
                       ([platform, link], index) => (
                         <div
                           key={index}
-                          className="relative flex items-center max-w-sm">
+                          className="relative flex items-center max-w-sm"
+                        >
                           <span className="px-2 py-1 border border-black w-full overflow-auto rounded">
                             {String(link)}
                           </span>
                           <button
                             onClick={() => handleRemoveSocialLinks(index)}
-                            className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[45%] -translate-y-[94%]">
+                            className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[45%] -translate-y-[94%]"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-4 w-4 text-black"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
-                              strokeWidth={2}>
+                              strokeWidth={2}
+                            >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -756,7 +771,8 @@ const BrandDetails: React.FC<any> = () => {
                 disabled={loading}
                 className="w-28"
                 size="thin"
-                onClick={handleSave}>
+                onClick={handleSave}
+              >
                 {loading ? "Saving..." : "Save"}
               </Button>
             </div>

@@ -201,7 +201,7 @@ const OutletDetails = () => {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const url = AWS_IMAGE_UPLOAD_URL;
-    const bucket_name = "advayu-onboarding-assets/outlet-assets";
+    const bucket_name = "advayu-onboard-assets/outlet-assets";
 
     if (files) {
       const fileArray = Array.from(files);
@@ -270,7 +270,7 @@ const OutletDetails = () => {
       // Call the API to delete the image from the bucket
       const deleteImageResponse = await deleteImageFromBucket(
         fileKey,
-        "advayu-onboarding-assets/outlet-assets",
+        "advayu-onboard-assets/outlet-assets",
         `${LAMBDA_URL}/upload/file`
       );
 
@@ -627,7 +627,8 @@ const OutletDetails = () => {
             <div className="my-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="address">
+                htmlFor="address"
+              >
                 Address of the outlet
               </Label>
               <Input
@@ -644,7 +645,8 @@ const OutletDetails = () => {
             <div className="my-4">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="location">
+                htmlFor="location"
+              >
                 Locate on the map
               </Label>
               <div className="relative mt-2">
@@ -665,7 +667,8 @@ const OutletDetails = () => {
                 <div
                   className={`absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center ${
                     isFetching ? "opacity-50 pointer-events-none" : ""
-                  } ${errors.location ? "border-red-500" : ""}`}>
+                  } ${errors.location ? "border-red-500" : ""}`}
+                >
                   <LocateFixed
                     className={`cursor-pointer ${
                       isFetching ? "opacity-50 pointer-events-none" : ""
@@ -678,18 +681,21 @@ const OutletDetails = () => {
                         className="animate-spin h-4 w-4 mr-1 text-blue-500"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
-                        viewBox="0 0 24 24">
+                        viewBox="0 0 24 24"
+                      >
                         <circle
                           className="opacity-25"
                           cx="12"
                           cy="12"
                           r="10"
                           stroke="currentColor"
-                          strokeWidth="4"></circle>
+                          strokeWidth="4"
+                        ></circle>
                         <path
                           className="opacity-75"
                           fill="currentColor"
-                          d="M4 12a8 8 0 018-8v8H4z"></path>
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
                       </svg>
                       Fetching location...
                     </span>
@@ -709,7 +715,8 @@ const OutletDetails = () => {
             <div className="my-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="neighborhood">
+                htmlFor="neighborhood"
+              >
                 Neighborhood
               </Label>
               <Input
@@ -726,7 +733,8 @@ const OutletDetails = () => {
             <div className="my-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="street">
+                htmlFor="street"
+              >
                 Street
               </Label>
               <Input
@@ -743,7 +751,8 @@ const OutletDetails = () => {
             <div className="my-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="postal_code">
+                htmlFor="postal_code"
+              >
                 Postal code
                 <span className="text-red-500"> *</span>
               </Label>
@@ -770,7 +779,8 @@ const OutletDetails = () => {
               <div className="flex-1">
                 <Label
                   className="text-base md:text-lg font-bold "
-                  htmlFor="phoneNumber">
+                  htmlFor="phoneNumber"
+                >
                   Manager mobile number
                 </Label>
 
@@ -792,7 +802,8 @@ const OutletDetails = () => {
             <div className="my-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="manager_name">
+                htmlFor="manager_name"
+              >
                 Manager name
               </Label>
               <Input
@@ -838,7 +849,8 @@ const OutletDetails = () => {
                 />
                 <button
                   onClick={handleServiceAdd}
-                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r"
+                >
                   Add
                 </button>
               </div>
@@ -852,20 +864,23 @@ const OutletDetails = () => {
                   {currentOutlet.services.map((link: string, index: number) => (
                     <div
                       key={index}
-                      className="relative flex items-center max-w-sm">
+                      className="relative flex items-center max-w-sm"
+                    >
                       <span className=" px-2 py-1 border border-black w-full overflow-auto rounded">
                         {link}
                       </span>
                       <button
                         onClick={() => handleRemoveService(index)}
-                        className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]">
+                        className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-4 w-4 text-black"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
-                          strokeWidth={2}>
+                          strokeWidth={2}
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -915,7 +930,8 @@ const OutletDetails = () => {
                 />
                 <button
                   onClick={handleAddAmenity}
-                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r"
+                >
                   Add
                 </button>
               </div>
@@ -927,20 +943,23 @@ const OutletDetails = () => {
                     (link: string, index: number) => (
                       <div
                         key={index}
-                        className="relative flex items-center max-w-sm">
+                        className="relative flex items-center max-w-sm"
+                      >
                         <span className=" px-2 py-1 border border-black w-full overflow-auto rounded">
                           {link}
                         </span>
                         <button
                           onClick={() => handleRemoveAmenity(index)}
-                          className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]">
+                          className="absolute right-0 bg-[#0000004D] rounded-full transform translate-x-[43%] -translate-y-[97%]"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4 text-black"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            strokeWidth={2}>
+                            strokeWidth={2}
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -966,7 +985,8 @@ const OutletDetails = () => {
                   areAllFeaturesSelected
                     ? "bg-blueTilt text-white"
                     : " bg-gray-400 text-white "
-                }`}>
+                }`}
+              >
                 {areAllFeaturesSelected ? "Deselect All" : "Select All"}
               </Button>
               <div className="mt-2">
@@ -978,7 +998,8 @@ const OutletDetails = () => {
                     return (
                       <div
                         key={feature}
-                        className="flex items-center space-x-4 my-2">
+                        className="flex items-center space-x-4 my-2"
+                      >
                         <Checkbox
                           checked={value}
                           onCheckedChange={() =>
@@ -1008,7 +1029,8 @@ const OutletDetails = () => {
                     name="opening_time"
                     className="mt-1  py-1 px-1 border rounded"
                     value={currentOutlet.opening_time}
-                    onChange={handleInputChange}>
+                    onChange={handleInputChange}
+                  >
                     <option value="">Opening Time</option>
                     {times.map((time) => (
                       <option key={`open-${time}`} value={`${time}:00 AM`}>
@@ -1031,7 +1053,8 @@ const OutletDetails = () => {
                     name="closing_time"
                     className="mt-1  py-1 px-1 border rounded"
                     value={currentOutlet.closing_time}
-                    onChange={handleInputChange}>
+                    onChange={handleInputChange}
+                  >
                     <option value="">Closing Time</option>
                     {times.map((time) => (
                       <option key={`close-${time}`} value={`${time}:00 AM`}>
@@ -1059,7 +1082,8 @@ const OutletDetails = () => {
                     ? "bg-blueTilt text-white"
                     : " bg-gray-400 text-white "
                 }`}
-                size="thin">
+                size="thin"
+              >
                 {currentOutlet.days_open &&
                 daysOfWeek.every((day) =>
                   currentOutlet.days_open.includes(day.value)
@@ -1072,12 +1096,14 @@ const OutletDetails = () => {
                   type="multiple"
                   className="flex flex-wrap gap-2"
                   value={currentOutlet.days_open || []}
-                  onValueChange={handleDaysOpenChange}>
+                  onValueChange={handleDaysOpenChange}
+                >
                   {daysOfWeek.map(({ display, value }) => (
                     <ToggleGroupItem
                       key={value}
                       value={value}
-                      className="cursor-pointer">
+                      className="cursor-pointer"
+                    >
                       {display}
                     </ToggleGroupItem>
                   ))}
@@ -1138,7 +1164,8 @@ const OutletDetails = () => {
               <label
                 aria-disabled={!loadingStates.uploadingImages}
                 htmlFor="fileInput"
-                className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit">
+                className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit"
+              >
                 Attach image
               </label>
 
@@ -1163,14 +1190,16 @@ const OutletDetails = () => {
                   />
                   <button
                     onClick={() => removeImage(src, index)}
-                    className="absolute right-0 top-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2">
+                    className="absolute right-0 top-0 bg-[#0000004D] rounded-full transform translate-x-1/2 -translate-y-1/2"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 text-black"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
-                      strokeWidth={2}>
+                      strokeWidth={2}
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -1186,7 +1215,8 @@ const OutletDetails = () => {
               variant="outline"
               size="thin"
               className="mt-3 w-full md:w-auto"
-              onClick={addOutletHandler}>
+              onClick={addOutletHandler}
+            >
               + Add Outlet
             </Button>
             {/* Navigation Buttons */}
@@ -1204,7 +1234,8 @@ const OutletDetails = () => {
                 disabled={outlets.length === 0 || loadingStates.savingData}
                 className="w-28"
                 size="thin"
-                onClick={handleSave}>
+                onClick={handleSave}
+              >
                 {loadingStates.savingData ? "Saving..." : "Save"}
               </Button>
             </div>
@@ -1221,7 +1252,8 @@ const OutletDetails = () => {
               {outlets.map((outlet: any, index: number) => (
                 <div
                   key={index}
-                  className=" max-w-80  relative flex flex-row  gap-4  justify-between p-4 bg-white border border-gray-200 shadow-md rounded-lg hover:shadow-lg transition-shadow">
+                  className=" max-w-80  relative flex flex-row  gap-4  justify-between p-4 bg-white border border-gray-200 shadow-md rounded-lg hover:shadow-lg transition-shadow"
+                >
                   {/* Outlet Info Section */}
                   <div className=" flex flex-row gap-4 items-left">
                     <Image
