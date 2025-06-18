@@ -22,7 +22,6 @@ import {
   getImageURlByFileKey,
   uploadImageToBucket,
 } from "@/services/ImageService";
-import { set } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import {
   deleteImageFromBucket,
@@ -453,45 +452,6 @@ const BrandDetails: React.FC<any> = () => {
               </div>
             </div>
 
-            {/* Age Group Selection */}
-            {/* <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-              <Label
-                className="text-base md:text-lg font-bold"
-                htmlFor="ageGroup">
-                What is your brand’s targeted age group?
-              </Label>
-              <div id="ageGroup" className="space-y-2">
-                {["0-12", "13-18", "19-25", "26-40", "41-60", "60+"].map(
-                  (group) => (
-                    <div key={group} className="flex items-center space-x-2">
-                      <Checkbox
-                        name={`ageGroup-${group}`}
-                        className="rounded-full"
-                        id={`ageGroup-${group}`}
-                        checked={brandDetails?.ageGroup?.includes(group)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setBrandDetails((prev: any) => ({
-                              ...prev,
-                              ageGroup: [...prev.ageGroup, group],
-                            }));
-                          } else {
-                            setBrandDetails((prev: any) => ({
-                              ...prev,
-                              ageGroup: prev.ageGroup.filter(
-                                (g: string) => g !== group
-                              ),
-                            }));
-                          }
-                        }}
-                      />
-                      <Label htmlFor={`ageGroup-${group}`}>{group}</Label>
-                    </div>
-                  )
-                )}
-              </div>
-            </div> */}
-
             {/* Description */}
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label
@@ -508,37 +468,6 @@ const BrandDetails: React.FC<any> = () => {
                 onChange={handleInputChange}
               />
             </div>
-
-            {/* Phone number */}
-            {/* <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-              <Label className="text-xl font-bold" htmlFor="phone">
-                Phone number
-              </Label>
-              <PhoneNumberInput
-                id="phone"
-                name="phone"
-                placeholder="Enter your phone number"
-                defaultValue={brandDetails?.phone}
-                onChange={handleInputChange}
-              />
-            </div> */}
-
-            {/* Alternate phone */}
-            {/* <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-              <Label className="text-xl font-bold" htmlFor="alternate_phone">
-                Alternate number
-              </Label>
-              <PhoneNumberInput
-                id="alternate_phone"
-                name="alternate_phone"
-                placeholder="Enter your alternate number"
-                defaultValue={brandDetails?.alternate_phone}
-                onChange={handleInputChange}
-              />
-              {errors.alternateNumber && (
-                <p className="text-red-500">{errors.alternateNumber}</p>
-              )}
-            </div> */}
 
             {/* Email */}
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
@@ -675,17 +604,6 @@ const BrandDetails: React.FC<any> = () => {
                   onChange={handleInputChange}
                   className="border border-black rounded p-2 pr-20 w-full"
                 />
-                {/* <input
-                  id="website_url"
-                  name="website_url"
-                  type="text"
-                  placeholder="Paste website link"
-                  defaultValue={brandDetails?.website_url}
-                  className="border border-black rounded p-2 pr-20 w-full"
-                /> */}
-                {/* <button className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
-                  Add Link
-                </button> */}
               </div>
               {errors.website_url && (
                 <span className="text-red-500">{errors.website_url}</span>
