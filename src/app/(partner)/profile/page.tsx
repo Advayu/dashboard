@@ -81,7 +81,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Name
           </Label>
           <Input
@@ -99,7 +100,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </Label>
           <Input
@@ -117,7 +119,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="phone"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Phone
           </Label>
           <Input
@@ -138,7 +141,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             New Password
           </Label>
           <Input
@@ -154,7 +158,8 @@ function Page() {
         <div className="mb-4">
           <Label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Confirm Password
           </Label>
           <Input
