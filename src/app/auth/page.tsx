@@ -59,8 +59,8 @@ const Auth = () => {
       );
 
       // Store brand ID in localStorage
-      if (response.data?.id) {
-        localStorage.setItem("brandId", response.data.id);
+      if (response.data?.brand_id) {
+        localStorage.setItem("brandId", response.data.brand_id);
       }
 
       // Show success toast
@@ -143,7 +143,8 @@ const Auth = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
+        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md"
+      >
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
           Advayu X Brands
         </h2>
@@ -167,7 +168,8 @@ const Auth = () => {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-semibold">
+            className="block mb-2 text-sm font-semibold"
+          >
             Password
           </label>
           <input
@@ -185,7 +187,8 @@ const Auth = () => {
           className={`w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300 ${
             loading && "cursor-not-allowed opacity-50"
           }`}
-          disabled={loading}>
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Sign In"}
         </button>
 

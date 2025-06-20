@@ -47,6 +47,7 @@
     "axios": "^1.7.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cookie": "^1.0.2",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
@@ -81,6 +82,7 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
+    "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20",
