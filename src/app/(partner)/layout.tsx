@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Provider } from "react-redux";
 import store from "@/store/store";
 import { Toaster } from "@/components/ui/toaster";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const PartnerDashboard = ({
   children,
@@ -17,14 +18,15 @@ const PartnerDashboard = ({
   const condition3 = pathname.startsWith("/brand/");
 
   const condition = condition1 || condition2 || condition3;
-
+  const queryClient = new QueryClient();
   return (
     <Provider store={store}>
-      <Toaster />
-      <div className="flex pb-[calc(3rem+16px)]">
-        {!condition && <Sidebar />}
-        {children}
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="flex pb-[calc(3rem+16px)]">
+          {!condition && <Sidebar />}
+          {children}
+        </div>
+      </QueryClientProvider>
     </Provider>
   );
 };

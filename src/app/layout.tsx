@@ -37,6 +37,7 @@ export default function RootLayout({
 
       <body className={satoshiFont.className}>
         {/* <Navbar /> */}
+
         {children}
       </body>
     </html>

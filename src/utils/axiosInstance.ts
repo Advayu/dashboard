@@ -46,3 +46,40 @@ if (typeof window !== "undefined") {
 }
 
 export default axiosInstance;
+
+
+// lib/axios/axios-instance.ts
+// import axios, { AxiosInstance } from "axios";
+// import { LAMBDA_URL } from "../constants";
+
+// const axiosInstance: AxiosInstance = axios.create({
+//   baseURL: LAMBDA_URL,
+//   headers: {
+//     "Content-Type": "application/json",
+//     Accept: "application/json",
+//   },
+//   withCredentials: true,
+// });
+
+// export const setupInterceptors = (instance: AxiosInstance) => {
+//   // Optional: attach token if needed
+//   instance.interceptors.request.use((config) => {
+//     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   });
+
+//   instance.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//       // Let hooks/components handle toasts and redirects
+//       return Promise.reject(error);
+//     }
+//   );
+// };
+
+// setupInterceptors(axiosInstance);
+
+// export default axiosInstance;
