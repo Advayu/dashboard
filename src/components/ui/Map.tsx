@@ -43,22 +43,21 @@ const Map: React.FC<MapProps> = ({
   ]);
 
   useEffect(() => {
-    console.log("lat in component:", lat, "long:", long);
     setMarkerPosition([lat, long]); // Update marker position when props change
     // updateLocationChange([lat, long]);
-  }, [lat]);
+  }, [lat, long]);
 
   return (
     <div className="w-full h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-lg">
       <MapContainer
         center={markerPosition}
-        zoom={13}
+        zoom={15}
         style={{ height: "100%", width: "100%" }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <FocusMap position={markerPosition} />{" "}
+        <FocusMap position={markerPosition} />
         {/* Add the FocusMap component */}
         <RelocateMarker position={markerPosition} />
         <MapClickHandler
@@ -75,7 +74,6 @@ const Map: React.FC<MapProps> = ({
 const RelocateMarker: React.FC<{ position: [number, number] }> = ({
   position,
 }) => {
-  console.log("position in map component:", position);
   return (
     <Marker position={position}>
       <Popup>
@@ -97,7 +95,6 @@ const MapClickHandler: React.FC<{
       setMarkerPosition(coords); // Update marker position
       onLocationChange(coords); // Update global state
       // updateLocationChange(coords);
-      console.log("Selected Coordinates:", coords); // Log clicked coordinates
     },
   });
   return null;

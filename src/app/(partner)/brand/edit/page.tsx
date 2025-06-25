@@ -6,14 +6,20 @@ import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Loading from "@/components/loading";
 import { useUpdateBrand } from "@/hooks/use-brand";
-
 import { ChevronLeft } from "lucide-react";
-
+import { FormProvider } from "react-hook-form";
 import { navigateToPreviousPage } from "@/functions/function";
 import { FilePreview } from "@/components/FilePreview";
+import ImageUploader from "@/components/ImageUploader";
 
 const BrandDetails: React.FC<any> = () => {
-  const { register, handleSubmit, watch } = useForm<any>();
+  const method = useForm<any>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = method;
   const {
     mutate: updateBrand,
     isPending,
@@ -54,191 +60,191 @@ const BrandDetails: React.FC<any> = () => {
           <h3 className="md:text-xl text-xs">+91 9660657811</h3>
         </div>
       </div>
+      <FormProvider {...method}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col items-center justify-center w-full md:px-0 px-5">
+          <div>
+            <h1 className="text-4xl font-bold">Brand Details</h1>
+            <p>Enter your brand details</p>
+            {/* Brand Name */}
+            <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
+              <Label className="text-base md:text-lg font-bold" htmlFor="name">
+                What is your brand name? <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                {...register("name", { required: true })}
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your brand name"
+              />
+            </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center justify-center w-full md:px-0 px-5">
-        <div>
-          <h1 className="text-4xl font-bold">Brand Details</h1>
-          <p>Enter your brand details</p>
-          {/* Brand Name */}
-          <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-            <Label className="text-base md:text-lg font-bold" htmlFor="name">
-              What is your brand name? <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              {...register("name", { required: true })}
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your brand name"
-            />
-          </div>
-
-          {/* Industry and Category */}
-          <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-            <Label
-              className="text-base md:text-lg font-bold"
-              htmlFor="category_name">
-              Select your industry <span className="text-red-500">*</span>
-            </Label>
-            <div className="flex space-x-2">
-              <div>
-                <select
-                  {...register("category_name", { required: true })}
-                  id="category_name"
-                  name="category_name"
-                  className={`w-full py-1 px-3 border rounded-md 
+            {/* Industry and Category */}
+            <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
+              <Label
+                className="text-base md:text-lg font-bold"
+                htmlFor="category_name">
+                Select your industry <span className="text-red-500">*</span>
+              </Label>
+              <div className="flex space-x-2">
+                <div>
+                  <select
+                    {...register("category_name", { required: true })}
+                    id="category_name"
+                    name="category_name"
+                    className={`w-full py-1 px-3 border rounded-md 
                "border-black"
                     }`}>
-                  <option value="" disabled>
-                    Select an industry
-                  </option>
-                  <option value="option1">option1</option>
-                  <option value="option2">option2</option>
-                </select>
-              </div>
+                    <option value="" disabled>
+                      Select an industry
+                    </option>
+                    <option value="option1">option1</option>
+                    <option value="option2">option2</option>
+                  </select>
+                </div>
 
-              <div>
-                <select
-                  {...register("subcategories", { required: true })}
-                  id="subcategories"
-                  name="subcategories"
-                  className={`w-full py-1 px-3 border rounded-md  "border-black"
+                <div>
+                  <select
+                    {...register("subcategories", { required: true })}
+                    id="subcategories"
+                    name="subcategories"
+                    className={`w-full py-1 px-3 border rounded-md  "border-black"
                     }`}>
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  <option value="option1">option1</option>
-                  <option value="option2">option2</option>
-                  <option value="option3">option3</option>
-                </select>
+                    <option value="" disabled>
+                      Select a category
+                    </option>
+                    <option value="option1">option1</option>
+                    <option value="option2">option2</option>
+                    <option value="option3">option3</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Description */}
-          <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-            <Label
-              className="text-base md:text-lg font-bold"
-              htmlFor="description">
-              Description
-            </Label>
-            <Input
-              {...register("description")}
-              type="text"
-              id="description"
-              name="description"
-              placeholder="Enter your description"
-            />
-          </div>
-
-          {/* Email */}
-          <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
-            <Label className="text-base md:text-lg font-bold" htmlFor="email">
-              Email address
-            </Label>
-            <Input
-              {...register("email")}
-              type="text"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          {/* Logo Upload Section */}
-          <div className="py-3">
-            <h3 className="text-base md:text-lg font-bold">
-              Upload the primary logo
-            </h3>
-            <div className="flex flex-col items-start">
-              <div className="flex items-center">
-                <input
-                  {...register("logo_url")}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  id="logo_url"
-                  name="logo_url"
-                />
-                <label
-                  htmlFor="logo_url"
-                  className="border border-black text-black px-4 rounded cursor-pointer my-1">
-                  Attach image
-                </label>
-              </div>
-
-              {/* Todo:  */}
-              <FilePreview file={logo} width={100} height={100} />
-            </div>
-          </div>
-
-          {/* Banner URL */}
-          <div className="py-3">
-            <h3 className="text-base md:text-lg font-bold">
-              Upload banner image
-            </h3>
-            <div className="flex flex-col items-start">
-              <div className="flex items-center">
-                <input
-                  {...register("banner_url")}
-                  id="banner_url"
-                  name="banner_url"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                />
-                <label
-                  htmlFor="banner_url"
-                  className="border border-black text-black px-4 rounded cursor-pointer my-1">
-                  Attach branch image
-                </label>
-              </div>
-
-              <FilePreview file={banner} width={100} height={100} />
-            </div>
-          </div>
-
-          {/* Website Links */}
-          <div className="py-3">
-            <h3 className="text-base md:text-lg font-bold">
-              Upload Website Links
-            </h3>
-            <div className="relative flex items-center max-w-sm my-2">
+            {/* Description */}
+            <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
+              <Label
+                className="text-base md:text-lg font-bold"
+                htmlFor="description">
+                Description
+              </Label>
               <Input
-                {...register("website_url")}
+                {...register("description")}
                 type="text"
-                id="website_url"
-                name="website_url"
-                placeholder="Paste website link"
-                className="border border-black rounded p-2 pr-20 w-full"
+                id="description"
+                name="description"
+                placeholder="Enter your description"
               />
             </div>
-          </div>
 
-          {/* Social Links */}
-          <div className="py-3">
-            <h3 className="text-base md:text-lg font-bold">
-              Upload Social Links
-            </h3>
-            <div className="relative flex items-center max-w-sm my-2">
-              <input
-                {...register("social_links")}
-                id="social_links"
-                name="social_links"
+            {/* Email */}
+            <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
+              <Label className="text-base md:text-lg font-bold" htmlFor="email">
+                Email address
+              </Label>
+              <Input
+                {...register("email")}
                 type="text"
-                placeholder="Paste social link"
-                className="border border-black rounded p-2 pr-20 w-full"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
               />
-              <button
-                type="button"
-                className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
-                Add Link
-              </button>
             </div>
 
-            {/* {brandDetails?.social_links &&
+            {/* Logo Upload Section */}
+            <div className="py-3">
+              <h3 className="text-base md:text-lg font-bold">
+                Upload the primary logo
+              </h3>
+              <div className="flex flex-col items-start">
+                {/* <div className="flex items-center">
+                  <input
+                    {...register("logo_url")}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="logo_url"
+                    name="logo_url"
+                  />
+                  <label
+                    htmlFor="logo_url"
+                    className="border border-black text-black px-4 rounded cursor-pointer my-1">
+                    Attach image
+                  </label>
+                </div> */}
+                <ImageUploader name="logo_url" multiple={false} />
+                {/* Todo:  */}
+                {/* <FilePreview file={watch("logo_url")} width={100} height={100} /> */}
+              </div>
+            </div>
+
+            {/* Banner URL */}
+            <div className="py-3">
+              <h3 className="text-base md:text-lg font-bold">
+                Upload banner image
+              </h3>
+              <div className="flex flex-col items-start">
+                {/* <div className="flex items-center">
+                  <input
+                    {...register("banner_url")}
+                    id="banner_url"
+                    name="banner_url"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="banner_url"
+                    className="border border-black text-black px-4 rounded cursor-pointer my-1">
+                    Attach branch image
+                  </label>
+                </div> */}
+
+                <ImageUploader name="banner_url" multiple={false} />
+              </div>
+            </div>
+
+            {/* Website Links */}
+            <div className="py-3">
+              <h3 className="text-base md:text-lg font-bold">
+                Upload Website Links
+              </h3>
+              <div className="relative flex items-center max-w-sm my-2">
+                <Input
+                  {...register("website_url")}
+                  type="text"
+                  id="website_url"
+                  name="website_url"
+                  placeholder="Paste website link"
+                  className="border border-black rounded p-2 pr-20 w-full"
+                />
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="py-3">
+              <h3 className="text-base md:text-lg font-bold">
+                Upload Social Links
+              </h3>
+              <div className="relative flex items-center max-w-sm my-2">
+                <input
+                  {...register("social_links")}
+                  id="social_links"
+                  name="social_links"
+                  type="text"
+                  placeholder="Paste social link"
+                  className="border border-black rounded p-2 pr-20 w-full"
+                />
+                <button
+                  type="button"
+                  className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+                  Add Link
+                </button>
+              </div>
+
+              {/* {brandDetails?.social_links &&
                 Object.keys(brandDetails?.social_links).length > 0 && (
                   <div className="mt-2 space-y-2">
                     {Object.entries(brandDetails?.social_links).map(
@@ -271,15 +277,16 @@ const BrandDetails: React.FC<any> = () => {
                     )}
                   </div>
                 )} */}
-          </div>
+            </div>
 
-          <div className="flex space-x-3 my-8">
-            <Button type="submit" className="w-28" size="thin">
-              save
-            </Button>
+            <div className="flex space-x-3 my-8">
+              <Button type="submit" className="w-28" size="thin">
+                save
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </FormProvider>
     </div>
   );
 };

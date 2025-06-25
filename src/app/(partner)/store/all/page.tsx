@@ -5,13 +5,11 @@ import { ChevronLeft } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
 import Support from "../../../../../public/image/contact.svg";
-import { LAMBDA_URL } from "@/utils/constants";
 import OutletCard from "@/components/cards/outletCard";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import axiosInstance from "@/utils/axiosInstance";
+import { useGetOutlets, useDeleteOutlet } from "@/hooks/use-outlet";
 
 const handleBackClick = () => {
   window.history.back();
@@ -32,9 +30,8 @@ const AllOutletPage = () => {
   const brandUserId = useSelector(
     (state: RootState) => state.brandUser.brand_id
   );
-
-  const [outlets, setOutlets] = useState<Outlet[]>([]);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const { data: outlets, isLoading } = useGetOutlets(brandUserId);
+  const { mutate: deleteOutlet } = useDeleteOutlet();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
@@ -43,65 +40,9 @@ const AllOutletPage = () => {
   };
 
   const confirmDelete = (id: string) => {
-    setDeleteId(id);
+    deleteOutlet(id);
     setIsDialogOpen(true);
   };
-
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    try {
-      const response = await axios.delete(
-        `${LAMBDA_URL}/v1/outlets/${deleteId}`,
-        { withCredentials: true }
-      );
-
-      console.log(response.status);
-      if (response.status === 401) {
-        router.push("/auth");
-      }
-      if (response.status === 200) {
-        setOutlets((prevOutlets) =>
-          prevOutlets.filter((outlet) => outlet.id !== deleteId)
-        );
-
-        console.log("Outlet deleted successfully:", response.data);
-      }
-    } catch (error) {
-      console.error("Error deleting outlet:", error);
-    } finally {
-      setIsDialogOpen(false);
-      setDeleteId(null);
-    }
-  };
-
-  useEffect(() => {
-    const fetchAllOutlets = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `${LAMBDA_URL}/v1/outlets?brand_id=${brandUserId}`,
-          { withCredentials: true }
-        );
-        console.log(response);
-
-        setOutlets(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching outlets:", error);
-        if (
-          axios.isAxiosError(error) &&
-          error.response &&
-          error.response.status === 401
-        ) {
-          console.log("Unauthorized: Redirecting to login...");
-          router.push("/auth");
-        } else {
-          console.error("An error occurred", error);
-        }
-      }
-    };
-
-    fetchAllOutlets();
-  }, [brandUserId]);
 
   return (
     <>
@@ -166,9 +107,7 @@ const AllOutletPage = () => {
               <button className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded">
+              <button className="px-4 py-2 bg-red-600 text-white rounded">
                 Delete
               </button>
             </AlertDialog.Action>
