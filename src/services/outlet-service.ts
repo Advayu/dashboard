@@ -1,6 +1,7 @@
 
+import { useImageUpload } from "@/hooks/use-image";
 import axiosInstance from "@/utils/axiosInstance";
-import { LAMBDA_URL } from "@/utils/constants";
+import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
 
 
 /* Todo: need to look into this */

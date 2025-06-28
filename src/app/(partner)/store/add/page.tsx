@@ -16,10 +16,18 @@ import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSel
 import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import GetLocationButton from "@/components/GetLocationButton";
-import { Tooltip } from "@radix-ui/react-tooltip";
 import { FilePreview } from "@/components/FilePreview";
+import { createOutlet } from "@/services/outlet-service";
+import { useImageUpload } from "@/hooks/use-image";
+import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
+import { toast } from "@/hooks/use-toast";
 
 const OutletDetails = () => {
+  const uploadImageToBucket = useImageUpload(
+    LAMBDA_URL + "/upload/url",
+    OUTLET_BUCKET_NAME
+  );
+
   const method = useForm();
 
   const {
@@ -42,8 +50,35 @@ const OutletDetails = () => {
     reset();
   };
 
-  const onhandleSubmit = () => {
+  const onhandleSubmit = async () => {
     console.log("outlets", outlets);
+
+    try {
+      const outletPromises = outlets.map(async (outlet) => {
+        // Upload all images of this outlet
+        const results = await Promise.all(
+          outlet.images.map(
+            (image: File) => uploadImageToBucket.mutateAsync(image) // Use mutateAsync to await properly
+          )
+        );
+
+        outlet.imagesUrl = results.map((result) => result.fileUrl);
+
+        // Create outlet with uploaded images URLs
+        return createOutlet(brand_id, outlet);
+      });
+
+      await Promise.all(outletPromises);
+      console.log("All outlets uploaded and created!");
+    } catch (error) {
+      console.error("Upload or creation failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Operation Failed",
+        description:
+          String(error) || "Something went wrong during upload or save.",
+      });
+    }
   };
 
   // Generate times for the outlets
