@@ -1,7 +1,6 @@
 "use client";
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 import { LAMBDA_URL } from "./constants";
-import { toast } from "@/hooks/use-toast";
 
 // Create an Axios instance with default configuration
 const axiosInstance = axios.create({
@@ -13,73 +12,9 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Function to set up interceptors
 
-const setupInterceptors = (axiosInstance: AxiosInstance) => {
-  axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (typeof window !== "undefined") {
-        if (error.response?.status === 401) {
-          console.error(
-            "Unauthorized error, redirecting to /auth",
-            error.response
-          );
-          toast({
-            variant: "destructive",
-            title: "Unauthorized",
-            description: "Unauthorized access. Please log in again.",
-          });
-          // window.location.href = "/auth"; // Redirect to login page
-        } else {
-          console.error("API error:", error.response);
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
-};
 
-// Set up interceptors only on the client side
-if (typeof window !== "undefined") {
-  setupInterceptors(axiosInstance);
-}
+
 
 export default axiosInstance;
 
-
-// lib/axios/axios-instance.ts
-// import axios, { AxiosInstance } from "axios";
-// import { LAMBDA_URL } from "../constants";
-
-// const axiosInstance: AxiosInstance = axios.create({
-//   baseURL: LAMBDA_URL,
-//   headers: {
-//     "Content-Type": "application/json",
-//     Accept: "application/json",
-//   },
-//   withCredentials: true,
-// });
-
-// export const setupInterceptors = (instance: AxiosInstance) => {
-//   // Optional: attach token if needed
-//   instance.interceptors.request.use((config) => {
-//     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   });
-
-//   instance.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//       // Let hooks/components handle toasts and redirects
-//       return Promise.reject(error);
-//     }
-//   );
-// };
-
-// setupInterceptors(axiosInstance);
-
-// export default axiosInstance;

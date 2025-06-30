@@ -8,14 +8,16 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { BrandUser } from "@/Types/type";
 import { RootState } from "@/store/store";
-import { get } from "http";
 import { toast } from "@/hooks/use-toast";
 import axiosInstance from "@/utils/axiosInstance";
 import { BrandDetail } from "../partner-with-us/validationSchema";
 import { setBrandData } from "@/store/globalSlice/brandSlice";
 import LoginWithGoogle from "@/components/GoogleLogin";
+import { useLogin } from "@/hooks/use-auth";
 
 const Auth = () => {
+  const { mutate: login, data, isError, error: loginError } = useLogin();
+
   const dispatch = useDispatch();
   const router = useRouter();
   const brandUser = useSelector((state: RootState) => state.brandUser);
@@ -23,82 +25,23 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [brandId, setBrandId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [brandName, setBrandName] = useState("");
-  const [isLogedin, setIsLogedin] = useState(false);
-
-  // Extract brandId from URL query
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      //   console.log("URL Params:", urlParams.get("brandId"));
-      setBrandId(urlParams.get("brandId"));
-    }
-  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
     setError(null);
 
     if (!email || !password) {
       setError("Please fill in all fields.");
-      setLoading(false);
       return;
     }
 
-    try {
-      const response = await axios.post(
-        `${LAMBDA_URL}/auth/login`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-
-      // Store brand ID in localStorage
-      if (response.data?.brand_id) {
-        localStorage.setItem("brandId", response.data.brand_id);
-      }
-
-      // Show success toast
-      toast({
-        variant: "success",
-        title: "Login successful",
-      });
-
-      console.log("logged in user", response.data);
-      // Fetch brand details
-      const brandUser = await getBrandByEmail(email);
-      const brandDetail = await getBrandDetails(brandUser?.brand_id || "");
-
-      if (brandUser) {
-        // Handle brand details if fetched
-        dispatch(setBrandUser(brandUser));
-        setBrandName(brandUser.name);
-      }
-      if (brandDetail) {
-        console.log("brandDetail", brandDetail);
-        dispatch(setBrandData(brandDetail));
-      }
-
-      router.replace(`/`);
-
-      // Redirect to partner page
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        setError("Incorrect email or password.");
-      } else if (error.response?.status === 500) {
-        setError("Server error. Please try again later.");
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
-      console.error("Login error:", error);
-    } finally {
-      setLoading(false);
-    }
+    login({ email, password });
+    console.log(data);
+    // Fetch brand details
+    // const brandUser = await getBrandByEmail(email);
+    // const brandDetail = await getBrandDetails(brandUser?.brand_id || "");
   };
 
   const getBrandByEmail = async (email: string) => {
@@ -126,25 +69,11 @@ const Auth = () => {
     }
   };
 
-  const getBrandDetails = async (id: string) => {
-    try {
-      const response = await axios.get(`${LAMBDA_URL}/v1/brands/${id}`, {
-        withCredentials: true,
-      });
-      console.log("edit brand response", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching brand details:", error);
-      return null;
-    }
-  };
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white via-blueTilt/50 to-blueTilt/50">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md"
-      >
+        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg shadow-gray-500/40">
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
           Advayu X Brands
         </h2>
@@ -168,8 +97,7 @@ const Auth = () => {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-semibold"
-          >
+            className="block mb-2 text-sm font-semibold">
             Password
           </label>
           <input
@@ -184,15 +112,11 @@ const Auth = () => {
 
         <button
           type="submit"
-          className={`w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300 ${
-            loading && "cursor-not-allowed opacity-50"
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Sign In"}
+          className={`w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300`}>
+          Sign in
         </button>
 
-        <div className="h-[1px] w-full bg-gray-200 mt-4"></div>
+        <div className="h-[1px] w-full bg-gray-200 mt-4" />
         <LoginWithGoogle />
       </form>
     </div>

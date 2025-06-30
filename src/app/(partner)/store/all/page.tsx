@@ -71,7 +71,7 @@ const AllOutletPage = () => {
         {/* Contact Info */}
         <div className="mx-4 sm:mx-6 md:mx-8">
           <div className="flex flex-wrap gap-4 md:justify-start justify-center">
-            {outlets.map((outlet, key) => (
+            {outlets.map((outlet: any, key: number) => (
               <div key={key}>
                 <OutletCard
                   id={outlet.id}

@@ -1,30 +1,13 @@
-import { cookies } from "next/headers";
-import Cookies from "js-cookie";
+import { NextResponse, type NextRequest } from 'next/server';
 
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const accessToken = request.cookies.get("access_token")?.value;
-  // console.log("cookies", cookies);
 
-  console.log("accessToken >>>", accessToken);
-  // console.log("request headers >>>", request.headers.get("cookie"));
-  const myCookie = Cookies.get("access_token");
-  console.log("Cookie Value:", myCookie);
+  const token = request.cookies.get('access_token')?.value;
+  console.log("token", token);
 
-  if (!accessToken) {
-    console.log("No access token found. Redirecting to /auth...");
-    // return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
-  // Example validation logic (optional)
-  try {
-    const isValid = true; // Replace with your token validation logic
-    if (!isValid) throw new Error("Invalid token");
-  } catch (error) {
-    console.log("Invalid token. Redirecting to /auth...");
-    // return NextResponse.redirect(new URL("/auth", request.url));
+  if (!token) {
+    return NextResponse.redirect(new URL('/auth', request.url));
   }
 
   return NextResponse.next();
@@ -40,9 +23,3 @@ export const config = {
     "/((?!auth|_next|favicon.ico|public).*)", // Fallback to secure all other routes
   ],
 };
-
-// npm install js-cookie
-// import Cookies from 'js-cookie';
-
-// const myCookie = Cookies.get('access_token');
-// console.log('Cookie Value:', myCookie);

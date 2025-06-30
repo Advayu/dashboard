@@ -43,7 +43,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import Loading from "@/components/loading";
 import {
-  getImageURlByFileKey,
+  getImageUrlByFileKey,
   uploadImageToBucket,
   deleteImageFromBucket,
 } from "@/services/image-service";
@@ -93,7 +93,7 @@ export default function Page() {
             const fileKeys = response.data?.images || [];
             const imageUrls = await Promise.all(
               fileKeys.map((key: any) =>
-                getImageURlByFileKey(
+                getImageUrlByFileKey(
                   key,
                   OUTLET_BUCKET_NAME,
                   `${LAMBDA_URL}/upload/url`
@@ -223,9 +223,10 @@ export default function Page() {
         setLoadingStates((prev) => ({ ...prev, uploadingImages: true }));
         try {
           // Upload each file
+
           const uploadImage = await uploadImageToBucket({
             file,
-            bucket_name,
+            bucket: bucket_name,
             url,
             maxFileSize: 2 * 1024 * 1024, // Optional: file size limit of 2 MB
           });
@@ -240,7 +241,7 @@ export default function Page() {
             const fileKey = uploadImage.fileKey;
 
             // Retrieve the uploaded file's URL (optional)
-            const fileData = await getImageURlByFileKey(
+            const fileData = await getImageUrlByFileKey(
               fileKey,
               bucket_name,
               `${LAMBDA_URL}/upload/url`
