@@ -62,11 +62,11 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
               Attach image
             </label>
 
-            {value.length > 0 && (
+            {value?.length > 0 && (
               <div className="mt-2 space-y-2">
                 <p className="text-sm font-medium">Selected Images:</p>
                 <ul className="list-disc list-inside flex flex-wrap gap-2 w-74 ">
-                  {value.map((file: File, index: number) => (
+                  {value?.map((file: File, index: number) => (
                     <FilePreview
                       key={index}
                       file={file}

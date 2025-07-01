@@ -1,11 +1,8 @@
-"use client";
+"use server";
 import React from "react";
-import dynamic from "next/dynamic";
 import Dashboard from "@/components/layout/dashboard";
 import NotificationCard from "@/components/cards/notificationCard";
-const Map = dynamic(() => import("@/components/ui/Map"), {
-  ssr: false, // Disable server-side rendering
-});
+
 // import Map from "@/components/ui/Map"
 import LineGraph from "@/components/ui/lineGraph"; //to show the outlet traffic
 import { Search } from "lucide-react";
@@ -13,11 +10,15 @@ import { Input } from "@/components/ui/input";
 // TODO: Replace this with actual data from the backend
 import { dataset2 } from "@/components/utils/dataset";
 import { notification as dummyNotification } from "@/dummydata/notification";
+import { decodeJWT } from "@/lib/decodeJWT";
 
-export default function Page() {
+export default async function Page() {
+  // getting decoded jwt token from cookies to get details like {email, brand_id}
+  const data = await decodeJWT();
+
   return (
     <div className="md:w-[93%] w-full md:mx-0 mx-4">
-      <Dashboard />
+      <Dashboard user={data} />
 
       <div className="flex flex-row  md:ml-10 mt-16 md:mb-0 mb-20">
         <NotificationCard notification={dummyNotification} />

@@ -28,7 +28,7 @@ const userSlice = createSlice({
     reducers: {
         // Set the entire user object
         setBrandUser(state, action: PayloadAction<BrandUser>) {
-            console.log("Brand User", action.payload);
+
             return { ...state, ...action.payload };
         },
 

@@ -58,6 +58,7 @@
     "embla-carousel-wheel-gestures": "^8.0.1",
     "formidable": "^3.5.1",
     "input-otp": "^1.4.1",
+    "jose": "^6.0.11",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

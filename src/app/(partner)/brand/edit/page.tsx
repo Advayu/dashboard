@@ -5,44 +5,45 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Loading from "@/components/loading";
-import { useUpdateBrand } from "@/hooks/use-brand";
+import { useGetBrand, useUpdateBrand } from "@/hooks/use-brand";
 import { ChevronLeft } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import { navigateToPreviousPage } from "@/functions/function";
 import { FilePreview } from "@/components/FilePreview";
 import ImageUploader from "@/components/ImageUploader";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const BrandDetails: React.FC<any> = () => {
+  const brand_user = useSelector((state: RootState) => state.brandUser);
   const method = useForm<any>();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
+    reset,
   } = method;
-  const {
-    mutate: updateBrand,
-    isPending,
-    isSuccess,
-    isError,
-    error,
-  } = useUpdateBrand();
+  const { mutate: updateBrand } = useUpdateBrand();
 
   /* Todo: remove hardcoded brand id*/
-  const brand_id = "7db32aea-485b-4e35-810f-30ff2ea03ae5";
+  const brand_id = brand_user?.brand_id;
+  console.log("brand_id", brand_id);
 
   const onSubmit: SubmitHandler<any> = (data) => {
     updateBrand({ id: brand_id, data });
     console.log("data", data);
   };
 
-  const logo = watch("logo_url");
-  const banner = watch("banner_url");
+  const { data: brandDetails } = useGetBrand(brand_id);
 
-  console.log("isPending", isPending);
-  console.log("isSuccess", isSuccess);
-  console.log("isError", isError);
-  console.log("error", error);
+  useEffect(() => {
+    if (brandDetails) {
+      console.log("brandDetails", brandDetails);
+      reset(brandDetails);
+    }
+  }, [brandDetails, reset]);
+
+  console.log("brandDetails", brandDetails);
 
   return (
     <div className="w-full">
