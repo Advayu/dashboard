@@ -27,10 +27,11 @@ interface Outlet {
 }
 
 const AllOutletPage = () => {
-  const brandUserId = useSelector(
-    (state: RootState) => state.brandUser.brand_id
-  );
-  const { data: outlets, isLoading } = useGetOutlets(brandUserId);
+  const brandUserStr = localStorage.getItem("persist:brandUser");
+  const brand_id = brandUserStr
+    ? JSON.parse(brandUserStr)?.brand_id
+    : undefined;
+  const { data: outlets, isLoading } = useGetOutlets(brand_id);
   const { mutate: deleteOutlet } = useDeleteOutlet();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
@@ -71,7 +72,7 @@ const AllOutletPage = () => {
         {/* Contact Info */}
         <div className="mx-4 sm:mx-6 md:mx-8">
           <div className="flex flex-wrap gap-4 md:justify-start justify-center">
-            {outlets.map((outlet: any, key: number) => (
+            {outlets?.map((outlet: any, key: number) => (
               <div key={key}>
                 <OutletCard
                   id={outlet.id}

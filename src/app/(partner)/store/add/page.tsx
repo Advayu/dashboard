@@ -17,12 +17,14 @@ import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import GetLocationButton from "@/components/GetLocationButton";
 import { FilePreview } from "@/components/FilePreview";
-import { createOutlet } from "@/services/outlet-service";
 import { useImageUpload } from "@/hooks/use-image";
 import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
 import { toast } from "@/hooks/use-toast";
+import { generateUUID } from "@/utils/functions";
+import { useCreateOutlet } from "@/hooks/use-outlet";
 
 const OutletDetails = () => {
+  const { mutate: createOutlet } = useCreateOutlet();
   const uploadImageToBucket = useImageUpload(
     LAMBDA_URL + "/upload/url",
     OUTLET_BUCKET_NAME
@@ -39,14 +41,18 @@ const OutletDetails = () => {
     reset,
   } = method;
 
-  const brand_id = "7db32aea-485b-4e35-810f-30ff2ea03ae5";
+  const brandUserStr = localStorage.getItem("persist:brandUser");
+  const brand_id = brandUserStr
+    ? JSON.parse(brandUserStr)?.brand_id
+    : undefined;
+  console.log("brand_id", brand_id);
   const [outlets, setOutlets] = useState<any[]>([]);
 
   const onSubmit: SubmitHandler<any> = (data) => {
     // createOutlet(brand_id, data);
     console.log("data", data);
     setOutlets((prev) => [...prev, data]);
-    //clean the form
+    // clean the form
     reset();
   };
 
@@ -62,10 +68,10 @@ const OutletDetails = () => {
           )
         );
 
-        outlet.imagesUrl = results.map((result) => result.fileUrl);
-
+        outlet.images = results.map((result) => result.fileUrl);
+        console.log("current outlet", outlet);
         // Create outlet with uploaded images URLs
-        return createOutlet(brand_id, outlet);
+        return createOutlet({ brand_id, newOutlet: outlet });
       });
 
       await Promise.all(outletPromises);
@@ -99,7 +105,7 @@ const OutletDetails = () => {
   console.log("watch", watch("location"));
 
   const onLocationChange = (coords: [number, number]) => {
-    setValue("location", coords);
+    setValue("location", [77.6408, 12.9784]);
   };
 
   return (
@@ -302,19 +308,19 @@ const OutletDetails = () => {
                 </label>
                 <div className="flex flex-row items-center space-x-2">
                   <TimeSelector
-                    name="opening_time"
+                    name="opening_hours"
                     label="Opening Time"
                     times={times}
                   />
-                  <TimeSelector
+                  {/* <TimeSelector
                     name="closing_time"
                     label="Closing Time"
                     times={times}
-                  />
+                  /> */}
                 </div>
               </div>
 
-              <DaysOpenSelector name="days_open" />
+              {/* <DaysOpenSelector name="days_open" /> */}
               {/* upload images of this outlet */}
               <h4>Upload Outlet Images</h4>
               <ImageUploader name="images" multiple={true} />

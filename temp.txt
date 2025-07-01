@@ -1,0 +1,189 @@
+{offerDetail.discountType === "Buy n Get n" && (
+            
+          )}
+        </div>
+        {offerDetail.discountType === "Flat off" && (
+          
+        )}
+        {/* Percentage off */}
+        {offerDetail.discountType === "Percentage off" && (
+          
+        )}
+
+        {offerDetail.discountType === "Buy n Get n" && (
+          <>
+            {subCategoryDiscountType === "Item" && (
+              <div>
+                {/* Buy Section */}
+                <div className="flex items-center space-x-4">
+                  <Label className="font-black text-lg md:text-xl">Buy</Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-24 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.buy || 0}
+                    onChange={(e) =>
+                      handleBuyNGetNChange(
+                        e.target.value,
+                        offerDetail.maxDiscountValue
+                      )
+                    }
+                  />
+
+                  <Select defaultValue="0">
+                    <SelectTrigger className="font-black border border-black text-lg md:text-xl text-blueTilt w-40 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+                      <SelectValue placeholder="Min Order Value" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">All Items</SelectItem>
+                      <SelectItem value="1">1 Item</SelectItem>
+                      <SelectItem value="2">2 Items</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Get Section */}
+                <div className="flex items-center space-x-4 mt-4">
+                  <Label className="font-black text-lg md:text-xl">Get</Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-24 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.get || 0}
+                    onChange={(e) =>
+                      handleBuyNGetNChange(
+                        offerDetails.conditions.buyNGetN?.buy || 0,
+                        Number(e.target.value)
+                      )
+                    }
+                  />
+                  <Select defaultValue="0">
+                    <SelectTrigger className="font-black border border-black text-lg md:text-xl text-blueTilt w-40 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+                      <SelectValue placeholder="Min Order Value" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">All Items</SelectItem>
+                      <SelectItem value="1">1 Item</SelectItem>
+                      <SelectItem value="2">2 Items</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+
+            {subCategoryDiscountType === "Percentage" && (
+              <div>
+                <div className="flex items-center space-x-4">
+                  <Label className="font-black text-lg md:text-xl">Buy</Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt  w-24 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 "
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.buy || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.get || 0,
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.buy || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.get || 0,
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                </div>
+
+                {/* get section */}
+                <div className="flex items-center space-x-4 mt-4">
+                  <Label className="font-black text-lg md:text-xl">Get</Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-5/12 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-36"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.get || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     offerDetails.conditions.buyNGetN?.buy || 0,
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                  <p className="font-black">OFF</p>
+                </div>
+
+                {/* Add additional input or content for percentage discount if needed */}
+              </div>
+            )}
+
+            {subCategoryDiscountType === "Rupees" && (
+              <div>
+                <div className="flex items-center space-x-4">
+                  <Label className="font-black text-lg md:text-xl">Buy</Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt  w-24 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.buy || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.get || 0,
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.buy || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.get || 0,
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                </div>
+
+                {/* get section */}
+                <div className="flex items-center space-x-4 mt-4">
+                  <Label className="font-black text-lg md:text-xl">
+                    Get Rs.
+                  </Label>
+                  <Input
+                    className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-36"
+                    type="text"
+                    value={offerDetails.conditions.buyNGetN?.get || 0}
+                    // onChange={(e) =>
+                    //   handleBuyNGetNChange(
+                    //     offerDetails.conditions.buyNGetN?.buy || 0,
+                    //     Number(e.target.value),
+                    //     offerDetails.conditions.buyNGetN?.description || ""
+                    //   )
+                    // }
+                  />
+                  <p className="font-black">OFF</p>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {offerDetail.discountType === "Free gift" && (
+         
+        )}
+
+        {offerDetail.discountType === "Items at set price" && (
+          
+        )}
+
+        {offerDetail.discountType === "Combo offers" && (
+          
+        )}
+      </div>

@@ -1,4 +1,5 @@
 import axiosInstance from "@/utils/axiosInstance";
+import { AWS_IMAGE_UPLOAD_URL } from "@/utils/constants";
 
 
 export const uploadImageToBucket = async ({
@@ -26,7 +27,7 @@ export const uploadImageToBucket = async ({
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    const endpoint = `${url}?bucket=${bucket}`;
+    const endpoint = `${AWS_IMAGE_UPLOAD_URL}?bucket=${bucket}`;
 
     // Perform the upload
     const response = await axiosInstance.post(endpoint, formData);

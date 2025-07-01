@@ -26,7 +26,10 @@ export function useCreateOutlet() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ brand_id, newOutlet }: { brand_id: string; newOutlet: any }) => createOutlet(brand_id, newOutlet),
+        mutationFn: ({ brand_id, newOutlet }: { brand_id: string; newOutlet: any }) => {
+
+            return createOutlet(brand_id, newOutlet);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['outlets'] });
         },

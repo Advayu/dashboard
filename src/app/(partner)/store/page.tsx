@@ -47,7 +47,7 @@ import { LAMBDA_URL } from "@/utils/constants";
 import axiosInstance from "@/utils/axiosInstance";
 
 // sales with advayu
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
   borderRadius: "0rem",
   [`&.${linearProgressClasses.colorPrimary}`]: {

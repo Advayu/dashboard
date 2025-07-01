@@ -51,3 +51,4 @@ export const useDeleteOffer = () => {
     });
     return { mutate, error, isLoading: isPending, isSuccess };
 };
+
