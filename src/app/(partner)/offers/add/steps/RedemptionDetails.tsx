@@ -1,28 +1,16 @@
 "use client";
 import React from "react";
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  resetOfferDetails,
-  setOfferfield,
-} from "@/store/offerSlice/offerDetailsSlice";
-import { useDispatch } from "react-redux";
-// import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { daysOfWeek } from "@/app/Constants/constant";
 import OfferDetailsShow from "../OfferDetailsShow";
-// import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { saveOfferAsDraft } from "@/services/api/offers/offersApi";
-import { useRouter } from "next/navigation";
+
 import {
   Tooltip,
   TooltipContent,
@@ -30,13 +18,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
+import { Controller, useFormContext } from "react-hook-form";
 
-interface RedemptionDetailsProps {
-  handleNext: () => void;
-  activeStep: number;
-}
+interface RedemptionDetailsProps {}
 
 // Reusable Tooltip Component
 const InfoTooltip: React.FC<{ message: string }> = ({ message }) => (
@@ -54,187 +38,25 @@ const InfoTooltip: React.FC<{ message: string }> = ({ message }) => (
 const currentDate = dayjs(); // Get the current date
 dayjs.extend(utc);
 dayjs.extend(timezone);
-const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
-  handleNext,
-}) => {
-  const dispatch = useDispatch();
-  const { toast } = useToast();
-  const [loadingState, setLoadingState] = useState({
-    saveDraft: false,
-    processed: false,
-  });
-  const offerDetail = useSelector((state: RootState) => state.offer);
-  const brand = useSelector((state: RootState) => state.brandUser);
-  const days = ["Sa", "M", "Tu", "W", "Th", "F", "Su"];
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const router = useRouter();
-  const [redemptionDetails, setRedemptionDetailsState] = useState({
-    startDate: "",
-    endDate: "",
-    activeDays: [] as string[],
-    maximumRedemptions: "",
-    maximumRedemptionsPerUser: "",
-    durationBetweenRedemptions: "",
-  });
+const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
+  const {
+    register,
+    watch,
+    control,
+    formState: { errors },
+  } = useFormContext();
 
-  const handleStartDateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    // Parse the selected date, adjusting to IST (Indian Standard Time)
-    // const newValue = dayjs(event.target.value)
-    //   .tz("Asia/Kolkata", true)
-    //   .startOf("day");
-
-    // Add one day to the date
-    // const updatedValue = newValue.add(1, "day");
-
-    // Convert the updated date to UTC
-    // const utcDate = updatedValue.utc().toISOString();
-
-    // const utcDate = event.target.value;
-    const utcDate = dayjs(event.target.value).endOf("day").toISOString();
-
-    // Log the final UTC date (for debugging purposes)
-    console.log("Updated start date in UTC:", utcDate);
-
-    // Dispatch the updated date in UTC format
-    dispatch(
-      setOfferfield({
-        field: "startDate",
-        value: utcDate,
-      })
-    );
-  };
-
-  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Parse the selected end date, adjusting to IST (Indian Standard Time)
-    // const newValue = dayjs(event.target.value)
-    //   .tz("Asia/Kolkata", true)
-    //   .startOf("day");
-
-    // Log the IST date (for debugging purposes)
-    // console.log(
-    //   "IST Date:",
-    //   newValue.format("ddd, DD MMM YYYY HH:mm:ss [IST]")
-    // );
-
-    // Convert the date to UTC, keeping it as a consistent time moment, and store it in UTC
-    // const utcDate = newValue.utc().toISOString();
-
-    const utcDate = dayjs(event.target.value).endOf("day").toISOString();
-
-    // Log the final UTC date (for debugging purposes)
-    console.log("end date in UTC:", utcDate);
-
-    // Dispatch the value as UTC, which will be stored in the database correctly
-    dispatch(
-      setOfferfield({
-        field: "endDate",
-        value: utcDate,
-      })
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return dayjs(dateString).format("YYYY-MM-DD");
-  };
+  const offerDetails = watch();
 
   // Function to toggle the selection of a day
-  const toggleDaySelection = (day: string) => {
-    const updatedDays = offerDetail.applicableDays.includes(day)
-      ? offerDetail.applicableDays.filter(
-          (selectedDay: string) => selectedDay !== day
-        )
-      : [...offerDetail.applicableDays, day];
-
-    console.log("updatedatys;", updatedDays);
-    // Dispatch the updated list of applicableDays to Redux
-    dispatch(
-      setOfferfield({
-        field: "applicableDays", // the field to update
-        value: updatedDays, // the updated value for applicableDays
-      })
-    );
+  const toggleDaySelection = (
+    selectedDays: string[],
+    value: string
+  ): string[] => {
+    return selectedDays.includes(value)
+      ? selectedDays.filter((day) => day !== value)
+      : [...selectedDays, value];
   };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setRedemptionDetailsState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
-    dispatch(setOfferfield({ field: "totalLimit", value: value }));
-  };
-
-  const handleTotalLimitChange = (event: any) => {
-    dispatch(setOfferfield({ field: "totalLimit", value: event.target.value }));
-  };
-
-  const handleNextClick = () => {
-    setLoadingState({ ...loadingState, processed: true });
-    if (offerDetail.startDate >= offerDetail.endDate) {
-      toast({
-        variant: "destructive",
-        title: "Start date should be less than end date.",
-      });
-      setLoadingState({ ...loadingState, processed: false });
-      return;
-    }
-    setLoadingState({ ...loadingState, processed: false });
-    handleNext();
-
-    console.log("offer details from store:", offerDetail);
-  };
-
-  const handleDraft = async () => {
-    // const brandId = localStorage.getItem("brandId") || offerDetail.brandId;
-    const brandId = brand.brand_id;
-    console.log("brandId", brandId);
-    setLoadingState({ ...loadingState, saveDraft: true });
-
-    try {
-      const responseCode: any = await saveOfferAsDraft(
-        offerDetail, // Pass the updated details
-        offerDetail.outletId,
-        brandId
-      );
-
-      console.log("responseCode", responseCode);
-      if (responseCode == 201) {
-        toast({
-          duration: 5000,
-          variant: "success",
-          title: "Offer saved as draft",
-        });
-        setLoadingState({ ...loadingState, saveDraft: false });
-        dispatch(resetOfferDetails());
-        router.push("/offers");
-      }
-    } catch (error) {
-      if (
-        axios.isAxiosError(error) &&
-        error.response &&
-        error.response.status === 401
-      ) {
-        console.log("Unauthorized: Redirecting to login...");
-        toast({
-          duration: 5000,
-          variant: "destructive",
-          title: "Session Expired. Please login again.",
-        });
-        router.push("/auth");
-      }
-      console.error("Error saving draft:", error);
-      toast({
-        duration: 5000,
-        variant: "destructive",
-        title: "Failed to save offer as draft. Please try again.",
-      });
-      setLoadingState({ ...loadingState, saveDraft: false });
-    }
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <TooltipProvider>
@@ -249,9 +71,10 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
           {/* Date Range */}
           <div className="mt-10">
             <h2 className="text-lg font-medium mb-4 blue-tilt">
-              {offerDetail.discountType}
+              {/* Todo: replace with actual discount type */}
+              {/* {offerDetail.discountType} */}
             </h2>
-            <OfferDetailsShow />
+            {/* <OfferDetailsShow {...offerDetails} /> */}
             <div className="flex space-x-4 mt-[24.4px]">
               <div className="flex  items-center">
                 <div className="flex flex-col gap-2">
@@ -261,17 +84,13 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
                   </label>
                   <div className="relative">
                     <input
+                      {...register("startDate")}
                       type="date"
-                      value={formatDate(offerDetail.startDate)}
-                      onChange={handleStartDateChange}
+                      // onChange={handleStartDateChange}
                       className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase border border-black"
                       required
                       min={dayjs().format("YYYY-MM-DD")}
                     />
-                    {/* <Calendar
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                      size={20}
-                    /> */}
                   </div>
                 </div>
 
@@ -281,41 +100,15 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
                   <label className="text-xl font-bold">Expiry date</label>
                   <div className="relative">
                     <input
+                      {...register("endDate")}
                       type="date"
-                      value={formatDate(offerDetail.endDate)}
-                      onChange={handleEndDateChange}
+                      // onChange={handleEndDateChange}
                       className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase border border-black"
                       required
-                      min={formatDate(offerDetail.startDate)}
                     />
-                    {/* <Calendar
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                      size={20}
-                    /> */}
                   </div>
                 </div>
               </div>
-              {/* <DatePicker
-                className="py-0"
-                label="Start Date"
-                defaultValue={
-                  offerDetail.startDate ? dayjs(offerDetail.startDate) : null
-                }
-                onChange={handleStartDateChange}
-                minDate={currentDate} // Minimum date allowed
-              />
-              <DatePicker
-                label="End Date"
-                defaultValue={
-                  offerDetail.endDate ? dayjs(offerDetail.endDate) : null
-                }
-                onChange={handleEndDateChange}
-                minDate={
-                  offerDetail.startDate
-                    ? dayjs(offerDetail.startDate)
-                    : currentDate
-                }
-              /> */}
             </div>
           </div>
 
@@ -325,40 +118,38 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
               Select days it will run
               <InfoTooltip message="Select days to run" />
             </h2>
-            <div className="flex space-x-2 mt-2">
-              {daysOfWeek.map((day, index) => (
-                <button
-                  key={index}
-                  className={`border rounded-md flex px-2 py-1  ${
-                    offerDetail.applicableDays.includes(day.value)
-                      ? "bg-blueTilt text-white"
-                      : "text-gray-300 border-black hover:bg-blueTilt hover:text-white"
-                  }`}
-                  onClick={() => toggleDaySelection(day.value)}>
-                  {day.display}
-                </button>
-              ))}
-            </div>
+
+            <Controller
+              name="applicableDays"
+              control={control}
+              defaultValue={[]}
+              render={({ field }) => (
+                <div className="flex space-x-2 mt-2">
+                  {daysOfWeek.map((day) => {
+                    const isSelected = field.value?.includes(day.value);
+
+                    return (
+                      <button
+                        key={day.value}
+                        type="button"
+                        className={`border rounded-md flex px-2 py-1 ${
+                          isSelected
+                            ? "bg-blueTilt text-white"
+                            : "text-gray-300 border-black hover:bg-blueTilt hover:text-white"
+                        }`}
+                        onClick={() =>
+                          field.onChange(
+                            toggleDaySelection(field.value || [], day.value)
+                          )
+                        }>
+                        {day.display}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            />
           </div>
-
-          {/* <div className="my-6">
-            <Label className="text-base md:text-lg font-bold">
-              Days Open in a Week
-            </Label>
-
-            <ToggleGroup
-              type="multiple"
-              className="mt-2 flex flex-wrap gap-2"
-              value={currentOutlet.daysOpen || []}
-              onValueChange={handleDaysOpenChange}
-            >
-              {daysOfWeek.map(({ display, value }) => (
-                <ToggleGroupItem key={value} value={value}>
-                  {display}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div> */}
 
           {/* Input Fields */}
           <div className="mt-4">
@@ -369,10 +160,8 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
             <Input
               type="text"
               placeholder="Enter maximum number"
-              name="totalLimit"
               className="w-52 mt-[7.5px]"
-              defaultValue={offerDetail.totalLimit}
-              onChange={handleTotalLimitChange}
+              {...register("totalLimit")}
             />
           </div>
 
@@ -409,23 +198,6 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = ({
           </div> */}
 
           {/* Buttons */}
-          <div className="flex space-x-2 justify-end mt-6">
-            <Button
-              disabled={loadingState.saveDraft}
-              onClick={handleDraft}
-              variant="outline"
-              className="w-40"
-              size="thin">
-              {loadingState.saveDraft ? "Saving..." : "Save Draft"}
-            </Button>
-            <Button
-              disabled={loadingState.processed}
-              className="w-40"
-              size="thin"
-              onClick={handleNextClick}>
-              {loadingState.processed ? "Processing..." : "processed"}
-            </Button>
-          </div>
         </div>
       </TooltipProvider>
     </LocalizationProvider>

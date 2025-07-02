@@ -1,3 +1,4 @@
+//offerDetails.tsx
 import React from "react";
 import {
   Select,
@@ -8,9 +9,8 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import {
   ComboOffers,
   FlatOff,
@@ -19,11 +19,7 @@ import {
   PercentageOff,
   BuyNGetN,
 } from "../components";
-interface OfferDetailsProps {
-  // Define your component props here
-  handleNext: () => void;
-  activeStep: number;
-}
+interface OfferDetailsProps {}
 
 interface OfferDetails {
   offerType: string; // e.g., "Flat off", "Percentage off", etc.
@@ -58,27 +54,15 @@ interface OfferDetails {
   };
 }
 
-const OfferDetails: React.FC<OfferDetailsProps> = ({
-  handleNext,
-  activeStep,
-}) => {
+const OfferDetails: React.FC<OfferDetailsProps> = () => {
   const {
-    control,
     register,
-    handleSubmit,
     watch,
+    control,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      outletId: "",
-      discountType: "",
-      discountCode: "",
-    },
-  });
+  } = useFormContext();
 
   const discountType = watch("discountType");
-
-  const onSubmit = (data) => console.log(data);
 
   const renderOfferDetailsComponent = () => {
     switch (discountType) {
@@ -100,7 +84,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
+    <div className="flex flex-col ">
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl	font-black">Offer details</h1>
         <p>Curate your offer</p>
@@ -145,7 +129,6 @@ const OfferDetails: React.FC<OfferDetailsProps> = ({
               <SelectItem value="Items at set price">
                 Items at set price
               </SelectItem>
-              <SelectItem value="Combo offers">Combo offers</SelectItem>
             </SelectContent>
           </Select>
         )}
@@ -165,23 +148,8 @@ const OfferDetails: React.FC<OfferDetailsProps> = ({
           placeholder="Enter offer code"
           {...register("discountCode", { required: "Offer code is required" })}
         />
-        {errors.discountCode && (
-          <p className="text-red-500 text-sm">{errors.discountCode.message}</p>
-        )}
       </div>
-      <div className="flex space-x-2 md:justify-end ">
-        <Button
-          type="button"
-          variant={"outline"}
-          className="my-5 w-40 "
-          size={"thin"}>
-          Save draft
-        </Button>
-        <Button type="submit" className="my-5 w-40" size={"thin"}>
-          Procced
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 

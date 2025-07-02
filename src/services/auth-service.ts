@@ -3,7 +3,7 @@ import axios from "axios";
 import { LAMBDA_URL } from "@/utils/constants";
 
 export const logout = async () => {
-    const response = await axiosInstance.post(`${LAMBDA_URL}/auth/logout`);
+    const response = await axiosInstance.post(`/auth/logout`);
     return response.data;
 };
 

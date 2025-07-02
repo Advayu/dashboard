@@ -1,13 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
 const FlatOff = () => {
+  const { register } = useFormContext();
   return (
     <div className="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0 md:items-center">
       <div className="flex items-center space-x-2">
         <Label className="font-black  text-lg md:text-xl">FLAT Rs.</Label>
         <Input
+          {...register("discountValue")}
           type="text"
           placeholder="e.g 150"
           name="discountValue"
@@ -18,6 +21,7 @@ const FlatOff = () => {
       <div className="flex items-center space-x-2">
         <Label className="font-black  text-lg md:text-xl">OFF above Rs.</Label>
         <Input
+          {...register("minOrderValue")}
           type="text"
           name="minOrderValue"
           placeholder="e.g 400"

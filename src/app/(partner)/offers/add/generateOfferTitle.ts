@@ -4,12 +4,13 @@ type OfferDetails = {
     minOrderValue?: string;
     maxOrderValue?: string;
     maxDiscountValue?: string;
+
 };
 
-export const generateOfferTitle = (offerDetail: OfferDetails): string => {
+export const generateOfferTitle = (offerDetail: any): string => {
     const { discountType, discountValue = 0, minOrderValue = 0, maxOrderValue = 0, maxDiscountValue = 0 } = offerDetail;
 
-    switch (discountType.toLowerCase()) {
+    switch (discountType?.toLowerCase()) {
         case "flat off":
             return `Flat Rs ${discountValue} off above Rs ${minOrderValue}`;
 

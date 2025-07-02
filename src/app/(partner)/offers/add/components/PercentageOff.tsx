@@ -1,14 +1,18 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
 const PercentageOff = () => {
+  const { register } = useFormContext();
+
   return (
     <div className="flex flex-col space-y-4">
       {/* First Row */}
       <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 md:items-center">
         <div className="flex space-x-2">
           <Input
+            {...register("discountValue")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt  md:w-48 w-2/5 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
             type="text"
             name="discountValue"
@@ -22,7 +26,7 @@ const PercentageOff = () => {
           name="price"
           placeholder="Value"
           // Todo: review
-          value={"All Items"}
+          defaultValue={"All Items"}
           readOnly
         />
       </div>
@@ -32,6 +36,7 @@ const PercentageOff = () => {
         <div className="flex space-x-2">
           <Label className="font-black text-lg md:text-xl">above Rs.</Label>
           <Input
+            {...register("minOrderValue")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
             type="text"
             name="minOrderValue"
@@ -42,6 +47,7 @@ const PercentageOff = () => {
         <div className="flex space-x-2">
           <Label className="font-black text-lg md:text-xl">upto Rs.</Label>
           <Input
+            {...register("maxDiscountValue")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
             type="text"
             name="maxDiscountValue"

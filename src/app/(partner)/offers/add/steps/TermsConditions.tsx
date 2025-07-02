@@ -1,149 +1,61 @@
-import React, { use, useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
-import OfferDetailsShow from "../OfferDetailsShow";
-import OfferDetails from "./OfferDetails";
-import { saveOfferAsDraft } from "@/services/api/offers/offersApi";
-import { RootState } from "@/store/store";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
-import { resetOfferDetails } from "@/store/offerSlice/offerDetailsSlice";
-import axios from "axios";
+import React from "react";
 import dayjs from "dayjs";
-interface TermsConditionsProps {
-  // Define your props here
-  handleNext: () => void;
-  activeStep: number;
-}
+import { useFormContext } from "react-hook-form";
+import OfferDetailsShow from "../OfferDetailsShow";
 
-const TermsConditions: React.FC<TermsConditionsProps> = ({
-  handleNext,
-  activeStep,
-}) => {
-  // Add your component logic here
-  const offerDetail = useSelector((state: RootState) => state.offerDetails);
-  const brand = useSelector((state: RootState) => state.brand);
-  const dispatch = useDispatch();
-  const [loadingState, setLoadingState] = useState({
-    saveDraft: false,
-    processed: false,
-  });
-  const router = useRouter();
+const TermsConditions: React.FC = () => {
+  const brandName = "shivam";
+  const brand = { name: "advayu" };
 
-  const { toast } = useToast();
-  useEffect(() => {
-    console.log("brand details", brand);
-    console.log("offer details", offerDetail);
-  }, []);
+  const { watch } = useFormContext();
+  const applicableDays = watch("applicableDays") || [];
+  const endDate = watch("endDate");
 
-  // const brandName = brandUser?.name || localStorage.getItem("brandName");
-  const brandName = brand?.name;
+  const formattedDate = endDate
+    ? dayjs(endDate).tz("Asia/Kolkata").format("DD MMM YYYY")
+    : "N/A";
+
   const termsAndConditions = [
-    { id: 1, text: `Offer is valid at <b>${brandName}</b>'s outlets` },
-    // { id: 2, text: "Coupon code can be applied only once in n hours" },
-    { id: 3, text: `Offer valid on <b>${offerDetail.applicableDays}</b>` },
-    {
-      id: 4,
-      text: `Offer valid till <b>${dayjs(offerDetail.endDate).tz("Asia/Kolkata").format("DD MMM YYYY")}</b>`,
-    },
-    // { id: 5, text: "Offer is applicable on Enter items" },
-    {
-      id: 6,
-      text: `Discount can only be availed when paying your bill at <b>${brand?.name}</b>`,
-    },
-    // {
-    //   id: 7,
-    //   text: "Coupon redemption details will be sent via message, email, or on the Advayu app",
-    // },
-    {
-      id: 8,
-      text: "Once redeemed, the offer cannot be modified or transferred",
-    },
-    { id: 9, text: "The offer is guaranteed" },
-    {
-      id: 10,
-      text: "<b>Advayu</b> shall not be responsible for any loss you may incur",
-    },
+    <span key="1">
+      Offer is valid at <b>{brandName}</b>&rsquo;s outlets
+    </span>,
+    <span key="3">
+      Offer valid on <b>{applicableDays.join(", ")}</b>
+    </span>,
+    <span key="4">
+      Offer valid till <b>{formattedDate}</b>
+    </span>,
+    <span key="6">
+      Discount can only be availed when paying your bill at <b>{brand?.name}</b>
+    </span>,
+    <span key="8">
+      Once redeemed, the offer cannot be modified or transferred
+    </span>,
+    <span key="9">The offer is guaranteed</span>,
+    <span key="10">
+      <b>Advayu</b> shall not be responsible for any loss you may incur
+    </span>,
   ];
 
-  const handleDraft = async () => {
-    // const brandId = localStorage.getItem("brandId") || offerDetail.brandId;
-    const brandId = brand.id;
-    const outletId = offerDetail.outletId;
-    setLoadingState({ ...loadingState, saveDraft: true });
-    try {
-      const responseCode: any = await saveOfferAsDraft(
-        offerDetail, // Pass the updated details
-        outletId,
-        brandId
-      );
-
-      if (responseCode == 201) {
-        toast({
-          duration: 5000,
-          variant: "success",
-          title: "Offer saved as draft",
-        });
-        setLoadingState({ ...loadingState, saveDraft: false });
-        dispatch(resetOfferDetails());
-        router.push("/offers");
-      }
-    } catch (error) {
-      if (
-        axios.isAxiosError(error) &&
-        error.response &&
-        error.response.status === 401
-      ) {
-        console.log("Unauthorized: Redirecting to login...");
-        router.push("/auth");
-      }
-      console.error("Error saving draft:", error);
-      setLoadingState({ ...loadingState, saveDraft: false });
-      toast({
-        duration: 5000,
-        variant: "destructive",
-        title: "Failed to save offer as draft. Please try again.",
-      });
-    }
-  };
+  const offerDetails = watch();
   return (
     <div className="p-4 bg-white rounded">
-      {/* Header Section */}
+      {/* Header */}
       <div className="mb-4">
         <h1 className="font-bold text-2xl md:text-3xl">Terms and Conditions</h1>
         <p className="text-gray-600 text-sm">Set offer conditions</p>
       </div>
 
-      {/* Offer Conditions Section */}
-      <OfferDetailsShow />
+      {/* <OfferDetailsShow {...offerDetails} /> */}
 
-      {/* Terms and Conditions List */}
+      {/* T&C List */}
       <ul className="list-disc pl-6 mt-6 text-gray-800">
-        {termsAndConditions.map((term) => (
-          <li
-            key={term.id}
-            className="text-sm md:text-base py-2"
-            dangerouslySetInnerHTML={{ __html: term.text || "" }}
-          />
+        {termsAndConditions.map((item, idx) => (
+          <li key={idx} className="text-sm md:text-base py-2">
+            {item}
+          </li>
         ))}
       </ul>
-
-      {/* Action Buttons */}
-      <div className="flex justify-end space-x-4 mt-6">
-        <Button
-          disabled={loadingState.saveDraft}
-          onClick={handleDraft}
-          variant="outline"
-          className="w-32 md:w-40"
-          size="thin">
-          {loadingState.saveDraft ? "Saving..." : "Save for later"}
-        </Button>
-        <Button className="w-32 md:w-40" size="thin" onClick={handleNext}>
-          {loadingState.processed ? "Processing..." : "processed"}
-        </Button>
-      </div>
     </div>
   );
 };

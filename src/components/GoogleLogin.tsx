@@ -3,17 +3,12 @@
 import { toast } from "@/hooks/use-toast";
 import { LAMBDA_URL } from "@/utils/constants";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
-import { setBrandData } from "@/store/globalSlice/brandSlice";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 
 const LoginWithGoogle: React.FC = () => {
-  const [brandName, setBrandName] = useState("");
   const router = useRouter();
-  const dispatch = useDispatch();
   const handleSuccess = async (credentialResponse: any) => {
     console.log("🟢 Google login success:", credentialResponse);
 
@@ -22,7 +17,7 @@ const LoginWithGoogle: React.FC = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:4200/brand-users/dashboard-brand-google-login`,
+        `${LAMBDA_URL}/brand-users/dashboard-brand-google-login`,
         {
           idToken: idToken,
         },
@@ -40,8 +35,6 @@ const LoginWithGoogle: React.FC = () => {
       console.log("logged in user", res.data);
 
       router.replace(`/`);
-      // // Optional: store token, redirect, etc.
-      // localStorage.setItem("token", data.jwt);
     } catch (error) {
       console.error("❌ Error sending token to backend:", error);
     }
