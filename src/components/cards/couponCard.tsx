@@ -238,12 +238,15 @@ const NoActiveOffers = () => {
         {/* Coupon effect */}
         <div className="flex border-l-0 border-blueTilt flex-col absolute ml-[3px] left-[-4px] top-1/2 transform -translate-y-1/2 w-4 h-6 bg-white border rounded-r-full"></div>
 
-        <div className="flex w-[20vw] h-[10vh]  justify-center items-center gap-2">
-          <h1>No active offers!</h1>
-          <a href="offers/add">
-            <Link className="text-blueTilt" to={"/offers/add"} />
-          </a>
-        </div>
+        <a
+          href="offers/add"
+          className="flex w-[20vw] h-[10vh]  justify-center items-center gap-2 ">
+          <h1 className="underline  underline-offset-4 text-black">
+            No active offers!
+          </h1>
+
+          <Link className="text-blueTilt" to={"/offers/add"} />
+        </a>
       </div>
     </>
   );
