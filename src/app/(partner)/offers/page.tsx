@@ -22,9 +22,15 @@ import Autoplay from "embla-carousel-autoplay";
 import Loading from "@/components/loading";
 
 import OfferAccordionSection from "@/components/ui/OfferAccordionSection";
+import { useGetOutlets } from "@/hooks/use-outlet";
 
 export default function Page() {
-  const [outlets, setOutlets] = useState<any[]>([]);
+  const brandUserStr = localStorage.getItem("persist:brandUser");
+  const brand_id = brandUserStr
+    ? JSON.parse(brandUserStr)?.brand_id
+    : undefined;
+  const { data: outlets, isLoading: isLoadingOutlets } =
+    useGetOutlets(brand_id);
   const [outletId, setOutletId] = useState<string>("");
   const [offers, setOffers] = useState<{
     upComming: any[];
@@ -73,7 +79,7 @@ export default function Page() {
             <Input
               type="text"
               placeholder="Search by offer code"
-              value={searchQuery}
+              // value={searchQuery}
               // onChange={handleSearch}
               className="pl-10 w-72 py-5 border-gray-400"
             />
@@ -94,10 +100,8 @@ export default function Page() {
           value={outletId}
           onChange={handleOutletChange}
           className="border-2 border-black rounded-md p-2 w-[17rem] max-w-[17rem]">
-          <option value="" disabled>
-            Select Outlet
-          </option>
-          {outlets.map((outlet) => (
+          <option disabled>Select Outlet</option>
+          {outlets?.map((outlet) => (
             <option key={outlet.id} value={outlet.id}>
               {outlet.name}
             </option>

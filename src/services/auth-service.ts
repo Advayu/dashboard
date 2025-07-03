@@ -14,7 +14,7 @@ export const login = async ({
     email: string;
     password: string;
 }) => {
-    const response = await axios.post(`${LAMBDA_URL}/auth/login`, {
+    const response = await axiosInstance.post(`${LAMBDA_URL}/auth/login`, {
         email,
         password,
     });

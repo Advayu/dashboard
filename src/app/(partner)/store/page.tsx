@@ -45,6 +45,7 @@ import LinearProgress, {
 import { styled } from "@mui/material/styles";
 import { LAMBDA_URL } from "@/utils/constants";
 import axiosInstance from "@/utils/axiosInstance";
+import { useGetOutlets } from "@/hooks/use-outlet";
 
 // sales with advayu
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -66,80 +67,20 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState<string>(""); // For search quer
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingOffer, setIsLoadingOffer] = useState(true);
+  const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [offerByOutletId, setOfferByOutletId] = useState<any>({}); // Use an object to store offers by outletId
   const router = useRouter();
-
-  useEffect(() => {
-    // Fetch outlet data only once
-    if (!brand.id) {
-      router.forward();
-    }
-
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `${LAMBDA_URL}/v1/outlets?searchType=Exact&brand_id=${brand.id}`,
-          { withCredentials: true }
-        );
-        console.log("Outlet data:", response.data);
-        setOultet(response.data);
-        setFilteredOutlets(response.data); // Initialize filtered outlets
-      } catch (error) {
-        console.error("Error fetching outlet data:", error);
-        if (
-          axios.isAxiosError(error) &&
-          error.response &&
-          error.response.status === 401
-        ) {
-          console.log("Unauthorized: Redirecting to login...");
-          router.push("/auth");
-        } else {
-          console.error("An error occurred", error);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [brand.id]); // Dependency array to ensure fetch happens only when `brand.id` changes
-
-  const fetchOutletOfferDetailsByOutletId = async (id: string) => {
-    if (offerByOutletId[id]) {
-      return;
-    }
-
-    setIsLoadingOffer(true);
-    try {
-      const response = await axiosInstance.get(
-        `${LAMBDA_URL}/offers?outlet_id=${id}`,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("Offers data:", response.data);
-      const now = new Date();
-      const ongoing = response.data.filter(
-        (offer: any) =>
-          new Date(offer.start_date) <= now && new Date(offer.end_date) > now
-      );
-      setOfferByOutletId((prevState: any) => ({
-        ...prevState,
-        [id]: ongoing,
-      }));
-      setOpenAccordion(filteredOutlets[0].id);
-    } catch (error) {
-      console.error("Error fetching outlet offers:", error);
-    } finally {
-      setIsLoadingOffer(false);
-    }
-  };
+  const brandUserStr = localStorage.getItem("persist:brandUser");
+  const brand_id = brandUserStr
+    ? JSON.parse(brandUserStr)?.brand_id
+    : undefined;
+  const { data: outlets, isLoading: isLoadingOutlets } =
+    useGetOutlets(brand_id);
 
   const handleAccordionClick = (id: string) => {
     if (openAccordion !== id) {
       setOpenAccordion(id); // Set the clicked outlet ID as open
-      fetchOutletOfferDetailsByOutletId(id); // Fetch offers when the accordion is opened
+      // fetchOutletOfferDetailsByOutletId(id); // Fetch offers when the accordion is opened
     } else {
       setOpenAccordion(null); // Close the accordion if it's already open
     }
@@ -211,187 +152,176 @@ export default function Page() {
           <Filter width={16} height={16} />
         </div>
       </div>
+      {outlets?.length === 0 && (
+        <div className="flex flex-col items-center justify-center h-full">
+          <a>No outlets added yet.</a>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center w-full mx-auto h-full">
-          <Loading />
+          <button
+            className="px-2 py-2 bg-blueTilt rounded-lg text-white hover:bg-blueTilt/90 transition-all duration-300 ease-in-out"
+            onClick={handleAddOutletClick}>
+            + Add Outlet
+          </button>
         </div>
-      ) : filteredOutlets && filteredOutlets.length == 0 ? (
-        <div className="m-auto flex flex-col items-center gap-4">
-          <p>
-            No outlet found <span className="font-bold">{searchQuery}</span>
-          </p>
-
-          <Button onClick={() => router.push(`/store/add?name=${searchQuery}`)}>
-            Create Outlet
-          </Button>
-        </div>
-      ) : (
-        filteredOutlets.map((outletItem: any) => (
-          <div
-            className="flex bg-gray-100 rounded px-4 my-4 transition duration-300 fade-in"
-            key={outletItem.id}>
-            <Accordion type="single" collapsible className="w-[90vw]">
-              <AccordionItem value={outletItem.id.toString()}>
-                <AccordionTrigger
-                  onClick={() => handleAccordionClick(outletItem.id)}
-                  className="w-full text-xl font-bold flex flex-col py-4">
-                  <div className="flex flex-col w-full">
-                    <div className="flex items-center space-x-2">
-                      <h2 className="text-xl">{outletItem.name}</h2>
-                      <ChevronDown
-                        width={16}
-                        height={16}
-                        className={`transition-transform duration-300 ${
-                          openAccordion === outletItem.id
-                            ? "rotate-180"
-                            : "rotate-0"
-                        }`}
-                      />
-                    </div>
-
-                    <div className="flex items-center space-x-4">
-                      <p className="text-[#2AA000] text-sm">+888.8%</p>
-                      <span className="text-black flex items-center space-x-1">
-                        <svg
-                          width="13"
-                          height="11"
-                          viewBox="0 0 13 11"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <path
-                            d="M6.5 0.0419922L7.84708 4.18789H12.2063L8.67963 6.7502L10.0267 10.8961L6.5 8.33379L2.97329 10.8961L4.32037 6.7502L0.793661 4.18789H5.15292L6.5 0.0419922Z"
-                            fill="black"
-                          />
-                        </svg>
-                        <p className="text-sm border-b-2 border-black">
-                          4.6 (273)
-                        </p>
-                      </span>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-
-                <AccordionContent>
-                  <div className="md:flex block">
-                    <div className="">
-                      <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-4 md:items-center">
-                        <div className="flex space-x-4">
-                          <h3 className="md:text-lg text-sm">
-                            Sales with Advayu
-                          </h3>
-                          <Select>
-                            <SelectTrigger className="w-[180px] border border-black">
-                              <SelectValue placeholder="Select your year" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>Years</SelectLabel>
-                                <SelectItem value="2022">2022</SelectItem>
-                                <SelectItem value="2023">2023</SelectItem>
-                                <SelectItem value="2024">2024</SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="flex ">
-                          <DateRangeSelector />
-                        </div>
-                      </div>
-                      {/* sales with advayu */}
-                      <div className="grid md:grid-cols-[1fr_4fr] gap-[1.5rem]  items-center mt-[16px]">
-                        <p className="text-[#2AA000] md:text-3xl text-xl font-bold">
-                          +888.8%
-                        </p>
-                        <div className="w-[95%] ">
-                          <Stack spacing={2} sx={{ flexGrow: 1 }}>
-                            <BorderLinearProgress
-                              variant="determinate"
-                              value={70}
-                            />
-                          </Stack>
-                        </div>
-                      </div>
-                      <div className="flex justify-between md:ml-40 items-center">
-                        <p className="">Other</p>
-                        <p className=" md:mr-[1.6rem] mr-[1rem]">Advayu</p>
-                      </div>
-                      <div className="md:block hidden">
-                        <LineGraph dataset={dataset} />
-                      </div>
-
-                      {/* for small screen */}
-                      <div className="lg:hidden flex flex-row gap-4 mt-4 max-w-[81vw] overflow-x-auto">
-                        {isLoadingOffer
-                          ? // Shimmer effect while loading
-                            Array.from({ length: 3 }).map((_, index) => (
-                              <div
-                                key={index}
-                                className="flex flex-row space-y-2 p-10 animate-pulse">
-                                <div className="h-4 w-72 bg-gray-300 rounded"></div>
-                              </div>
-                            ))
-                          : // Render offers when loaded
-                            offerByOutletId[outletItem.id]?.map(
-                              (offer: any) => (
-                                <div key={offer.id} className="flex flex-row">
-                                  <CouponCard
-                                    id={offer.id}
-                                    title={offer.title}
-                                    start_date={offer.start_date}
-                                    expiry_date={offer.end_date}
-                                    unique_code={offer.code}
-                                    number_of_redemptions={0}
-                                    total_coupons={offer.total_limit}
-                                  />
-                                </div>
-                              )
-                            )}
-                      </div>
-                    </div>
-
-                    <div className="lg:flex hidden flex-col pl-14 ">
-                      <h2 className="text-lg font-normal">Active Offers</h2>
-
-                      {/* Scrollable Container */}
-                      <div className="mt-4 max-h-[29rem] overflow-y-auto">
-                        {isLoadingOffer
-                          ? // Shimmer effect while loading
-                            Array.from({ length: 3 }).map((_, index) => (
-                              <div
-                                key={index}
-                                className="flex flex-col space-y-2 p-10 animate-pulse">
-                                <div className="h-4 w-72 bg-gray-300 rounded"></div>
-                                <div className="h-3 w-72 bg-gray-300 rounded"></div>
-                                <div className="h-5 w-72 bg-gray-300 rounded"></div>
-                              </div>
-                            ))
-                          : // Render offers when loaded
-                            offerByOutletId[outletItem.id]?.map(
-                              (offer: any) => (
-                                <div key={offer.id} className="flex flex-col">
-                                  <CouponCard
-                                    id={offer.id}
-                                    title={offer.title}
-                                    start_date={offer.start_date}
-                                    expiry_date={offer.end_date}
-                                    unique_code={offer.code}
-                                    number_of_redemptions={0}
-                                    total_coupons={offer.total_limit}
-                                  />
-                                </div>
-                              )
-                            )}
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        ))
       )}
+      {outlets?.map((outletItem: any) => (
+        <div
+          className="flex bg-gray-100 rounded px-4 my-4 transition duration-300 fade-in"
+          key={outletItem.id}>
+          <Accordion type="single" collapsible className="w-[90vw]">
+            <AccordionItem value={outletItem.id.toString()}>
+              <AccordionTrigger
+                onClick={() => handleAccordionClick(outletItem.id)}
+                className="w-full text-xl font-bold flex flex-col py-4">
+                <div className="flex flex-col w-full">
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-xl">{outletItem.name}</h2>
+                    <ChevronDown
+                      width={16}
+                      height={16}
+                      className={`transition-transform duration-300 ${
+                        openAccordion === outletItem.id
+                          ? "rotate-180"
+                          : "rotate-0"
+                      }`}
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <p className="text-[#2AA000] text-sm">+888.8%</p>
+                    <span className="text-black flex items-center space-x-1">
+                      <svg
+                        width="13"
+                        height="11"
+                        viewBox="0 0 13 11"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M6.5 0.0419922L7.84708 4.18789H12.2063L8.67963 6.7502L10.0267 10.8961L6.5 8.33379L2.97329 10.8961L4.32037 6.7502L0.793661 4.18789H5.15292L6.5 0.0419922Z"
+                          fill="black"
+                        />
+                      </svg>
+                      <p className="text-sm border-b-2 border-black">
+                        4.6 (273)
+                      </p>
+                    </span>
+                  </div>
+                </div>
+              </AccordionTrigger>
+
+              <AccordionContent>
+                <div className="md:flex block">
+                  <div className="">
+                    <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-4 md:items-center">
+                      <div className="flex space-x-4">
+                        <h3 className="md:text-lg text-sm">
+                          Sales with Advayu
+                        </h3>
+                        <Select>
+                          <SelectTrigger className="w-[180px] border border-black">
+                            <SelectValue placeholder="Select your year" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Years</SelectLabel>
+                              <SelectItem value="2022">2022</SelectItem>
+                              <SelectItem value="2023">2023</SelectItem>
+                              <SelectItem value="2024">2024</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex ">
+                        <DateRangeSelector />
+                      </div>
+                    </div>
+                    {/* sales with advayu */}
+                    <div className="grid md:grid-cols-[1fr_4fr] gap-[1.5rem]  items-center mt-[16px]">
+                      <p className="text-[#2AA000] md:text-3xl text-xl font-bold">
+                        +888.8%
+                      </p>
+                      <div className="w-[95%] ">
+                        <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                          <BorderLinearProgress
+                            variant="determinate"
+                            value={70}
+                          />
+                        </Stack>
+                      </div>
+                    </div>
+                    <div className="flex justify-between md:ml-40 items-center">
+                      <p className="">Other</p>
+                      <p className=" md:mr-[1.6rem] mr-[1rem]">Advayu</p>
+                    </div>
+                    <div className="md:block hidden">
+                      <LineGraph dataset={dataset} />
+                    </div>
+
+                    {/* for small screen */}
+                    <div className="lg:hidden flex flex-row gap-4 mt-4 max-w-[81vw] overflow-x-auto">
+                      {isLoadingOffer
+                        ? // Shimmer effect while loading
+                          Array.from({ length: 3 }).map((_, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-row space-y-2 p-10 animate-pulse">
+                              <div className="h-4 w-72 bg-gray-300 rounded"></div>
+                            </div>
+                          ))
+                        : // Render offers when loaded
+                          offerByOutletId[outletItem.id]?.map((offer: any) => (
+                            <div key={offer.id} className="flex flex-row">
+                              <CouponCard
+                                id={offer.id}
+                                title={offer.title}
+                                start_date={offer.start_date}
+                                expiry_date={offer.end_date}
+                                unique_code={offer.code}
+                                number_of_redemptions={0}
+                                total_coupons={offer.total_limit}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+
+                  <div className="lg:flex hidden flex-col pl-14 ">
+                    <h2 className="text-lg font-normal">Active Offers</h2>
+
+                    {/* Scrollable Container */}
+                    <div className="mt-4 max-h-[29rem] overflow-y-auto">
+                      {isLoadingOffer
+                        ? // Shimmer effect while loading
+                          Array.from({ length: 3 }).map((_, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col space-y-2 p-10 animate-pulse">
+                              <div className="h-4 w-72 bg-gray-300 rounded"></div>
+                              <div className="h-3 w-72 bg-gray-300 rounded"></div>
+                              <div className="h-5 w-72 bg-gray-300 rounded"></div>
+                            </div>
+                          ))
+                        : // Render offers when loaded
+                          offerByOutletId[outletItem.id]?.map((offer: any) => (
+                            <div key={offer.id} className="flex flex-col">
+                              <CouponCard
+                                id={offer.id}
+                                title={offer.title}
+                                start_date={offer.start_date}
+                                expiry_date={offer.end_date}
+                                unique_code={offer.code}
+                                number_of_redemptions={0}
+                                total_coupons={offer.total_limit}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      ))}
     </div>
-    // </LocalizationProvider>
   );
 }

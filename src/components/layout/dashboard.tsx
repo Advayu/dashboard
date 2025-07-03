@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import CouponCard from "@/components/cards/couponCard";
+import CouponCard, { NoActiveOffers } from "@/components/cards/couponCard";
 import { UserRound } from "lucide-react";
 import { HorizontalCarousel } from "@/components/crasoul/EmblaCarousel";
 import GaugeComponent from "@/components/ui/ProgressBar";
@@ -78,13 +78,8 @@ const Dashboard = ({ user }: any) => {
   const renderOfferCards = () => {
     if (offers?.length === 0) {
       return (
-        <div className="md:m-auto">
-          <h1 className="md:text-2xl text-xl font-bold">
-            No Active offers found!
-          </h1>
-          <Link href="offers/add" className="underline">
-            Create an offer
-          </Link>
+        <div className="w-full flex justify-center ">
+          <NoActiveOffers />
         </div>
       );
     }
@@ -112,7 +107,7 @@ const Dashboard = ({ user }: any) => {
       <div className="md:pl-10 md:mt-16 mt-[2rem]">
         <div className="flex justify-between items-center">
           <h1 className="md:text-3xl text-xl font-bold">
-            Advayu X {user?.email}
+            Advayu X {user?.brandName}
           </h1>
           <button
             onClick={toggleMenu}

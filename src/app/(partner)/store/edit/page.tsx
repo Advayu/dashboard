@@ -10,7 +10,7 @@ import Map from "@/components/ui/Map";
 import Image from "next/image";
 import { PhoneNumberInput } from "@/components/ui/phone-number-input";
 import { DynamicInputList } from "@/components/DynamicInputList";
-import DaysOpenSelector from "@/components/DaysOpenSelector";
+import DaysOpenSelector from "@/components/WeekdaySelector";
 import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSelector";
 import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";

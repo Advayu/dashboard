@@ -5,13 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import Map from "@/components/ui/Map";
 import Image from "next/image";
 import { PhoneNumberInput } from "@/components/ui/phone-number-input";
 import { Trash } from "lucide-react";
 import { DynamicInputList } from "@/components/DynamicInputList";
-import DaysOpenSelector from "@/components/DaysOpenSelector";
+import WeekdaySelector from "@/components/WeekdaySelector";
 import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSelector";
 import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
@@ -186,16 +191,6 @@ const OutletDetails = () => {
 
                 <Map lat={lat} long={lng} onLocationChange={onLocationChange} />
               </div>
-              {/* <div className="relative mt-2">
-                <Input
-                  {...register(`latitude`)}
-                  ref={locationRef}
-                  id="location"
-                  className={`pr-10 w-full my-2 `}
-                  placeholder="Locate on the map"
-                  readOnly
-                />
-              </div> */}
 
               {/* neighborhood */}
               <div className="my-3">
@@ -312,15 +307,15 @@ const OutletDetails = () => {
                     label="Opening Time"
                     times={times}
                   />
-                  {/* <TimeSelector
+                  <TimeSelector
                     name="closing_time"
                     label="Closing Time"
                     times={times}
-                  /> */}
+                  />
                 </div>
               </div>
 
-              {/* <DaysOpenSelector name="days_open" /> */}
+              <WeekdaySelector name="days_open" />
               {/* upload images of this outlet */}
               <h4>Upload Outlet Images</h4>
               <ImageUploader name="images" multiple={true} />

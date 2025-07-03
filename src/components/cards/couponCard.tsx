@@ -7,6 +7,7 @@ import timezone from "dayjs/plugin/timezone";
 // CouponCard.tsx
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Link } from "lucide-react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 interface CouponCardProps {
@@ -230,7 +231,23 @@ const Couponbig = ({
   );
 };
 
-// export default Coupon;
+const NoActiveOffers = () => {
+  return (
+    <>
+      <div className="border border-blueTilt rounded-xl my-2 flex  relative bg-white">
+        {/* Coupon effect */}
+        <div className="flex border-l-0 border-blueTilt flex-col absolute ml-[3px] left-[-4px] top-1/2 transform -translate-y-1/2 w-4 h-6 bg-white border rounded-r-full"></div>
+
+        <div className="flex w-[20vw] h-[10vh]  justify-center items-center gap-2">
+          <h1>No active offers!</h1>
+          <a href="offers/add">
+            <Link className="text-blueTilt" to={"/offers/add"} />
+          </a>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default CouponCard;
-export { Couponbig };
+export { Couponbig, NoActiveOffers };

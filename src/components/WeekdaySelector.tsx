@@ -8,7 +8,7 @@ interface DaysOpenSelectorProps {
   name: string; // Field name
 }
 
-const DaysOpenSelector: React.FC<DaysOpenSelectorProps> = ({ name }) => {
+const WeekdaySelector: React.FC<DaysOpenSelectorProps> = ({ name }) => {
   const { control } = useFormContext(); // Access control from context
 
   return (
@@ -66,4 +66,4 @@ const DaysOpenSelector: React.FC<DaysOpenSelectorProps> = ({ name }) => {
   );
 };
 
-export default DaysOpenSelector;
+export default WeekdaySelector;

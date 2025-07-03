@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { styled } from "@mui/material/styles";
-
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Stack from "@mui/material/Stack";
 import LinearProgress, {
   linearProgressClasses,
@@ -13,7 +11,6 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Power } from "lucide-react";
-import axios from "axios";
 import { LAMBDA_URL } from "@/utils/constants";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
@@ -118,9 +115,9 @@ export default function Page() {
             <Link
               href={item.link}
               key={idx}
-              className="w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
+              className=" group w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
               <span className="text-xl text-gray-900">{item.name}</span>
-              <ChevronRight className="h-[1.5rem] w-[1.5rem]" />
+              <ChevronRight className="group-hover:translate-x-2 transition-transform ease-in-out h-[1.5rem] w-[1.5rem]" />
             </Link>
           ))}
         </div>
@@ -138,9 +135,9 @@ export default function Page() {
             <Link
               href={item.link}
               key={idx}
-              className="w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
+              className=" group w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
               <span className="text-xl text-gray-900">{item.name}</span>
-              <ChevronRight className="h-[1.5rem] w-[1.5rem]" />
+              <ChevronRight className="group-hover:translate-x-2 transition-transform ease-in-out h-[1.5rem] w-[1.5rem]" />
             </Link>
           ))}
         </div>

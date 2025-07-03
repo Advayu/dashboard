@@ -41,11 +41,10 @@ export default async function Page() {
             </div>
           </div>
 
-          <div className="ml-12 w-full md:block hidden h-[18.75rem] w-[44vw]">
+          {/* <div className="ml-12 w-full md:block hidden h-[18.75rem] w-[44vw]">
             <h1 className="text-xl font-bold my-2">Outlet traffic</h1>
-            {/* shows outlet traffic graphs */}
             <LineGraph dataset={dataset2} toggle={true} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -7,23 +7,22 @@ const JWT_SECRET = process.env.JWT_SECRET;
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
   console.log("token", token);
+  if (!token) {
+    // No token = Unauthorized
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
-  // if (!token) {
-  //   // No token = Unauthorized
-  //   return NextResponse.redirect(new URL("/login", request.url));
-  // }
-
-  // try {
-  //   // Validate the token
-  //   const secret = new TextEncoder().encode(JWT_SECRET);
-  //   await jwtVerify(token, secret);
-  //   // Token is valid → continue
-  //   return NextResponse.next();
-  // } catch (err) {
-  //   // Token is invalid or expired = Unauthorized
-  //   console.error("JWT verification failed:", err);
-  //   return NextResponse.redirect(new URL("/login", request.url));
-  // }
+  try {
+    // Validate the token
+    const secret = new TextEncoder().encode(JWT_SECRET);
+    await jwtVerify(token, secret);
+    // Token is valid → continue
+    return NextResponse.next();
+  } catch (err) {
+    // Token is invalid or expired = Unauthorized
+    console.error("JWT verification failed:", err);
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 }
 
 export const config = {

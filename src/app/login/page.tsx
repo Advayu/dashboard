@@ -10,6 +10,8 @@ import Mail from "@/components/icons/Mail";
 import Lock from "@/components/icons/Lock";
 import logo from "../../../public/logo/advayuClubLogo.svg";
 import { useRouter } from "next/navigation";
+import { LAMBDA_URL } from "@/utils/constants";
+import axios from "axios";
 
 const Auth = () => {
   const router = useRouter();
@@ -36,11 +38,11 @@ const Auth = () => {
       setError("Please fill in all fields.");
       return;
     }
-
     login({ email, password });
+
     console.log(data);
   };
-  isSuccess && router.push("/");
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white  via-[#A1F6FF] to-[#189EAC]/80">
       <form
