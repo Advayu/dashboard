@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
-  Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
@@ -16,17 +15,21 @@ import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSel
 import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import OutletLocationSection from "./OutletLocationSection";
-
+import { Trash2 } from "lucide-react";
 interface OutletFormSectionProps {
   index: number;
   remove: (index: number) => void;
   value: string;
+  errors: any;
+  watch?: any;
 }
 
 const OutletFormSection = ({
   index,
   remove,
   value,
+  errors,
+  watch,
 }: OutletFormSectionProps) => {
   const { register } = useFormContext();
 
@@ -36,9 +39,20 @@ const OutletFormSection = ({
   );
 
   return (
-    <AccordionItem value={value}>
-      <AccordionTrigger className="font-black text-2xl">
-        Outlet #{index + 1}
+    <AccordionItem
+      value={value}
+      className="border-2 border-gray-300 rounded-lg p-4 shadow-lg ">
+      <AccordionTrigger className="font-black text-2xl flex flex-row gap-4 ">
+        <div className="flex justify-between items-center flex-row w-full">
+          Outlet #{index + 1}
+          <span className="text-xl font-medium"></span>
+          <span>
+            <Trash2
+              onClick={() => remove(index)}
+              className=" text-red-400 hover:text-red-500"
+            />
+          </span>
+        </div>
       </AccordionTrigger>
       <AccordionContent>
         {/* Name */}
@@ -51,8 +65,12 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.name`, { required: true })}
             id="name"
             placeholder="Enter outlet name"
+            className="w-full"
           />
         </div>
+        {errors.outlet?.[index]?.name && (
+          <p className="text-red-500 text-xs">This field is required</p>
+        )}
 
         {/* Address */}
         <div className="my-3">
@@ -61,6 +79,7 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.address`, { required: true })}
             id="address"
             placeholder="Enter address"
+            className="w-full"
           />
         </div>
 
@@ -74,6 +93,7 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.neighborhood`)}
             id="neighborhood"
             placeholder="Enter neighborhood"
+            className="w-full"
           />
         </div>
 
@@ -84,6 +104,7 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.street`)}
             id="street"
             placeholder="Enter street"
+            className="w-full"
           />
         </div>
 
@@ -94,6 +115,7 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.postal_code`, { required: true })}
             id="postal_code"
             placeholder="Enter postal code"
+            className="w-full"
           />
         </div>
 
@@ -114,6 +136,7 @@ const OutletFormSection = ({
             {...register(`outlet.${index}.manager_name`, { required: true })}
             id="manager_name"
             placeholder="Enter name"
+            className="w-full"
           />
         </div>
 
@@ -163,14 +186,6 @@ const OutletFormSection = ({
           <h4>Upload Outlet Images</h4>
           <ImageUploader name={`outlet.${index}.images`} multiple={true} />
         </div>
-
-        {/* Remove Button */}
-        <Button
-          onClick={() => remove(index)}
-          type="button"
-          variant="destructive">
-          Remove Outlet
-        </Button>
       </AccordionContent>
     </AccordionItem>
   );

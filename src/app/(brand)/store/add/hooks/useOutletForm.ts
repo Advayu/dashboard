@@ -146,5 +146,6 @@ export const useOutletForm = () => {
         openAccordionValue,
         setOpenAccordionValue,
         errors,
+        watch
     };
 };

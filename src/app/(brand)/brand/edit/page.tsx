@@ -1,5 +1,12 @@
 "use client";
-import React, { useState, useEffect, useCallback, useRef, use } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  use,
+  useMemo,
+} from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,6 +27,7 @@ import {
 } from "@/hooks/use-industry";
 import { DynamicInputList } from "@/components/DynamicInputList";
 import { resolveImageUpload } from "@/utils/image-utils";
+import { sanitizeBrandDetails } from "@/utils/brand-utils";
 
 const BrandDetails: React.FC<any> = () => {
   // getting brand user details form redux store
@@ -115,10 +123,11 @@ const BrandDetails: React.FC<any> = () => {
       <FormProvider {...method}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center justify-center w-full md:px-0 px-5">
-          <div>
+          className="flex flex-col items-center justify-center w-full md:px-0 px-5 ">
+          <div className="border border-gray-400/70 rounded-lg p-4 shadow-lg md:w-[40vw] w-aut0">
             <h1 className="text-4xl font-bold">Brand Details</h1>
             <p>Enter your brand details</p>
+
             {/* Brand Name */}
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label className="text-base md:text-lg font-bold" htmlFor="name">
@@ -131,6 +140,9 @@ const BrandDetails: React.FC<any> = () => {
                 name="name"
                 placeholder="Enter your brand name"
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs">This field is required</p>
+              )}
             </div>
 
             {/* Industry and Category */}
@@ -168,6 +180,11 @@ const BrandDetails: React.FC<any> = () => {
                       ))
                     )}
                   </select>
+                  {errors.category_name && (
+                    <p className="text-red-500 text-xs">
+                      This field is required
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -196,6 +213,11 @@ const BrandDetails: React.FC<any> = () => {
                       ))
                     )}
                   </select>
+                  {errors.subcategories && (
+                    <p className="text-red-500 text-xs">
+                      This field is required
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

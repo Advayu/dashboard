@@ -44,7 +44,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white  via-[#A1F6FF] to-[#189EAC]/80">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white  via-[#A1F6FF] to-[#189EAC]/80 px-6">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg shadow-gray-500/40 ">

@@ -16,6 +16,8 @@ const OutletDetails = () => {
     handleOutletSubmit,
     openAccordionValue,
     setOpenAccordionValue,
+    errors,
+    watch,
   } = useOutletForm();
 
   return (
@@ -30,13 +32,16 @@ const OutletDetails = () => {
             type="single"
             collapsible
             value={openAccordionValue}
-            onValueChange={setOpenAccordionValue}>
+            onValueChange={setOpenAccordionValue}
+            className="space-y-4">
             {fields.map((field, index) => (
               <OutletFormSection
                 key={field.id}
                 index={index}
                 remove={remove}
                 value={`outlet-${index}`}
+                errors={errors}
+                watch={watch}
               />
             ))}
           </Accordion>
@@ -53,8 +58,8 @@ const OutletDetails = () => {
             <Button
               disabled={fields.length === 0}
               type="submit"
-              className="w-28 w-full md:w-auto"
-              size="thin">
+              className="w-72 w-full md:w-auto px-6 py-2 "
+              size="default">
               Save
             </Button>
           </div>
