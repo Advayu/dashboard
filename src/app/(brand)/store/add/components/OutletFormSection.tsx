@@ -20,15 +20,13 @@ import OutletLocationSection from "./OutletLocationSection";
 interface OutletFormSectionProps {
   index: number;
   remove: (index: number) => void;
-  isOpen: boolean;
-  onOpen: () => void;
+  value: string;
 }
 
 const OutletFormSection = ({
   index,
   remove,
-  isOpen,
-  onOpen,
+  value,
 }: OutletFormSectionProps) => {
   const { register } = useFormContext();
 
@@ -38,148 +36,143 @@ const OutletFormSection = ({
   );
 
   return (
-    <Accordion
-      type="single"
-      collapsible
-      value={isOpen ? `outlet-${index}` : ""}
-      onValueChange={() => onOpen()}>
-      <AccordionItem value={`outlet-${index}`}>
-        <AccordionTrigger className="font-black text-2xl">
-          Outlet #{index + 1}
-        </AccordionTrigger>
-        <AccordionContent>
-          {/* Name */}
-          <div className="my-3">
-            <Label htmlFor="name">
-              Name of the outlet <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              {...register(`outlet.${index}.name`, { required: true })}
-              id="name"
-              placeholder="Enter outlet name"
-            />
-          </div>
-
-          {/* Address */}
-          <div className="my-3">
-            <Label htmlFor="address">Address</Label>
-            <Input
-              {...register(`outlet.${index}.address`, { required: true })}
-              id="address"
-              placeholder="Enter address"
-            />
-          </div>
-
-          {/* Location */}
-          <OutletLocationSection index={index} />
-
-          {/* Neighborhood */}
-          <div className="my-3">
-            <Label htmlFor="neighborhood">Neighborhood</Label>
-            <Input
-              {...register(`outlet.${index}.neighborhood`)}
-              id="neighborhood"
-              placeholder="Enter neighborhood"
-            />
-          </div>
-
-          {/* Street */}
-          <div className="my-3">
-            <Label htmlFor="street">Street</Label>
-            <Input
-              {...register(`outlet.${index}.street`)}
-              id="street"
-              placeholder="Enter street"
-            />
-          </div>
-
-          {/* Postal Code */}
-          <div className="my-3">
-            <Label htmlFor="postal_code">Postal Code</Label>
-            <Input
-              {...register(`outlet.${index}.postal_code`, { required: true })}
-              id="postal_code"
-              placeholder="Enter postal code"
-            />
-          </div>
-
-          {/* Phone */}
-          <div className="my-3">
-            <Label htmlFor="manager_phone">Manager Phone</Label>
-            <PhoneNumberInput
-              {...register(`outlet.${index}.manager_phone`, { required: true })}
-              id="manager_phone"
-              placeholder="Enter phone number"
-            />
-          </div>
-
-          {/* Manager Name */}
-          <div className="my-3">
-            <Label htmlFor="manager_name">Manager Name</Label>
-            <Input
-              {...register(`outlet.${index}.manager_name`, { required: true })}
-              id="manager_name"
-              placeholder="Enter name"
-            />
-          </div>
-
-          {/* Services */}
-          <DynamicInputList
-            fieldName={`outlet.${index}.service`}
-            label="Add services"
-            placeholder="Enter a service"
-            index={1}
+    <AccordionItem value={value}>
+      <AccordionTrigger className="font-black text-2xl">
+        Outlet #{index + 1}
+      </AccordionTrigger>
+      <AccordionContent>
+        {/* Name */}
+        <div className="my-3">
+          <Label htmlFor="name">
+            Name of the outlet <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            autoFocus
+            {...register(`outlet.${index}.name`, { required: true })}
+            id="name"
+            placeholder="Enter outlet name"
           />
+        </div>
 
-          {/* Amenities */}
-          <DynamicInputList
-            fieldName={`outlet.${index}.amenity`}
-            label="Add amenities"
-            placeholder="Enter an amenity"
-            index={2}
+        {/* Address */}
+        <div className="my-3">
+          <Label htmlFor="address">Address</Label>
+          <Input
+            {...register(`outlet.${index}.address`, { required: true })}
+            id="address"
+            placeholder="Enter address"
           />
+        </div>
 
-          {/* Accessibility */}
-          <AccessibilityFeaturesSelector
-            name={`outlet.${index}.accessibility_features`}
+        {/* Location */}
+        <OutletLocationSection index={index} />
+
+        {/* Neighborhood */}
+        <div className="my-3">
+          <Label htmlFor="neighborhood">Neighborhood</Label>
+          <Input
+            {...register(`outlet.${index}.neighborhood`)}
+            id="neighborhood"
+            placeholder="Enter neighborhood"
           />
+        </div>
 
-          {/* Timing */}
-          <div className="my-6">
-            <Label>Outlet Timing</Label>
-            <div className="flex space-x-2">
-              <TimeSelector
-                name={`outlet.${index}.opening_hours`}
-                label="Opening Time"
-                times={times}
-              />
-              <TimeSelector
-                name={`outlet.${index}.closing_time`}
-                label="Closing Time"
-                times={times}
-              />
-            </div>
+        {/* Street */}
+        <div className="my-3">
+          <Label htmlFor="street">Street</Label>
+          <Input
+            {...register(`outlet.${index}.street`)}
+            id="street"
+            placeholder="Enter street"
+          />
+        </div>
+
+        {/* Postal Code */}
+        <div className="my-3">
+          <Label htmlFor="postal_code">Postal Code</Label>
+          <Input
+            {...register(`outlet.${index}.postal_code`, { required: true })}
+            id="postal_code"
+            placeholder="Enter postal code"
+          />
+        </div>
+
+        {/* Phone */}
+        <div className="my-3">
+          <Label htmlFor="manager_phone">Manager Phone</Label>
+          <PhoneNumberInput
+            {...register(`outlet.${index}.manager_phone`, { required: true })}
+            id="manager_phone"
+            placeholder="Enter phone number"
+          />
+        </div>
+
+        {/* Manager Name */}
+        <div className="my-3">
+          <Label htmlFor="manager_name">Manager Name</Label>
+          <Input
+            {...register(`outlet.${index}.manager_name`, { required: true })}
+            id="manager_name"
+            placeholder="Enter name"
+          />
+        </div>
+
+        {/* Services */}
+        <DynamicInputList
+          fieldName={`outlet.${index}.services`}
+          label="Add services"
+          placeholder="Enter a service"
+          index={1}
+        />
+
+        {/* Amenities */}
+        <DynamicInputList
+          fieldName={`outlet.${index}.amenities`}
+          label="Add amenities"
+          placeholder="Enter an amenity"
+          index={2}
+        />
+
+        {/* Accessibility */}
+        <AccessibilityFeaturesSelector
+          name={`outlet.${index}.accessibility_features`}
+        />
+
+        {/* Timing */}
+        <div className="my-6">
+          <Label>Outlet Timing</Label>
+          <div className="flex space-x-2">
+            <TimeSelector
+              name={`outlet.${index}.opening_hours`}
+              label="Opening Time"
+              times={times}
+            />
+            <TimeSelector
+              name={`outlet.${index}.closing_hours`}
+              label="Closing Time"
+              times={times}
+            />
           </div>
+        </div>
 
-          {/* Days Open */}
-          <WeekdaySelector name={`outlet.${index}.days_open`} />
+        {/* Days Open */}
+        <WeekdaySelector name={`outlet.${index}.days_open`} />
 
-          {/* Images */}
-          <div className="my-3">
-            <h4>Upload Outlet Images</h4>
-            <ImageUploader name={`outlet.${index}.images`} multiple={true} />
-          </div>
+        {/* Images */}
+        <div className="my-3">
+          <h4>Upload Outlet Images</h4>
+          <ImageUploader name={`outlet.${index}.images`} multiple={true} />
+        </div>
 
-          {/* Remove Button */}
-          <Button
-            onClick={() => remove(index)}
-            type="button"
-            variant="destructive">
-            Remove Outlet
-          </Button>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        {/* Remove Button */}
+        <Button
+          onClick={() => remove(index)}
+          type="button"
+          variant="destructive">
+          Remove Outlet
+        </Button>
+      </AccordionContent>
+    </AccordionItem>
   );
 };
 

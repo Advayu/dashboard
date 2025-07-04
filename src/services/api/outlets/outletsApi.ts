@@ -12,7 +12,7 @@ export const postOutletData = async (
   const opening_hours: Record<string, string> = {};
 
   data.days_open.map((day: string) => {
-    // opening_hours[day] = data.opening_hours[day]
+
     opening_hours[day] = `${data.opening_time} - ${data.closing_time}`;
   });
 

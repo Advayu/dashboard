@@ -9,15 +9,20 @@ export const outletSchema = z.object({
     postal_code: z.string().optional(),
     manager_phone: z.string().optional(),
     manager_name: z.string().optional(),
-    service: z.array(z.string()).optional(),
-    amenity: z.array(z.string()).optional(),
+    services: z.array(z.string()).optional(),
+    amenities: z.array(z.string()).optional(),
     accessibility_features: z.record(z.string(), z.boolean(), {
         message: "Accessibility features are required"
     }).optional(),
     opening_hours: z.string().optional(),
-    closing_time: z.string().optional(),
+    closing_hours: z.string().optional(),
+    closed_days: z.string().optional(),
     days_open: z.array(z.string()).optional(),
-    images: z.array(z.instanceof(File)).optional()
+    images: z.array(z.instanceof(File)).optional(),
+    location: z.object({
+        lat: z.number(),
+        lng: z.number(),
+    }),
 })
 
 export const outletFormSchema = z.object({

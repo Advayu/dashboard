@@ -5,17 +5,17 @@ import { FormProvider } from "react-hook-form";
 import AddOutletLayout from "./components/add-outlet-layout";
 import OutletFormSection from "./components/OutletFormSection";
 import { useOutletForm } from "./hooks/useOutletForm";
+import { Accordion } from "@/components/ui/accordion";
 
 const OutletDetails = () => {
   const {
     methods,
     fields,
-    append,
     remove,
     addNewOutlet,
     handleOutletSubmit,
-    openAccordionIndex,
-    setOpenAccordionIndex,
+    openAccordionValue,
+    setOpenAccordionValue,
   } = useOutletForm();
 
   return (
@@ -26,16 +26,20 @@ const OutletDetails = () => {
           className="mt-8">
           {/* Outlet Name */}
 
-          {fields.map((field, index) => (
-            <OutletFormSection
-              key={field.id}
-              index={index}
-              remove={remove}
-              isOpen={index === openAccordionIndex}
-              onOpen={() => setOpenAccordionIndex(index)}
-            />
-          ))}
-
+          <Accordion
+            type="single"
+            collapsible
+            value={openAccordionValue}
+            onValueChange={setOpenAccordionValue}>
+            {fields.map((field, index) => (
+              <OutletFormSection
+                key={field.id}
+                index={index}
+                remove={remove}
+                value={`outlet-${index}`}
+              />
+            ))}
+          </Accordion>
           <Button
             onClick={addNewOutlet}
             type="button"

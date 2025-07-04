@@ -31,6 +31,9 @@ const userSlice = createSlice({
 
             return { ...state, ...action.payload };
         },
+        setBrandUserId(state, action: PayloadAction<string>) {
+            state.id = action.payload;
+        },
 
         // Reset the state to its initial structure
         resetBrandUser() {
@@ -40,5 +43,5 @@ const userSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { setBrandUser, resetBrandUser } = userSlice.actions;
+export const { setBrandUser, resetBrandUser, setBrandUserId } = userSlice.actions;
 export default userSlice.reducer;

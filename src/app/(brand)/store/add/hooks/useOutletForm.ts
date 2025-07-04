@@ -2,14 +2,17 @@
 
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { outletFormSchema } from "@/schemas/outlet.schema";
+import { outletFormSchema, outletSchema } from "@/schemas/outlet.schema";
 import { toast } from "@/hooks/use-toast";
 import { useImageUpload } from "@/hooks/use-image";
 import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
 import { useCreateOutlet } from "@/hooks/use-outlet";
 import { useState } from "react";
+import { z } from "zod";
 
-const outletData = {
+type OutletData = z.infer<typeof outletFormSchema>["outlet"][number];
+
+const outletData: OutletData = {
     name: "",
     address: "",
     neighborhood: "",
@@ -17,12 +20,12 @@ const outletData = {
     postal_code: "",
     manager_phone: "",
     manager_name: "",
-    service: "",
-    amenity: "",
-    accessibility_features: "",
+    services: [],
+    amenities: [],
+    accessibility_features: {},
     opening_hours: "",
-    closing_time: "",
-    days_open: "",
+    closed_days: "",
+    days_open: [],
     images: [],
     location: {
         lat: 12.9784,
@@ -32,7 +35,7 @@ const outletData = {
 
 export const useOutletForm = () => {
 
-    const [openAccordionIndex, setOpenAccordionIndex] = useState<number | null>(0);
+    const [openAccordionValue, setOpenAccordionValue] = useState<string | undefined>("outlet-0");
 
 
     const uploadImageToBucket = useImageUpload(
@@ -67,6 +70,7 @@ export const useOutletForm = () => {
 
     const handleOutletSubmit: SubmitHandler<any> = async (data) => {
         const outlets = data.outlet;
+        console.log("outlets", outlets);
 
         if (!brand_id) {
             toast({
@@ -84,7 +88,9 @@ export const useOutletForm = () => {
                         uploadImageToBucket.mutateAsync(image)
                     )
                 );
-                outlet.images = results.map((r) => r.fileUrl);
+                console.log("results", results);
+                outlet.images = results.map((r) => r.fileKey);
+                console.log("outlet", outlet);
                 return createOutlet({ brand_id, newOutlet: outlet });
             });
 
@@ -106,6 +112,7 @@ export const useOutletForm = () => {
     };
 
     const addNewOutlet = async () => {
+        console.log(errors);
         const currentOutlets = watch("outlet");
         const lastIndex = currentOutlets?.length - 1;
 
@@ -125,7 +132,7 @@ export const useOutletForm = () => {
         append({ ...outletData });
 
         // Set the accordion to open the new one
-        setOpenAccordionIndex(fields.length);
+        setOpenAccordionValue(`outlet-${fields.length}`);
 
     };
 
@@ -136,7 +143,8 @@ export const useOutletForm = () => {
         remove,
         addNewOutlet,
         handleOutletSubmit,
-        openAccordionIndex,
-        setOpenAccordionIndex,
+        openAccordionValue,
+        setOpenAccordionValue,
+        errors,
     };
 };

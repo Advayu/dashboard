@@ -12,7 +12,7 @@ export const createBrand = async (brandData: any) => {
 // Update an existing brand
 /* need to remove logo  and banner url from brand data */
 export const updateBrand = async (brandId: string, brandData: any) => {
-    const response = await axios.put(`${LAMBDA_URL}/v1/brands/${brandId}`, { ...brandData, logo_url: "", banner_url: "" }, {
+    const response = await axios.put(`${LAMBDA_URL}/v1/brands/${brandId}`, { ...brandData }, {
         withCredentials: true,
     });
     return response.data;

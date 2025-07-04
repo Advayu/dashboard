@@ -1,5 +1,8 @@
-import { useFilePreview } from "@/hooks/use-filepreview";
+import { usePreviewUrl } from "@/hooks/use-preview-url";
+import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
 import Image from "next/image";
+
+type UploadableImage = File | string;
 
 export function FilePreview({
   file,
@@ -9,18 +12,17 @@ export function FilePreview({
   alt = "Preview",
   onRemove,
 }: {
-  file?: File | null;
+  file?: UploadableImage | null;
   fallback?: string;
   width?: number;
   height?: number;
   alt?: string;
-  onRemove?: () => void; // 🆕 Optional remove handler
+  onRemove?: () => void;
 }) {
-  const previewUrl = useFilePreview(file);
+  const previewUrl = usePreviewUrl(file, OUTLET_BUCKET_NAME, LAMBDA_URL);
 
   return (
     <div className="relative inline-block">
-      {/* Cross button */}
       {onRemove && (
         <button
           type="button"

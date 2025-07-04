@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 
+
+// cookies has brand email, brand id, userId 
 export const decodeJWT = async () => {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;

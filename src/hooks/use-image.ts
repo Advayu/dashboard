@@ -10,27 +10,30 @@ import { formatApiError } from "@/utils/formatApiError";
 export const useImageUpload = (
     url: string,
     bucket: string
-): UseMutationResult<any, Error, File> => {
+): UseMutationResult<{ fileKey: string }, Error, File> => {
     return useMutation({
-        mutationFn: (file: File) =>
-            uploadImageToBucket({
+        mutationFn: async (file: File) => {
+            const response = await uploadImageToBucket({
                 file,
                 bucket,
                 url,
                 maxFileSize: 2 * 1024 * 1024,
-            }),
+            });
+
+            return { fileKey: response.fileKey }; // ✅ return the key here
+        },
         onSuccess: (_, file) => {
             toast({
-                variant: 'success',
-                title: 'Upload Successful',
+                variant: "success",
+                title: "Upload Successful",
                 description: `${file.name} uploaded successfully.`,
             });
         },
         onError: (error) => {
             toast({
-                variant: 'destructive',
-                title: 'Upload Failed',
-                description: formatApiError(error), // 👈 centralized error formatting
+                variant: "destructive",
+                title: "Upload Failed",
+                description: formatApiError(error),
             });
         },
     });

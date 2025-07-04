@@ -13,7 +13,10 @@ import { useDispatch } from "react-redux";
 
 import { useGetOffers } from "@/hooks/use-offer";
 import { useLogout } from "@/hooks/use-auth";
-import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
+import {
+  setBrandUser,
+  setBrandUserId,
+} from "@/store/globalSlice/brandUserSlice";
 
 const ShimmerLoader: React.FC = () => (
   <div className="embla__slide w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
@@ -21,6 +24,7 @@ const ShimmerLoader: React.FC = () => (
 
 const Dashboard = ({ user }: any) => {
   const dispatch = useDispatch();
+
   const { mutate: logout } = useLogout();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
@@ -58,7 +62,7 @@ const Dashboard = ({ user }: any) => {
   useEffect(() => {
     dispatch(
       setBrandUser({
-        id: user?.id ?? "",
+        id: user?.userId ?? "",
         name: user?.name ?? "",
         email: user?.email ?? "",
         phone: user?.phone ?? "",

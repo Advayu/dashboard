@@ -2,6 +2,8 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { FilePreview } from "./FilePreview";
 
+export type UploadableImage = File | string; // string = pre-uploaded URL
+
 interface ImageUploadProps {
   name: string;
   multiple?: boolean;
@@ -15,8 +17,8 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
 
   const handleFileInput = (
     e: React.ChangeEvent<HTMLInputElement>,
-    existingFiles: File[],
-    onChange: (files: File[]) => void,
+    existingFiles: UploadableImage[],
+    onChange: (files: UploadableImage[]) => void,
     allowMultiple: boolean
   ) => {
     const newFiles = Array.from(e.target.files || []);
@@ -32,8 +34,8 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
 
   const handleRemove = (
     index: number,
-    files: File[],
-    onChange: (files: File[]) => void
+    files: UploadableImage[],
+    onChange: (files: UploadableImage[]) => void
   ) => {
     const updatedFiles = files.filter((_, i) => i !== index);
     onChange(updatedFiles);
@@ -45,39 +47,43 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
         name={name}
         control={control}
         defaultValue={[]}
-        render={({ field: { value = [], onChange } }) => (
-          <>
-            <input
-              id={name}
-              type="file"
-              multiple={multiple}
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleFileInput(e, value, onChange, multiple)}
-            />
+        render={({ field: { value, onChange } }) => {
+          const files = Array.isArray(value) ? value : value ? [value] : [];
 
-            <label
-              htmlFor={name}
-              className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit">
-              Attach image
-            </label>
+          return (
+            <>
+              <input
+                id={name}
+                type="file"
+                multiple={multiple}
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFileInput(e, files, onChange, multiple)}
+              />
 
-            {value?.length > 0 && (
-              <div className="mt-2 space-y-2">
-                <p className="text-sm font-medium">Selected Images:</p>
-                <ul className="list-disc list-inside flex flex-wrap gap-2 w-74 ">
-                  {value?.map((file: File, index: number) => (
-                    <FilePreview
-                      key={index}
-                      file={file}
-                      onRemove={() => handleRemove(index, value, onChange)}
-                    />
-                  ))}
-                </ul>
-              </div>
-            )}
-          </>
-        )}
+              <label
+                htmlFor={name}
+                className="border border-black text-black px-4 rounded cursor-pointer my-1 w-fit">
+                Attach image
+              </label>
+
+              {files.length > 0 && (
+                <div className="mt-2 space-y-2">
+                  <p className="text-sm font-medium">Selected Images:</p>
+                  <ul className="list-disc list-inside flex flex-wrap gap-2 w-74">
+                    {files.map((item, index) => (
+                      <FilePreview
+                        key={index}
+                        file={item}
+                        onRemove={() => handleRemove(index, files, onChange)}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          );
+        }}
       />
     </div>
   );

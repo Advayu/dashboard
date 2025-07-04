@@ -1,40 +1,52 @@
 import axiosInstance from "@/utils/axiosInstance";
-import { AWS_IMAGE_UPLOAD_URL } from "@/utils/constants";
+import { AWS_IMAGE_UPLOAD_URL, LAMBDA_URL } from "@/utils/constants";
+
 
 
 export const uploadImageToBucket = async ({
     file,
     bucket,
-    url,
+    url, // Currently unused
     maxFileSize = 5 * 1024 * 1024, // Default 5 MB
 }: {
     file: File;
     bucket: string;
-    url: string;
+    url: string; // You may want to use this instead of LAMBDA_URL if dynamic
     maxFileSize?: number;
 }) => {
-
     if (!file) {
         throw new Error('No file provided for upload.');
     }
 
-    // Validate file size
+
     if (file.size > maxFileSize) {
-        throw new Error(`File size exceeds the limit of ${maxFileSize / (1024 * 1024)} MB.`);
+        throw new Error(
+            `File size exceeds the limit of ${maxFileSize / (1024 * 1024)} MB.`
+        );
     }
 
-    // Prepare FormData
+
     const formData = new FormData();
-    formData.append('file', file, file.name);
+    formData.append('file', file);
 
-    const endpoint = `${AWS_IMAGE_UPLOAD_URL}?bucket=${bucket}`;
+    const endpoint = `${LAMBDA_URL}/upload/image?bucket=${encodeURIComponent(
+        bucket
+    )}`;
 
-    // Perform the upload
-    const response = await axiosInstance.post(endpoint, formData);
+    try {
+        const response = await axiosInstance.post(endpoint, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Axios will handle the boundary
+            },
+        });
 
-    return response.data;
-
+        return response.data;
+    } catch (error: any) {
+        // Optional: improve error handling or rethrow
+        throw error?.response?.data || error;
+    }
 };
+
 
 
 export const getImageUrlByFileKey = async (
@@ -46,12 +58,13 @@ export const getImageUrlByFileKey = async (
         throw new Error('Missing required parameters to fetch image URL.');
     }
 
-    const response = await axiosInstance.get(url, {
+    const response = await axiosInstance.get("/upload/url", {
         params: { fileKey, bucket },
     });
 
     return response.data;
 };
+
 
 
 
