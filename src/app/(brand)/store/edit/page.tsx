@@ -15,15 +15,9 @@ import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSel
 import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import GetLocationButton from "@/components/GetLocationButton";
-import { FilePreview } from "@/components/FilePreview";
 import { useImageUpload } from "@/hooks/use-image";
 import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
-import { toast } from "@/hooks/use-toast";
-import {
-  useCreateOutlet,
-  useGetOutlet,
-  useUpdateOutlet,
-} from "@/hooks/use-outlet";
+import { useGetOutlet, useUpdateOutlet } from "@/hooks/use-outlet";
 import { useSearchParams } from "next/navigation";
 const OutletDetails = () => {
   // getting outlet id from search params
@@ -49,15 +43,68 @@ const OutletDetails = () => {
     reset,
   } = method;
 
+  // populating outlet form with inital data
   useEffect(() => {
     if (data) {
+      const schedule = data.opening_hours;
+
+      const weekdays = Object.keys(schedule).sort(
+        (a, b) =>
+          [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ].indexOf(a) -
+          [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ].indexOf(b)
+      );
+
+      const firstTimeRange = Object.values(schedule)[0];
+      const [openingTime, closingTime] = firstTimeRange.split(" - ");
+
+      data.opening_hours = openingTime;
+      data.closing_hours = closingTime;
+      data.days_open = weekdays;
+
       reset(data); // ✅ update form with loaded data
     }
   }, [data, reset]);
 
+  // submit function
   function onSubmit(data) {
     console.log("data>>", data);
-    updateOutlet({ id, data });
+
+    // need to uplaod images to bucket if it's file. if it's not file means it's already has filekey no need to do anything
+
+    const images = data.images;
+
+    if (images) {
+      const promises = images.map((image: File | string) => {
+        if (typeof image !== "string") {
+          return uploadImageToBucket.mutateAsync(image); // ✅ return added
+        } else {
+          return Promise.resolve({ fileKey: image });
+        }
+      });
+
+      Promise.all(promises).then((results) => {
+        data.images = results.map((r) => r.fileKey);
+        updateOutlet({ id, data });
+      });
+    } else {
+      updateOutlet({ id, data });
+    }
   }
 
   // Generate times for the outlets
@@ -280,15 +327,15 @@ const OutletDetails = () => {
                     label="Opening Time"
                     times={times}
                   />
-                  {/* <TimeSelector
-                    name="closing_time"
+                  <TimeSelector
+                    name="closing_hours"
                     label="Closing Time"
                     times={times}
-                  /> */}
+                  />
                 </div>
               </div>
 
-              {/* <DaysOpenSelector name="days_open" /> */}
+              <DaysOpenSelector name="days_open" />
               {/* upload images of this outlet */}
               <h4>Upload Outlet Images</h4>
               <ImageUploader name="images" multiple={true} />
