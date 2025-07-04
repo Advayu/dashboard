@@ -17,7 +17,7 @@ const outletData: OutletData = {
     address: "",
     neighborhood: "",
     street: "",
-    postal_code: "",
+    postal_code: 0,
     manager_phone: "",
     manager_name: "",
     services: [],
@@ -55,6 +55,7 @@ export const useOutletForm = () => {
         handleSubmit,
         trigger,
         watch,
+        setFocus,
         formState: { errors },
     } = methods;
 
@@ -114,17 +115,13 @@ export const useOutletForm = () => {
     const addNewOutlet = async () => {
         console.log(errors);
         const currentOutlets = watch("outlet");
+        console.log("currentOutlets", currentOutlets);
         const lastIndex = currentOutlets?.length - 1;
 
         if (lastIndex >= 0) {
             const isValid = await trigger(`outlet.${lastIndex}`);
             if (!isValid) {
-                toast({
-                    variant: "destructive",
-                    title: "Incomplete Outlet",
-                    description:
-                        "Please complete the current outlet before adding another.",
-                });
+
                 return;
             }
         }

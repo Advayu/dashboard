@@ -16,6 +16,7 @@ import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import OutletLocationSection from "./OutletLocationSection";
 import { Trash2 } from "lucide-react";
+import { error } from "console";
 interface OutletFormSectionProps {
   index: number;
   remove: (index: number) => void;
@@ -81,6 +82,11 @@ const OutletFormSection = ({
             placeholder="Enter address"
             className="w-full"
           />
+          {errors && errors.outlet?.[index]?.address && (
+            <p className="text-red-500 text-xs italic">
+              {errors.outlet?.[index]?.address?.message}
+            </p>
+          )}
         </div>
 
         {/* Location */}
@@ -112,11 +118,23 @@ const OutletFormSection = ({
         <div className="my-3">
           <Label htmlFor="postal_code">Postal Code</Label>
           <Input
-            {...register(`outlet.${index}.postal_code`, { required: true })}
+            inputMode="numeric"
+            {...register(`outlet.${index}.postal_code`, {
+              required: "Postal code is required",
+              pattern: {
+                value: /^\d{5}$/,
+                message: "Postal code must be 5 digits",
+              },
+            })}
             id="postal_code"
             placeholder="Enter postal code"
             className="w-full"
           />
+          {errors.outlet?.[index]?.postal_code && (
+            <p className="text-red-500 text-xs italic">
+              {errors.outlet?.[index]?.postal_code?.message}
+            </p>
+          )}
         </div>
 
         {/* Phone */}

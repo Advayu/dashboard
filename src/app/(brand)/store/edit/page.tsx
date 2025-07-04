@@ -71,7 +71,7 @@ const OutletDetails = () => {
       );
 
       const firstTimeRange = Object.values(schedule)[0];
-      const [openingTime, closingTime] = firstTimeRange.split(" - ");
+      const [openingTime, closingTime] = firstTimeRange.split(" - ") || [];
 
       data.opening_hours = openingTime;
       data.closing_hours = closingTime;

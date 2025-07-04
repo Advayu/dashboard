@@ -6,7 +6,7 @@ export const outletSchema = z.object({
     address: z.string(),
     neighborhood: z.string().optional(),
     street: z.string().optional(),
-    postal_code: z.string().optional(),
+    postal_code: z.number().min(6, "Postal code is required"),
     manager_phone: z.string().optional(),
     manager_name: z.string().optional(),
     services: z.array(z.string()).optional(),
