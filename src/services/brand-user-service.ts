@@ -35,22 +35,29 @@ export const getBrandUser = async (brandUserId: string): Promise<any> => {
 
 
 export const putBrandUser = async (
-    data: BrandUserUpdateInput,
+    data: any,
     brandId: string
 ): Promise<BrandUserResponse> => {
-    const apiUrl = `${LAMBDA_URL}/brand-users/${brandId}`;
+    const apiUrl = `/brand-users/${brandId}`;
 
-    const requestData: Record<string, any> = {
+    console.log("data", data);
+    const requestData: any = {
         name: data.name,
         email: data.email,
         phone: data.phone,
     };
 
-    if (data.password) {
+    if (data.password == "") {
+        delete requestData.password;
+    }
+    else {
         requestData.password_hash = data.password;
-        requestData.is_password_changed = true;
     }
 
+
+
+
+    console.log("requestData", requestData);
     const response = await axiosInstance.put(apiUrl, requestData, {
     });
 

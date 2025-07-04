@@ -17,10 +17,10 @@ export const useGetBrandUser = (brandId: string) => {
 
 
 export const useUpdateBrandUser = (
-    brandId: string
-): UseMutationResult<BrandUserResponse, Error, BrandUserUpdateInput> => {
+    brand_user_id: string
+): UseMutationResult<BrandUserResponse, Error, any> => {
     return useMutation({
-        mutationFn: (data) => putBrandUser(data, brandId),
+        mutationFn: (data) => putBrandUser(data, brand_user_id),
         onSuccess: (data) => {
             toast({
                 title: 'User Updated',

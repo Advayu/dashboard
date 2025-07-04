@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 import { useForm } from "react-hook-form";
-import { useGetBrandUser } from "@/hooks/use-brand-user";
+import { useGetBrandUser, useUpdateBrandUser } from "@/hooks/use-brand-user";
 import Loading from "@/components/loading";
 
 function Page() {
@@ -20,6 +20,7 @@ function Page() {
 
   const brandUser = useSelector((state: RootState) => state.brandUser);
   const { data: fetchedUser, isLoading } = useGetBrandUser(brandUser.id);
+  const { mutate: updateBrandUser } = useUpdateBrandUser(brandUser.id);
 
   useEffect(() => {
     console.log("fetchedUser", fetchedUser);
@@ -28,6 +29,7 @@ function Page() {
         name: fetchedUser.name,
         email: fetchedUser.email,
         phone: fetchedUser.phone,
+        role: fetchedUser.role,
         password: "",
         confirmPassword: "",
       });
@@ -38,10 +40,15 @@ function Page() {
     return <Loading />;
   }
 
+  const onSubmit = (data: any) => {
+    console.log("data", data);
+    updateBrandUser(data);
+  };
+
   return (
     <div className="md:w-[40%] w-full px-10 mt-10">
       <h2 className="text-2xl font-semibold mb-4">Profile Settings</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* Name Field */}
         <div className="mb-4">
           <Label
@@ -66,6 +73,7 @@ function Page() {
             Email
           </Label>
           <Input
+            disabled
             type="email"
             id="email"
             {...register("email", { required: true })}
@@ -92,7 +100,24 @@ function Page() {
             required
           />
         </div>
-        {fetchedUser?.provider !== "GOOGLE" && (
+        <div className="mb-4">
+          <Label
+            htmlFor="role"
+            className="block text-sm font-medium text-gray-700">
+            Role
+          </Label>
+          <Input
+            disabled
+            {...register("role")}
+            id="role"
+            placeholder="your role"
+            className="w-full px-3 py-2 mt-1 border rounded-md"
+            minLength={12}
+            maxLength={12}
+            required
+          />
+        </div>
+        {/* {fetchedUser?.provider !== "GOOGLE" && (
           <>
             <div className="mb-4">
               <Label
@@ -101,7 +126,7 @@ function Page() {
                 New Password
               </Label>
               <Input
-                {...register("password", { required: true })}
+                {...register("password")}
                 type="password"
                 id="password"
                 placeholder="Enter your new password"
@@ -115,7 +140,7 @@ function Page() {
                 Confirm Password
               </Label>
               <Input
-                {...register("confirmPassword", { required: true })}
+                {...register("confirmPassword")}
                 type="password"
                 id="confirmPassword"
                 placeholder="Enter your new password"
@@ -123,7 +148,7 @@ function Page() {
               />
             </div>
           </>
-        )}
+        )} */}
 
         <div className="flex justify-between items-center">
           <Button type="submit" className=" text-white px-4 py-2 rounded-md ">
