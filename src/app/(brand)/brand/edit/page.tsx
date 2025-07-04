@@ -92,11 +92,15 @@ const BrandDetails: React.FC<any> = () => {
     if (brandDetails) {
       console.log("brandDetails", brandDetails);
       (brandDetails.logo_url =
-        typeof brandDetails.logo_url === "string"
+        typeof brandDetails.logo_url === "string" &&
+        brandDetails.logo_url !== null &&
+        brandDetails.logo_url != ""
           ? [brandDetails.logo_url]
           : []),
         (brandDetails.banner_url =
-          typeof brandDetails.banner_url === "string"
+          typeof brandDetails.banner_url === "string" &&
+          brandDetails.banner_url !== null &&
+          brandDetails.banner_url != ""
             ? [brandDetails.banner_url]
             : []),
         console.log("brandDetails", brandDetails.social_links);
@@ -110,7 +114,8 @@ const BrandDetails: React.FC<any> = () => {
         <div className="flex items-center">
           <button
             className="flex items-center"
-            onClick={navigateToPreviousPage}>
+            onClick={navigateToPreviousPage}
+          >
             <ChevronLeft />
             <h1 className="md:text-3xl font-black"> Edit Brand</h1>
           </button>
@@ -123,7 +128,8 @@ const BrandDetails: React.FC<any> = () => {
       <FormProvider {...method}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center justify-center w-full md:px-0 px-5 ">
+          className="flex flex-col items-center justify-center w-full md:px-0 px-5 "
+        >
           <div className="border border-gray-400/70 rounded-lg p-4 shadow-lg md:w-[40vw] w-aut0">
             <h1 className="text-4xl font-bold">Brand Details</h1>
             <p>Enter your brand details</p>
@@ -149,7 +155,8 @@ const BrandDetails: React.FC<any> = () => {
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="category_name">
+                htmlFor="category_name"
+              >
                 Select your industry <span className="text-red-500">*</span>
               </Label>
               <div className="flex space-x-2">
@@ -160,7 +167,8 @@ const BrandDetails: React.FC<any> = () => {
                     name="category_name"
                     className={`w-full py-1 px-3 border rounded-md 
                "border-black"
-                    }`}>
+                    }`}
+                  >
                     <option value="" disabled>
                       Select an industry
                     </option>
@@ -173,7 +181,7 @@ const BrandDetails: React.FC<any> = () => {
                         No industry found
                       </option>
                     ) : (
-                      industries?.map((item, index) => (
+                      industries?.map((item: any, index: number) => (
                         <option value={item.name} key={index}>
                           {item.name}
                         </option>
@@ -193,7 +201,8 @@ const BrandDetails: React.FC<any> = () => {
                     id="subcategories"
                     name="subcategories"
                     className={`w-full py-1 px-3 border rounded-md  "border-black"
-                    }`}>
+                    }`}
+                  >
                     <option value="Select a category" disabled>
                       Select a category
                     </option>
@@ -206,7 +215,7 @@ const BrandDetails: React.FC<any> = () => {
                         No category found
                       </option>
                     ) : (
-                      categories?.map((item, index) => (
+                      categories?.map((item: any, index: number) => (
                         <option value={item.name} key={index}>
                           {item.name}
                         </option>
@@ -226,7 +235,8 @@ const BrandDetails: React.FC<any> = () => {
             <div className="grid w-full max-w-sm items-center gap-1.5 py-3">
               <Label
                 className="text-base md:text-lg font-bold"
-                htmlFor="description">
+                htmlFor="description"
+              >
                 Description
               </Label>
               <Input
