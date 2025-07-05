@@ -47,7 +47,7 @@ const OutletCard = ({
         />
         <button
           onClick={() => onDelete(id)}
-          className="text-red-500 hover:text-red-700"
+          className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100"
           title="Delete">
           <Trash size={16} />
         </button>

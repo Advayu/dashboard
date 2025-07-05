@@ -9,6 +9,7 @@ import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
 import { useCreateOutlet } from "@/hooks/use-outlet";
 import { useState } from "react";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 type OutletData = z.infer<typeof outletFormSchema>["outlet"][number];
 
@@ -17,7 +18,7 @@ const outletData: OutletData = {
     address: "",
     neighborhood: "",
     street: "",
-    postal_code: 0,
+    postal_code: "",
     manager_phone: "",
     manager_name: "",
     services: [],
@@ -34,7 +35,7 @@ const outletData: OutletData = {
 };
 
 export const useOutletForm = () => {
-
+    const router = useRouter();
     const [openAccordionValue, setOpenAccordionValue] = useState<string | undefined>("outlet-0");
 
 
@@ -42,9 +43,10 @@ export const useOutletForm = () => {
         `${LAMBDA_URL}/upload/url`,
         OUTLET_BUCKET_NAME
     );
+    // hook that call api to create outlet
+    const createOutlet = useCreateOutlet();
 
-    const { mutate: createOutlet } = useCreateOutlet();
-
+    // redux form hook
     const methods = useForm({
         resolver: zodResolver(outletFormSchema),
         defaultValues: { outlet: [outletData] },
@@ -55,7 +57,6 @@ export const useOutletForm = () => {
         handleSubmit,
         trigger,
         watch,
-        setFocus,
         formState: { errors },
     } = methods;
 
@@ -70,6 +71,7 @@ export const useOutletForm = () => {
         : undefined;
 
     const handleOutletSubmit: SubmitHandler<any> = async (data) => {
+        setOpenAccordionValue("");
         const outlets = data.outlet;
         console.log("outlets", outlets);
 
@@ -92,7 +94,7 @@ export const useOutletForm = () => {
                 console.log("results", results);
                 outlet.images = results.map((r) => r.fileKey);
                 console.log("outlet", outlet);
-                return createOutlet({ brand_id, newOutlet: outlet });
+                return createOutlet.mutateAsync({ brand_id, newOutlet: outlet });
             });
 
             await Promise.all(outletPromises);
@@ -102,6 +104,7 @@ export const useOutletForm = () => {
                 title: "Success",
                 description: "All outlets created successfully!",
             });
+            createOutlet.isSuccess && router.push("/store/all");
         } catch (error) {
             console.error("Error creating outlets:", error);
             toast({
@@ -113,9 +116,8 @@ export const useOutletForm = () => {
     };
 
     const addNewOutlet = async () => {
-        console.log(errors);
+
         const currentOutlets = watch("outlet");
-        console.log("currentOutlets", currentOutlets);
         const lastIndex = currentOutlets?.length - 1;
 
         if (lastIndex >= 0) {
@@ -143,6 +145,7 @@ export const useOutletForm = () => {
         openAccordionValue,
         setOpenAccordionValue,
         errors,
-        watch
+        watch,
+        createOutlet
     };
 };

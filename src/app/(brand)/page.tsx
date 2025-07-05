@@ -23,31 +23,30 @@ export default async function Page() {
       outlet_name: "Outlet A",
       lat: 12.9784,
       lng: 77.6408,
-      total_redemptions: 4000000000000,
+      total_redemptions: 40,
     },
     {
       outlet_id: "2",
       outlet_name: "Outlet B",
       lat: 12.9786,
       lng: 77.6412,
-      total_redemptions: 3000000000000,
+      total_redemptions: 3,
     },
     {
       outlet_id: "3",
       outlet_name: "Outlet C",
       lat: 12.9782,
       lng: 77.6406,
-      total_redemptions: 2500000000000,
+      total_redemptions: 2,
     },
     {
       outlet_id: "4",
       outlet_name: "Outlet D",
       lat: 12.9789,
       lng: 77.6409,
-      total_redemptions: 1000000000000,
+      total_redemptions: 10,
     },
 
-    // 🟡 Cluster 2 - Rajasthan (Medium–low activity)
     {
       outlet_id: "5",
       outlet_name: "Outlet E",
@@ -68,6 +67,20 @@ export default async function Page() {
       lat: 27.5534,
       lng: 76.6352,
       total_redemptions: 150000,
+    },
+    {
+      outlet_id: "8",
+      outlet_name: "Outlet H",
+      lat: 27.5528,
+      lng: 76.6343,
+      total_redemptions: 90000,
+    },
+    {
+      outlet_id: "8",
+      outlet_name: "Outlet H",
+      lat: 27.5528,
+      lng: 76.6343,
+      total_redemptions: 90000,
     },
     {
       outlet_id: "8",

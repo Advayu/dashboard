@@ -9,6 +9,8 @@ import OutletCard from "@/components/cards/outletCard";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useGetOutlets, useDeleteOutlet } from "@/hooks/use-outlet";
 import { navigateToPreviousPage } from "@/functions/function";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Outlet {
   id: string;
@@ -26,7 +28,7 @@ const AllOutletPage = () => {
   const brand_id = brandUserStr
     ? JSON.parse(brandUserStr)?.brand_id
     : undefined;
-  const { data: outlets, isLoading } = useGetOutlets(brand_id);
+  const { data: outlets, isLoading, isError } = useGetOutlets(brand_id);
   const { mutate: deleteOutlet } = useDeleteOutlet();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOutletId, setSelectedOutletId] = useState<string | null>(null);
@@ -71,33 +73,65 @@ const AllOutletPage = () => {
         {/* Contact Info */}
         <div className="mx-4 sm:mx-6 md:mx-8">
           <div className="overflow-x-auto shadow-sm border rounded-lg">
-            <table className="min-w-full text-left border-collapse">
-              <thead className="bg-blueTilt/60">
-                <tr>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Address</th>
+            {/* Loading State */}
+            {isLoading && (
+              <div className="flex justify-center items-center h-40">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>
+            )}
 
-                  <th className="px-4 py-2">Pincode</th>
-                  <th className="px-4 py-2">Manager Phone</th>
+            {/* Error State */}
+            {isError && (
+              <div className="text-red-600 bg-red-100 border border-red-300 text-center py-4 rounded">
+                Failed to load outlets. Please check your internet connection
+                and try again.
+                <div className="mt-2">
+                  <button
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    onClick={() => router.refresh()}>
+                    Retry
+                  </button>
+                </div>
+              </div>
+            )}
 
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {outlets?.map((outlet: any, key: number) => (
-                  <OutletCard
-                    key={key}
-                    id={outlet.id}
-                    name={outlet.name}
-                    address={outlet.address}
-                    pincode={outlet.postal_code}
-                    phone={outlet.manager_phone}
-                    onEdit={handleEdit}
-                    onDelete={() => confirmDelete(outlet.id)}
-                  />
-                ))}
-              </tbody>
-            </table>
+            {/* Empty State */}
+            {!isLoading && !isError && outlets?.length === 0 && (
+              <div className="text-gray-500 text-center py-10 flex flex-col items-center">
+                No outlets found for your brand.
+                <Link href="/store/add">
+                  <Button className="">Create Outlet</Button>
+                </Link>
+              </div>
+            )}
+            {/* Table */}
+            {!isLoading && !isError && outlets?.length > 0 && (
+              <table className="min-w-full text-left border-collapse">
+                <thead className="bg-blueTilt/60">
+                  <tr>
+                    <th className="px-4 py-2">Name</th>
+                    <th className="px-4 py-2">Address</th>
+                    <th className="px-4 py-2">Pincode</th>
+                    <th className="px-4 py-2">Manager Phone</th>
+                    <th className="px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {outlets.map((outlet: any, key: number) => (
+                    <OutletCard
+                      key={key}
+                      id={outlet.id}
+                      name={outlet.name}
+                      address={outlet.address}
+                      pincode={outlet.postal_code}
+                      phone={outlet.manager_phone}
+                      onEdit={handleEdit}
+                      onDelete={() => confirmDelete(outlet.id)}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 

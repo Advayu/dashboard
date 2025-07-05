@@ -18,6 +18,7 @@ const OutletDetails = () => {
     setOpenAccordionValue,
     errors,
     watch,
+    createOutlet,
   } = useOutletForm();
 
   return (
@@ -25,9 +26,14 @@ const OutletDetails = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(handleOutletSubmit)}
-          className="mt-8">
+          className="mt-8 ">
           {/* Outlet Name */}
-
+          {createOutlet.isError && (
+            <div className="mb-4 p-3 rounded bg-red-50 border border-red-300 text-sm text-red-700">
+              {createOutlet.error?.message ||
+                "Something went wrong while saving the outlets. Please try again."}
+            </div>
+          )}
           <Accordion
             type="single"
             collapsible
@@ -45,22 +51,23 @@ const OutletDetails = () => {
               />
             ))}
           </Accordion>
-          <Button
-            onClick={addNewOutlet}
-            type="button"
-            variant="outline"
-            size="thin"
-            className="mt-3 w-full md:w-auto">
-            + Add Outlet
-          </Button>
-          {/* Navigation Buttons */}
-          <div className="relative group inline-block w-full mt-4">
+          <div className="fixed md:bottom-8 bottom-0 left-0 w-full  px-4 py-3 flex justify-center gap-4 ">
             <Button
-              disabled={fields.length === 0}
+              onClick={addNewOutlet}
+              type="button"
+              variant="outline"
+              size="thin"
+              className="w-auto">
+              + Add Outlet
+            </Button>
+            <Button
+              disabled={fields.length === 0 || createOutlet.isPending}
               type="submit"
-              className="w-72 w-full md:w-auto px-6 py-2 "
+              className="w-auto px-6 py-2"
               size="default">
-              Save
+              {createOutlet.isPending
+                ? "Creating outlets..."
+                : "Create Outlets"}
             </Button>
           </div>
         </form>
