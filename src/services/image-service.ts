@@ -6,12 +6,10 @@ import { AWS_IMAGE_UPLOAD_URL, LAMBDA_URL } from "@/utils/constants";
 export const uploadImageToBucket = async ({
     file,
     bucket,
-    url, // Currently unused
     maxFileSize = 5 * 1024 * 1024, // Default 5 MB
 }: {
     file: File;
     bucket: string;
-    url: string; // You may want to use this instead of LAMBDA_URL if dynamic
     maxFileSize?: number;
 }) => {
     if (!file) {

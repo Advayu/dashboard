@@ -8,7 +8,7 @@ import { formatApiError } from "@/utils/formatApiError";
 // Todo: need to write types
 /* upload image to bucket  */
 export const useImageUpload = (
-    url: string,
+
     bucket: string
 ): UseMutationResult<{ fileKey: string }, Error, File> => {
     return useMutation({
@@ -16,7 +16,7 @@ export const useImageUpload = (
             const response = await uploadImageToBucket({
                 file,
                 bucket,
-                url,
+
                 maxFileSize: 2 * 1024 * 1024,
             });
 

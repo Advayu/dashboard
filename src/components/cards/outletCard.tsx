@@ -39,7 +39,7 @@ const OutletCard = ({
           trigger={
             <button
               onClick={(e) => e.stopPropagation()}
-              className="p-1 rounded-full hover:bg-blue-100 text-gray-500 hover:text-blue-500"
+              className="p-2 rounded-full hover:bg-blue-100 text-gray-500 hover:text-blue-500"
               aria-label="Edit">
               <Pencil />
             </button>
@@ -49,7 +49,7 @@ const OutletCard = ({
           onClick={() => onDelete(id)}
           className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100"
           title="Delete">
-          <Trash size={16} />
+          <Trash />
         </button>
       </td>
     </tr>

@@ -1,12 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
-import Support from "../../../../../public/image/contact.svg";
+import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FormProvider, useForm } from "react-hook-form";
 import Map from "@/components/ui/Map";
-import Image from "next/image";
 import { PhoneNumberInput } from "@/components/ui/phone-number-input";
 import { DynamicInputList } from "@/components/DynamicInputList";
 import DaysOpenSelector from "@/components/WeekdaySelector";
@@ -15,19 +13,47 @@ import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import GetLocationButton from "@/components/GetLocationButton";
 import { useImageUpload } from "@/hooks/use-image";
-import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
+import { OUTLET_BUCKET_NAME } from "@/utils/constants";
 import { useGetOutlet, useUpdateOutlet } from "@/hooks/use-outlet";
+import { Skeleton } from "@/components/ui/skeleton";
+
+type OutletFormValues = {
+  name: string;
+  address: string;
+  neighborhood: string;
+  street: string;
+  postal_code: string;
+  manager_phone: string;
+  manager_name: string;
+  location: any;
+  images: string[];
+  days_open: string[];
+  opening_hours: string;
+  closing_hours: string;
+  services: string[];
+  amenities: string[];
+  accessibility_features: Record<string, boolean>;
+  // Add other fields here as needed
+};
 
 const OutletDetails = ({ id }: { id: string }) => {
-  const { data, isLoading, error } = useGetOutlet(id);
-  const { mutate: updateOutlet } = useUpdateOutlet();
+  // get outlet api hook
+  const {
+    data,
+    isLoading: outletGetLoading,
+    error: outletGetError,
+  } = useGetOutlet(id);
 
-  const uploadImageToBucket = useImageUpload(
-    LAMBDA_URL + "/upload/url",
-    OUTLET_BUCKET_NAME
-  );
+  // update outlet api hook
+  const {
+    mutate: updateOutlet,
+    isPending: outletUpdatePending,
+    error: outletUpdaetError,
+  } = useUpdateOutlet();
 
-  const method = useForm();
+  const uploadImageToBucket = useImageUpload(OUTLET_BUCKET_NAME);
+
+  const method = useForm<OutletFormValues>();
 
   const {
     watch,
@@ -73,16 +99,13 @@ const OutletDetails = ({ id }: { id: string }) => {
       data.closing_hours = closingTime;
       data.days_open = weekdays;
 
-      reset(data); // ✅ update form with loaded data
+      reset(data); //  update form with loaded data
     }
   }, [data, reset]);
 
   // submit function
   function onSubmit(data: any) {
-    console.log("data>>", data);
-
     // need to uplaod images to bucket if it's file. if it's not file means it's already has filekey no need to do anything
-
     const images = data.images;
 
     if (images) {
@@ -120,12 +143,36 @@ const OutletDetails = ({ id }: { id: string }) => {
     // setValue("location", [77.6408, 12.9784]);
   };
 
+  useEffect(() => {
+    console.log("errors", errors);
+  }, [errors]);
+
   return (
     <div className="flex md:flex-row flex-col min-h-screen md:ml-10 mx-auto md:mx-0">
       <div className="w-full md:max-w-2xl  px-4">
         <h1 className="text-2xl md:text-4xl font-bold">Outlet Details</h1>
         <p className="mt-2 text-sm md:text-base">Name, store, and address</p>
+        {outletUpdaetError && (
+          <div className="text-red-500 text-xs italic">
+            {outletUpdaetError.message}
+          </div>
+        )}
+        {outletGetError && (
+          <div className="text-red-500 text-xs italic">
+            {outletGetError.message}
+          </div>
+        )}
         <FormProvider {...method}>
+          {outletGetLoading && (
+            <div className="space-y-4 mt-8">
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-[300px] w-full rounded-md" />
+              <Skeleton className="h-10 w-40" />
+            </div>
+          )}
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
             {/* Outlet Name */}
 
@@ -134,13 +181,20 @@ const OutletDetails = ({ id }: { id: string }) => {
                 Name of the outlet <span className="text-red-500">*</span>
               </Label>
               <Input
-                {...register(`name`, { required: true })}
+                {...register("name", {
+                  required: "Name is required",
+                })}
                 id="name"
                 type="text"
                 placeholder="Enter outlet name"
                 className="w-full"
               />
             </div>
+            {errors.name && (
+              <p className="text-red-500 text-xs italic">
+                {errors.name.message}
+              </p>
+            )}
 
             {/* Address */}
 
@@ -151,8 +205,8 @@ const OutletDetails = ({ id }: { id: string }) => {
                 Address of the outlet
               </Label>
               <Input
-                {...register(`address`, {
-                  required: true,
+                {...register("address", {
+                  required: "Address is required",
                 })}
                 id="address"
                 className="mt-1 w-full"
@@ -160,6 +214,11 @@ const OutletDetails = ({ id }: { id: string }) => {
                 placeholder="Enter the outlet address"
               />
             </div>
+            {typeof errors.address?.message === "string" && (
+              <p className="text-red-500 text-xs italic">
+                {errors.address.message}
+              </p>
+            )}
             {/* Locate on Map */}
             <div className="my-4">
               <Label
@@ -181,16 +240,6 @@ const OutletDetails = ({ id }: { id: string }) => {
 
               <Map lat={lat} long={lng} onLocationChange={onLocationChange} />
             </div>
-            {/* <div className="relative mt-2">
-                <Input
-                  {...register(`latitude`)}
-                  ref={locationRef}
-                  id="location"
-                  className={`pr-10 w-full my-2 `}
-                  placeholder="Locate on the map"
-                  readOnly
-                />
-              </div> */}
 
             {/* neighborhood */}
             <div className="my-3">
@@ -323,8 +372,8 @@ const OutletDetails = ({ id }: { id: string }) => {
             {/* preview all the images here */}
 
             {/* Add Outlet Button */}
-            <Button type="submit" className="w-28 w-full md:w-auto" size="thin">
-              Save
+            <Button type="submit" className="w-auto my-4 ">
+              {outletUpdatePending ? "Updating Outlet..." : "Update Outlet"}
             </Button>
             {/* Navigation Buttons */}
           </form>
