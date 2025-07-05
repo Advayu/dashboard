@@ -1,6 +1,6 @@
 "use client";
 
-import OutletDetails from "@/app/(brand)/store/edit/page";
+import OutletDetails from "@/app/(brand)/store/edit/edit-outlet";
 import {
   Dialog,
   DialogContent,

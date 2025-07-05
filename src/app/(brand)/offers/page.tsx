@@ -101,7 +101,7 @@ export default function Page() {
           onChange={handleOutletChange}
           className="border-2 border-black rounded-md p-2 w-[17rem] max-w-[17rem]">
           <option disabled>Select Outlet</option>
-          {outlets?.map((outlet) => (
+          {outlets?.map((outlet: any) => (
             <option key={outlet.id} value={outlet.id}>
               {outlet.name}
             </option>

@@ -6,7 +6,15 @@ import {
 } from "@/components/ui/select";
 import { useFormContext, Controller } from "react-hook-form";
 
-const SelectField = ({ name, options, placeholder }) => {
+const SelectField = ({
+  name,
+  options,
+  placeholder,
+}: {
+  name: string;
+  options: { value: string; label: string }[];
+  placeholder: string;
+}) => {
   const { control } = useFormContext(); // access control via context
 
   return (
