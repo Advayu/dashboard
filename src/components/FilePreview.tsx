@@ -3,6 +3,8 @@ import Image from "next/image";
 import { usePreviewUrl } from "@/hooks/use-preview-url";
 import { OUTLET_BUCKET_NAME, LAMBDA_URL } from "@/utils/constants";
 import { useDeleteImage } from "@/hooks/use-image";
+import { Skeleton } from "@/components/ui/skeleton";
+import image from "../../public/checker.png";
 
 type UploadableImage = File | string;
 
@@ -29,11 +31,11 @@ export function FilePreview({
   bucket = OUTLET_BUCKET_NAME,
   url = LAMBDA_URL,
 }: FilePreviewProps) {
-  const previewUrl = usePreviewUrl(file, bucket, url);
+  const { previewUrl, isLoading } = usePreviewUrl(file, bucket, url);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteImageMutation = useDeleteImage(
-    typeof file === "string" ? file : "", // safely pass fileKey if string
+    typeof file === "string" ? file : "",
     bucket,
     url
   );
@@ -66,13 +68,29 @@ export function FilePreview({
         </button>
       )}
 
-      <Image
-        src={previewUrl ?? fallback}
-        width={width}
-        height={height}
-        alt={alt}
-        className="object-cover rounded border-2 border-black aspect-square"
-      />
+      <div
+        className={`rounded border-2 border-black aspect-square`}
+        style={{ width, height }}>
+        {isLoading ? (
+          <Skeleton className="w-full h-full rounded" />
+        ) : previewUrl !== null ? (
+          <Image
+            src={previewUrl ?? image}
+            width={width}
+            height={height}
+            alt={alt}
+            className="object-cover w-full h-full rounded"
+          />
+        ) : (
+          <Image
+            src={image}
+            width={width}
+            height={height}
+            alt="Fallback image"
+            className="object-cover w-full h-full rounded opacity-60"
+          />
+        )}
+      </div>
     </div>
   );
 }

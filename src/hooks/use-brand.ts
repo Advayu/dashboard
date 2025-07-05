@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getBrand, createBrand, updateBrand, deleteBrand } from '@/services/brand-service';
+import { getBrand, createBrand, updateBrand, deleteBrand, getOutletRedemptionsByBrandId } from '@/services/brand-service';
 
 
 
@@ -48,5 +48,15 @@ export function useDeleteBrand() {
             queryClient.invalidateQueries({ queryKey: ['brands'] });
             queryClient.invalidateQueries({ queryKey: ['brand', id] });
         },
+    });
+}
+
+export function useGetOutletRedemptionsByBrandId(brandId: string) {
+    return useQuery({
+        queryKey: ['outletRedemptions', brandId],
+        queryFn: () => getOutletRedemptionsByBrandId(brandId),
+        enabled: !!brandId,
+        staleTime: 5 * 60 * 1000, // cache for 5 minutes, tweak as needed
+        retry: 1, // retry once on failure
     });
 }

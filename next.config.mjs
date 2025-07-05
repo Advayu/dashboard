@@ -5,6 +5,9 @@ const nextConfig = {
     ignoreDuringBuilds: true, // Ignore ESLint errors during production builds
   },
   images: {
+   
+    domains: ['advayu-brands-assets.s3.ap-south-1.amazonaws.com'],
+
     remotePatterns: [
       {
         protocol: "https",

@@ -8,88 +8,13 @@ import LineGraph from "@/components/ui/lineGraph"; //to show the outlet traffic
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 // TODO: Replace this with actual data from the backend
-import { dataset2 } from "@/components/utils/dataset";
 import { notification as dummyNotification } from "@/dummydata/notification";
 import { decodeJWT } from "@/lib/decodeJWT";
-import RedemptionHeatMap from "@/components/IndiaHeatmap";
+import DashboardGraphs from "@/components/dashboard-graphs";
 
 export default async function Page() {
   // getting decoded jwt token from cookies to get details like {email, brand_id}
   const data = await decodeJWT();
-  const data12 = [
-    // 🟠 Cluster 1 - Bangalore (High activity)
-    {
-      outlet_id: "1",
-      outlet_name: "Outlet A",
-      lat: 12.9784,
-      lng: 77.6408,
-      total_redemptions: 40,
-    },
-    {
-      outlet_id: "2",
-      outlet_name: "Outlet B",
-      lat: 12.9786,
-      lng: 77.6412,
-      total_redemptions: 3,
-    },
-    {
-      outlet_id: "3",
-      outlet_name: "Outlet C",
-      lat: 12.9782,
-      lng: 77.6406,
-      total_redemptions: 2,
-    },
-    {
-      outlet_id: "4",
-      outlet_name: "Outlet D",
-      lat: 12.9789,
-      lng: 77.6409,
-      total_redemptions: 10,
-    },
-
-    {
-      outlet_id: "5",
-      outlet_name: "Outlet E",
-      lat: 27.553,
-      lng: 76.6346,
-      total_redemptions: 100000,
-    },
-    {
-      outlet_id: "6",
-      outlet_name: "Outlet F",
-      lat: 27.5532,
-      lng: 76.6349,
-      total_redemptions: 200000,
-    },
-    {
-      outlet_id: "7",
-      outlet_name: "Outlet G",
-      lat: 27.5534,
-      lng: 76.6352,
-      total_redemptions: 150000,
-    },
-    {
-      outlet_id: "8",
-      outlet_name: "Outlet H",
-      lat: 27.5528,
-      lng: 76.6343,
-      total_redemptions: 90000,
-    },
-    {
-      outlet_id: "8",
-      outlet_name: "Outlet H",
-      lat: 27.5528,
-      lng: 76.6343,
-      total_redemptions: 90000,
-    },
-    {
-      outlet_id: "8",
-      outlet_name: "Outlet H",
-      lat: 27.5528,
-      lng: 76.6343,
-      total_redemptions: 90000,
-    },
-  ];
 
   return (
     <div className="md:w-[93%] w-full md:mx-0 mx-4">
@@ -114,7 +39,7 @@ export default async function Page() {
             {/* <div className=" h-[18.75rem] w-[44vw]  md:flex hidden items-center justify-center">
               <h2>No Active Users</h2>
             </div> */}
-            <RedemptionHeatMap data={data12} />
+            <DashboardGraphs />
           </div>
 
           {/* <div className="ml-12 w-full md:block hidden h-[18.75rem] w-[44vw]">

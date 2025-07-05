@@ -1,5 +1,6 @@
 import axios from "axios";
 import { LAMBDA_URL } from "@/utils/constants";
+import axiosInstance from "@/utils/axiosInstance";
 
 // Create a new brand
 export const createBrand = async (brandData: any) => {
@@ -38,3 +39,10 @@ export const getBrand = async (id: string) => {
     }
 };
 
+
+export const getOutletRedemptionsByBrandId = async (brandId: string) => {
+
+    const response = await axiosInstance.get(`v1/brands/outlets-redemptions?brandId=${brandId}`);
+    console.log("response", response);
+    return response.data;
+};

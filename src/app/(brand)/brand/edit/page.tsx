@@ -31,6 +31,7 @@ import { sanitizeBrandDetails } from "@/utils/brand-utils";
 
 const BrandDetails: React.FC<any> = () => {
   // getting brand user details form redux store
+  const [globalLoading, setGlobalLoading] = useState(false);
   const brand_user = useSelector((state: RootState) => state.brandUser);
   const brand_id = brand_user?.brand_id;
   // react form hook
@@ -79,34 +80,30 @@ const BrandDetails: React.FC<any> = () => {
     brand.logo_url = logoKey;
     brand.banner_url = bannerKey;
 
-    console.log("logoKey", logoKey);
-    console.log("bannerKey", bannerKey);
-
-    console.log("brand", brand);
     updateBrand({ id: brand_id, data: brand });
   };
 
   const { data: brandDetails } = useGetBrand(brand_id);
 
   useEffect(() => {
-    if (brandDetails) {
-      console.log("brandDetails", brandDetails);
-      (brandDetails.logo_url =
-        typeof brandDetails.logo_url === "string" &&
-        brandDetails.logo_url !== null &&
-        brandDetails.logo_url != ""
-          ? [brandDetails.logo_url]
-          : []),
-        (brandDetails.banner_url =
-          typeof brandDetails.banner_url === "string" &&
-          brandDetails.banner_url !== null &&
-          brandDetails.banner_url != ""
-            ? [brandDetails.banner_url]
+    if (!industryLoading || !categoryLoading) {
+      if (brandDetails) {
+        (brandDetails.logo_url =
+          typeof brandDetails.logo_url === "string" &&
+          brandDetails.logo_url !== null &&
+          brandDetails.logo_url != ""
+            ? [brandDetails.logo_url]
             : []),
-        console.log("brandDetails", brandDetails.social_links);
-      reset(brandDetails);
+          (brandDetails.banner_url =
+            typeof brandDetails.banner_url === "string" &&
+            brandDetails.banner_url !== null &&
+            brandDetails.banner_url != ""
+              ? [brandDetails.banner_url]
+              : []),
+          reset(brandDetails);
+      }
     }
-  }, [brandDetails, reset]);
+  }, [brandDetails, reset, categoryLoading, industryLoading]);
 
   return (
     <div className="w-full">
@@ -125,6 +122,11 @@ const BrandDetails: React.FC<any> = () => {
         </div>
       </div>
       <FormProvider {...method}>
+        {globalLoading && (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        )}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center justify-center w-full md:px-0 px-5 ">

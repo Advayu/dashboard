@@ -40,7 +40,7 @@ export const useOutletForm = () => {
 
 
     const uploadImageToBucket = useImageUpload(
-        `${LAMBDA_URL}/upload/url`,
+
         OUTLET_BUCKET_NAME
     );
     // hook that call api to create outlet
