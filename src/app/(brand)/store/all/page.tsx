@@ -8,10 +8,7 @@ import Support from "../../../../../public/image/contact.svg";
 import OutletCard from "@/components/cards/outletCard";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useGetOutlets, useDeleteOutlet } from "@/hooks/use-outlet";
-
-const handleBackClick = () => {
-  window.history.back();
-};
+import { navigateToPreviousPage } from "@/functions/function";
 
 interface Outlet {
   id: string;
@@ -50,7 +47,9 @@ const AllOutletPage = () => {
       <div className="w-full">
         <div className="flex justify-between my-10 mx-8 items-center">
           <div className="flex items-center">
-            <button className="flex  items-center" onClick={handleBackClick}>
+            <button
+              className="flex  items-center"
+              onClick={navigateToPreviousPage}>
               <ChevronLeft />
               <h1 className="md:text-3xl	font-black"> All Outlets</h1>
             </button>
