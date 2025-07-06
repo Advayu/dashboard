@@ -73,10 +73,9 @@ const CouponDetails = () => {
           <div>
             <label htmlFor="coupon_code">Coupon code</label>
             <Input
-              id="coupon_code"
-              name="coupon_code"
               type="text"
               placeholder="Enter coupon code"
+              {...register("coupon_code")}
             />
           </div>
         )}
@@ -85,10 +84,9 @@ const CouponDetails = () => {
           <div>
             <label htmlFor="no_of_coupons">No. of coupons</label>
             <Input
-              id="no_of_coupons"
-              name="no_of_coupons"
               type="number"
               placeholder="Enter number of coupons"
+              {...register("no_of_coupons")}
             />
           </div>
         )}

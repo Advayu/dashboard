@@ -18,6 +18,7 @@ import { create } from "domain";
 import { useCreateCoupon } from "@/hooks/use-coupon";
 import { useSelector } from "react-redux";
 import { off } from "process";
+import { min } from "date-fns";
 
 export default function Page() {
   const steps = [
@@ -52,8 +53,8 @@ function OfferCreationLayout() {
   });
 
   const onSubmit = async (data: any) => {
-    try {
-      var offer_payload: any = {
+    for (const outlet_id of data.outletIds) {
+      const offer_payload: any = {
         brand_id: brandId,
         offer_type: data.offer_type,
         discount_type: data.discountType,
@@ -62,48 +63,53 @@ function OfferCreationLayout() {
         applicable_days: data.applicableDays,
         max_per_user: Number(data.max_per_user),
         total_limit: Number(data.total_limit),
+        min_order_value: Number(data.min_order_value),
         terms_conditions: "terms and conditions", // change later
         title: generateOfferTitle(data),
-        outlet_id: data.outletIds[0],
-        max_discount_value: Number(data.max_discount_value),
-        min_order_value: Number(data.min_order_value),
-
+        outlet_id: outlet_id,
         is_active: true,
       };
 
       if (offer_payload.discount_type === "PERCENTAGE") {
-        {
-          offer_payload["discount_percent"] = Number(data.discount_percent);
-          offer_payload["discount_value"] = Number(data.max_discount_value);
-          offer_payload["max_discount_value"] = Number(data.max_discount_value);
-        }
+        offer_payload["discount_percent"] = Number(data.discount_percent);
+        offer_payload["discount_value"] = Number(data.max_discount_value);
+        offer_payload["max_discount_value"] = Number(data.max_discount_value);
       } else {
         offer_payload["discount_value"] = Number(data.discount_value);
       }
 
-      // Step 1: Create the offer
-      const offerResponse = await createOffer(offer_payload);
+      try {
+        // Step 1: Create the offer
+        const offerResponse = await createOffer(offer_payload);
 
-      // Assuming offer ID is returned like this:
-      const offer_id = offerResponse?.id;
+        const offer_id = offerResponse?.id;
+        if (!offer_id) {
+          console.warn("Failed to create offer for outlet:", outlet_id);
+          continue;
+        }
 
-      if (!offer_id) {
-        throw new Error("Failed to get offer ID.");
+        // Step 2: Create coupons only if offer type is COUPON_CODE
+        if (offerResponse.offer_type === "COUPON_CODE") {
+          var coupon_payload: any = {
+            offer_id: offer_id,
+            expires_at: data.endDate + "T23:59:59.000Z",
+          };
+          if (data.coupon_type === "fixed_code") {
+            coupon_payload["code"] = data.coupon_code;
+            const couponResponse = await createCouponAsync(coupon_payload);
+            console.log("Coupon created:", couponResponse);
+          } else {
+            for (let i = 0; i < data.no_of_coupons; i++) {
+              coupon_payload["code"] =
+                `COUPON-${Math.random().toString(36).substring(2, 15)}`;
+              const couponResponse = await createCouponAsync(coupon_payload);
+              console.log("Coupon created:", couponResponse);
+            }
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to process outlet ${outlet_id}:`, error);
       }
-
-      // Step 2: Create coupon with the offer ID
-      const coupon_payload = {
-        offer_id,
-        coupon_type: data.coupon_type,
-      };
-
-      const couponResponse = await createCouponAsync(coupon_payload);
-
-      console.log("Coupon created:", couponResponse);
-
-      // ✅ Success
-    } catch (err) {
-      console.error("Error creating offer or coupon:", err);
     }
   };
 
@@ -121,7 +127,8 @@ function OfferCreationLayout() {
             type="button"
             variant={"outline"}
             className="my-5 w-40 "
-            size={"thin"}>
+            size={"thin"}
+          >
             Save draft
           </Button>
 
@@ -134,7 +141,8 @@ function OfferCreationLayout() {
               type="button"
               onClick={handleNext}
               className="my-5 w-40"
-              size={"thin"}>
+              size={"thin"}
+            >
               Procced
             </Button>
           )}
