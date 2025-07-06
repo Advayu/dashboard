@@ -23,10 +23,23 @@ export const useGetOffer = (id: string) => {
 
 
 export const useCreateOffer = () => {
-    const { mutate, error, isPending, isSuccess } = useMutation({
-        mutationFn: (data: any) => createOffer(data),
+    const {
+        mutate,
+        mutateAsync,
+        error,
+        isPending,
+        isSuccess,
+    } = useMutation({
+        mutationFn: createOffer, // your API function
     });
-    return { mutate, error, isLoading: isPending, isSuccess };
+
+    return {
+        mutate,            // for fire-and-forget use
+        mutateAsync,       // for async/await usage
+        error,
+        isLoading: isPending,
+        isSuccess,
+    };
 };
 
 

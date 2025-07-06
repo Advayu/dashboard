@@ -19,6 +19,11 @@ import {
   PercentageOff,
   BuyNGetN,
 } from "../components";
+import { useSelector } from "react-redux";
+import { useGetOutlets } from "@/hooks/use-outlet";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 interface OfferDetailsProps {}
 
 interface OfferDetails {
@@ -55,6 +60,12 @@ interface OfferDetails {
 }
 
 const OfferDetails: React.FC<OfferDetailsProps> = () => {
+  const brandId = useSelector((state: any) => state.brandUser.brand_id);
+  const { data: outlets } = useGetOutlets(brandId);
+  const outletOptions = (outlets ?? []).map((outlet: any) => ({
+    label: outlet.name,
+    value: outlet.id,
+  }));
   const {
     register,
     watch,
@@ -66,20 +77,20 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
 
   const renderOfferDetailsComponent = () => {
     switch (discountType) {
-      case "Flat off":
+      case "ABSOLUTE":
         return <FlatOff />;
-      case "Percentage off":
+      case "PERCENTAGE":
         return <PercentageOff />;
-      case "Buy n Get n":
-        return <BuyNGetN />;
-      case "Free gift":
-        return <FreeGift />;
-      case "Items at set price":
-        return <ItemsAtSetPrice />;
-      case "Combo offers":
-        return <ComboOffers />;
+      // case "Buy n Get n":
+      //   return <BuyNGetN />;
+      // case "Free gift":
+      //   return <FreeGift />;
+      // case "Items at set price":
+      //   return <ItemsAtSetPrice />;
+      // case "Combo offers":
+      //   return <ComboOffers />;
       default:
-        return <div>No component found</div>;
+        return <div></div>;
     }
   };
 
@@ -97,18 +108,48 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
       </h1>
       <Controller
         control={control}
-        name="outletId"
+        name="outletIds"
         render={({ field }) => (
-          <Select onValueChange={field.onChange} value={field.value}>
-            <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
-              <SelectValue placeholder="Select outlet" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="new outlet">New outlet</SelectItem>
-            </SelectContent>
-          </Select>
+          <MultiSelect
+            options={outletOptions}
+            selected={field.value ?? []}
+            onChange={field.onChange}
+            placeholder="Select outlets"
+          />
         )}
       />
+      {/* {errors.outletIds && (
+        <p className="text-sm text-red-500 mt-1">
+          {errors?.outletIds?.message}
+        </p>
+      )} */}
+
+      <div>
+        <h1 className="text-xl font-bold mt-6">Offer Type</h1>
+
+        <Controller
+          control={control}
+          name="offer_type"
+          rules={{ required: "Offer type is required" }}
+          defaultValue="AUTO_APPLY"
+          render={({ field }) => (
+            <RadioGroup
+              className="flex flex-row items-center gap-4"
+              value={field.value}
+              onValueChange={field.onChange}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="AUTO_APPLY" id="AUTO_APPLY" />
+                <Label htmlFor="AUTO_APPLY">Auto Apply</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="COUPON_CODE" id="COUPON_CODE" />
+                <Label htmlFor="COUPON_CODE">Coupon Code</Label>
+              </div>
+            </RadioGroup>
+          )}
+        />
+      </div>
+
       <h1 className="text-xl font-bold mt-6">
         Category of your offer <span className="text-red-500">*</span>
       </h1>
@@ -122,13 +163,13 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
               <SelectValue placeholder="Offer type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Flat off">Flat off</SelectItem>
-              <SelectItem value="Percentage off">Percentage off</SelectItem>
-              <SelectItem value="Buy n Get n">Buy n Get n</SelectItem>
+              <SelectItem value="ABSOLUTE">Flat off</SelectItem>
+              <SelectItem value="PERCENTAGE">Percentage off</SelectItem>
+              {/* <SelectItem value="Buy n Get n">Buy n Get n</SelectItem>
               <SelectItem value="Free gift">Free gift</SelectItem>
               <SelectItem value="Items at set price">
                 Items at set price
-              </SelectItem>
+              </SelectItem> */}
             </SelectContent>
           </Select>
         )}
@@ -137,16 +178,16 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
       {/* select your outlet */}
 
       {renderOfferDetailsComponent()}
-
-      {/* Enter offer code */}
-      <div className="my-4 space-y-2 mt-8">
-        <Label className=" md:text-xl text-sm">
-          Offer Code: <span className="text-red-500">*</span>
+      <div className="mt-4">
+        <Label className="flex items-center text-xl font-bold">
+          Maximum offer redemptions
+          <InfoTooltip message="Maximum number of redemptions allowed" />
         </Label>
         <Input
-          className="border border-black px-3 py-2 rounded-md text-base md:text-lg focus:outline-none focus:ring focus:ring-blue-500  w-48"
-          placeholder="Enter offer code"
-          {...register("discountCode", { required: "Offer code is required" })}
+          type="text"
+          placeholder="Enter maximum number"
+          className="w-52 mt-[7.5px]"
+          {...register("total_limit")}
         />
       </div>
     </div>

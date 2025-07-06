@@ -1,0 +1,100 @@
+import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+
+const CouponDetails = () => {
+  const {
+    register,
+    watch,
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  const offerType = watch("offer_type");
+  const couponType = watch("coupon_type");
+  return (
+    <div>
+      <div className="flex flex-col ">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-3xl	font-black">Offer details</h1>
+          <p>Curate your Coupon</p>
+        </div>
+
+        {/* form to start creating Coupon */}
+
+        <div className="mt-4">
+          <Label className="flex items-center text-xl font-bold">
+            Maximum limit per user
+            <InfoTooltip message="Maximum number of redemptions allowed" />
+          </Label>
+          <Input
+            type="text"
+            placeholder="max per user"
+            className="w-52 mt-[7.5px]"
+            {...register("max_per_user")}
+          />
+        </div>
+        <div>
+          {offerType === "COUPON_CODE" && (
+            <div>
+              <h1>Coupon type</h1>
+              <Controller
+                control={control}
+                name="coupon_type"
+                render={({ field }) => (
+                  <div>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
+                        <SelectValue placeholder="Coupon type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="fixed_code">Fixed code</SelectItem>
+                        <SelectItem value="unique_code">Unique code</SelectItem>
+                        {/* Add more options if needed */}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+            </div>
+          )}
+        </div>
+
+        {couponType === "fixed_code" && (
+          <div>
+            <label htmlFor="coupon_code">Coupon code</label>
+            <Input
+              id="coupon_code"
+              name="coupon_code"
+              type="text"
+              placeholder="Enter coupon code"
+            />
+          </div>
+        )}
+
+        {couponType === "unique_code" && (
+          <div>
+            <label htmlFor="no_of_coupons">No. of coupons</label>
+            <Input
+              id="no_of_coupons"
+              name="no_of_coupons"
+              type="number"
+              placeholder="Enter number of coupons"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CouponDetails;

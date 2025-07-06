@@ -10,10 +10,10 @@ const FlatOff = () => {
       <div className="flex items-center space-x-2">
         <Label className="font-black  text-lg md:text-xl">FLAT Rs.</Label>
         <Input
-          {...register("discountValue")}
+          {...register("discount_value")}
           type="text"
           placeholder="e.g 150"
-          name="discountValue"
+          name="discount_value"
           className="font-bold  text-lg w-2/5 md:w-auto px-3 py-2 border text-blueTilt rounded-lg focus:outline-none focus:ring focus:ring-teal-500"
         />
       </div>
@@ -21,9 +21,9 @@ const FlatOff = () => {
       <div className="flex items-center space-x-2">
         <Label className="font-black  text-lg md:text-xl">OFF above Rs.</Label>
         <Input
-          {...register("minOrderValue")}
+          {...register("min_order_value")}
           type="text"
-          name="minOrderValue"
+          name="min_order_value"
           placeholder="e.g 400"
           className="font-bold  text-lg w-2/5 md:w-auto px-3 py-2 border text-blueTilt rounded-lg focus:outline-none focus:ring focus:ring-teal-500"
         />

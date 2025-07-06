@@ -29,6 +29,7 @@ export const deleteOffer = async (id: string) => {
 };
 
 export const createOffer = async (data: any) => {
+    console.log("offer data", data)
     const response = await axiosInstance.post(`/offers`, data);
     return response.data;
 };

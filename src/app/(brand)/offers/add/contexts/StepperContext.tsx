@@ -26,10 +26,8 @@ interface StepperProviderProps {
 export const StepperProvider = ({ children, steps }: StepperProviderProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<boolean[]>(
-    Array(steps.length).fill(true)
+    Array(steps.length).fill(false)
   );
-
-  console.log("active step", activeStep);
 
   const handleNext = () => {
     setCompletedSteps((prev) => {
@@ -43,19 +41,16 @@ export const StepperProvider = ({ children, steps }: StepperProviderProps) => {
   const handleBack = () => {
     setActiveStep((prev) => Math.max(prev - 1, 0));
   };
+
   const handleStepClick = (index: number) => {
-    console.log("index", index);
-    setActiveStep((currentStep) => {
-      const isPreviousOrCurrent = index <= currentStep;
-      const isNextAndCompleted =
-        index === currentStep + 1 && completedSteps[currentStep];
+    if (index === activeStep) return;
 
-      if (isPreviousOrCurrent || isNextAndCompleted) {
-        return index;
-      }
+    const isGoingBack = index < activeStep;
+    const isCompleted = completedSteps[index];
 
-      return currentStep; // don't change if not allowed
-    });
+    if (isGoingBack || isCompleted) {
+      setActiveStep(index);
+    }
   };
 
   return (

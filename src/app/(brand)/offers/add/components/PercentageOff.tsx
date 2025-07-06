@@ -12,15 +12,15 @@ const PercentageOff = () => {
       <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 md:items-center">
         <div className="flex space-x-2">
           <Input
-            {...register("discountValue")}
+            {...register("discount_percent")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt  md:w-48 w-2/5 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
             type="text"
-            name="discountValue"
+            name="discount_percent"
             placeholder="e.g 10%"
           />
-          <Label className="font-black text-lg md:text-xl">OFF on</Label>
+          <Label className="font-black text-lg md:text-xl">OFF </Label>
         </div>
-        <Input
+        {/* <Input
           className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
           type="text"
           name="price"
@@ -28,7 +28,7 @@ const PercentageOff = () => {
           // Todo: review
           defaultValue={"All Items"}
           readOnly
-        />
+        /> */}
       </div>
 
       {/* Second Row */}
@@ -36,10 +36,10 @@ const PercentageOff = () => {
         <div className="flex space-x-2">
           <Label className="font-black text-lg md:text-xl">above Rs.</Label>
           <Input
-            {...register("minOrderValue")}
+            {...register("min_order_value")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
             type="text"
-            name="minOrderValue"
+            name="min_order_value"
             placeholder="e.g 1000"
           />
         </div>
@@ -47,10 +47,10 @@ const PercentageOff = () => {
         <div className="flex space-x-2">
           <Label className="font-black text-lg md:text-xl">upto Rs.</Label>
           <Input
-            {...register("maxDiscountValue")}
+            {...register("max_discount_value")}
             className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
             type="text"
-            name="maxDiscountValue"
+            name="max_discount_value"
             placeholder="e.g 300"
           />
         </div>

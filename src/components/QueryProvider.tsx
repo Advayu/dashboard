@@ -6,6 +6,7 @@ import store, { persistor } from "@/store/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { ToastProvider } from "./ui/toast";
 import { Toaster } from "./ui/toaster";
+import { TooltipProvider } from "./ui/tooltip";
 
 interface Props {
   children: React.ReactNode;
@@ -19,8 +20,10 @@ const QueryProvider = ({ children }: Props) => {
         <PersistGate loading={null} persistor={persistor}>
           <QueryClientProvider client={queryClient}>
             <ToastProvider>
-              <Toaster />
-              {children}
+              <TooltipProvider>
+                <Toaster />
+                {children}
+              </TooltipProvider>
             </ToastProvider>
           </QueryClientProvider>
         </PersistGate>

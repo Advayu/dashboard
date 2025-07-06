@@ -10,11 +10,20 @@ import StepperLayout from "./newComp/StepperLayout";
 import { StepperProvider, useStepper } from "./contexts/StepperContext";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import CouponDetails from "./steps/couponDetails";
+import { useCreateOffer } from "@/hooks/use-offer";
+import { get } from "http";
+import { generateOfferTitle } from "./generateOfferTitle";
+import { create } from "domain";
+import { useCreateCoupon } from "@/hooks/use-coupon";
+import { useSelector } from "react-redux";
+import { off } from "process";
 
 export default function Page() {
   const steps = [
     { label: "Offer details", component: () => <OfferDetails /> },
-    { label: "Redemption details", component: () => <RedemptionDetails /> },
+    { label: "Validity & Timing", component: () => <RedemptionDetails /> },
+    { label: "Coupon details", component: () => <CouponDetails /> },
     { label: "Terms and Conditions", component: () => <TermsConditions /> },
     { label: "Preview", component: () => <CouponPreview /> },
   ];
@@ -31,8 +40,10 @@ export default function Page() {
 function OfferCreationLayout() {
   const { activeStep, steps, handleNext } = useStepper();
   const StepComponent = steps[activeStep]?.component;
+  const { mutateAsync: createOffer } = useCreateOffer();
+  const { mutateAsync: createCouponAsync } = useCreateCoupon();
+  const brandId = useSelector((state: any) => state.brandUser.brand_id);
 
-  // Initialize react-hook-form here
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
@@ -40,10 +51,60 @@ function OfferCreationLayout() {
     },
   });
 
-  const onSubmit = (data: any) => {
-    // handle form submission or step navigation
-    console.log("Form data", data);
-    handleNext();
+  const onSubmit = async (data: any) => {
+    try {
+      var offer_payload: any = {
+        brand_id: brandId,
+        offer_type: data.offer_type,
+        discount_type: data.discountType,
+        start_date: data.startDate + "T23:59:59.000Z",
+        end_date: data.endDate + "T23:59:59.000Z",
+        applicable_days: data.applicableDays,
+        max_per_user: Number(data.max_per_user),
+        total_limit: Number(data.total_limit),
+        terms_conditions: "terms and conditions", // change later
+        title: generateOfferTitle(data),
+        outlet_id: data.outletIds[0],
+        max_discount_value: Number(data.max_discount_value),
+        min_order_value: Number(data.min_order_value),
+
+        is_active: true,
+      };
+
+      if (offer_payload.discount_type === "PERCENTAGE") {
+        {
+          offer_payload["discount_percent"] = Number(data.discount_percent);
+          offer_payload["discount_value"] = Number(data.max_discount_value);
+          offer_payload["max_discount_value"] = Number(data.max_discount_value);
+        }
+      } else {
+        offer_payload["discount_value"] = Number(data.discount_value);
+      }
+
+      // Step 1: Create the offer
+      const offerResponse = await createOffer(offer_payload);
+
+      // Assuming offer ID is returned like this:
+      const offer_id = offerResponse?.id;
+
+      if (!offer_id) {
+        throw new Error("Failed to get offer ID.");
+      }
+
+      // Step 2: Create coupon with the offer ID
+      const coupon_payload = {
+        offer_id,
+        coupon_type: data.coupon_type,
+      };
+
+      const couponResponse = await createCouponAsync(coupon_payload);
+
+      console.log("Coupon created:", couponResponse);
+
+      // ✅ Success
+    } catch (err) {
+      console.error("Error creating offer or coupon:", err);
+    }
   };
 
   return (
@@ -63,9 +124,20 @@ function OfferCreationLayout() {
             size={"thin"}>
             Save draft
           </Button>
-          <Button type="submit" className="my-5 w-40" size={"thin"}>
-            Procced
-          </Button>
+
+          {activeStep === steps.length - 1 ? (
+            <Button type="submit" className="my-5 w-40" size={"thin"}>
+              Launch Offer
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={handleNext}
+              className="my-5 w-40"
+              size={"thin"}>
+              Procced
+            </Button>
+          )}
         </div>
       </form>
     </FormProvider>
