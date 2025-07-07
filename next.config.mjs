@@ -6,7 +6,7 @@ const nextConfig = {
   },
   images: {
    
-    domains: ['advayu-brands-assets.s3.ap-south-1.amazonaws.com'],
+   
 
     remotePatterns: [
       {

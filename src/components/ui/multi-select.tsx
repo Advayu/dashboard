@@ -1,5 +1,5 @@
-// components/form/multi-select.tsx
-
+"use client";
+import * as React from "react";
 import {
   Popover,
   PopoverContent,
@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Option = {
@@ -30,6 +30,8 @@ export function MultiSelect({
   placeholder = "Select options",
   className,
 }: MultiSelectProps) {
+  const [open, setOpen] = React.useState(false);
+
   const toggleOption = (value: string) => {
     if (selected.includes(value)) {
       onChange(selected.filter((v) => v !== value));
@@ -49,12 +51,20 @@ export function MultiSelect({
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("w-[300px] justify-start", className)}>
-          {selected.length > 0 ? `${selected.length} selected` : placeholder}
+          className={cn("w-[300px] justify-between", className)}>
+          <span>
+            {selected.length > 0 ? `${selected.length} selected` : placeholder}
+          </span>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              open && "rotate-180"
+            )}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">

@@ -1,23 +1,24 @@
 "use client";
 import React from "react";
 import { useWatch, useFormContext } from "react-hook-form";
+import { Button } from "./ui/button";
 
 interface DynamicInputListProps {
   fieldName: string; // e.g. 'items.0.service'
   label: string;
   placeholder: string;
-  index: number;
+  index?: number;
+  className?: string;
 }
 
 export const DynamicInputList: React.FC<DynamicInputListProps> = ({
   fieldName,
   label,
   placeholder,
-  index,
+  className,
 }) => {
   const { setValue } = useFormContext();
   const values: string[] = useWatch({ name: fieldName }) || [];
-
   const [input, setInput] = React.useState("");
 
   const handleAdd = () => {
@@ -33,35 +34,39 @@ export const DynamicInputList: React.FC<DynamicInputListProps> = ({
   };
 
   return (
-    <div className="my-3">
-      <label className="text-base md:text-lg font-bold block mb-2">
+    <div className={`my-4 ${className}`}>
+      <label className="text-base md:text-lg font-semibold block mb-2">
         {label}
       </label>
-      <div className="relative flex items-center">
+
+      {/* Input + Add Button */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           type="text"
           placeholder={placeholder}
-          className="border border-black rounded p-2 pr-20 w-full"
+          className="border border-gray-300 rounded px-3 py-2  sm:w-auto flex-grow"
         />
-        <button
+        <Button
           type="button"
           onClick={handleAdd}
-          className="px-4 bg-white border absolute right-0 top-0 h-full border-black border-l text-black rounded-r">
+          className=" text-white px-4 py-2 rounded  sm:w-auto">
           Add
-        </button>
+        </Button>
       </div>
-      <ul className="mt-2 space-y-1">
+
+      {/* Value List */}
+      <ul className="mt-3 space-y-2">
         {values.map((val, i) => (
           <li
             key={i}
-            className="flex justify-between items-center text-sm bg-gray-100 px-2 py-1 rounded">
-            {val}
+            className="flex justify-between items-center bg-gray-100 rounded px-3 py-2 text-sm">
+            <span className="break-words max-w-[80%]">{val}</span>
             <button
               type="button"
               onClick={() => handleRemove(i)}
-              className="text-red-500 text-xs ml-2">
+              className="text-red-500 text-xs hover:underline">
               Remove
             </button>
           </li>

@@ -1,3 +1,4 @@
+import { DynamicInputList } from "@/components/DynamicInputList";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,11 +72,12 @@ const CouponDetails = () => {
 
         {couponType === "fixed_code" && (
           <div>
-            <label htmlFor="coupon_code">Coupon code</label>
-            <Input
-              type="text"
-              placeholder="Enter coupon code"
-              {...register("coupon_code")}
+            <DynamicInputList
+              className="w-72"
+              fieldName={`coupon_code`}
+              label="Enter coupon code"
+              placeholder="enter coupon code"
+              index={2}
             />
           </div>
         )}

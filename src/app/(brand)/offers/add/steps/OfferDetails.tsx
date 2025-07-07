@@ -124,8 +124,8 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
         </p>
       )} */}
 
-      <div>
-        <h1 className="text-xl font-bold mt-6">Offer Type</h1>
+      <div className="space-y-2">
+        <h1 className="text-xl font-bold mt-6">Offer type</h1>
 
         <Controller
           control={control}
@@ -151,7 +151,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
       </div>
 
       <h1 className="text-xl font-bold mt-6">
-        Category of your offer <span className="text-red-500">*</span>
+        Discount type <span className="text-red-500">*</span>
       </h1>
 
       <Controller
@@ -160,7 +160,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
         render={({ field }) => (
           <Select onValueChange={field.onChange} value={field.value}>
             <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
-              <SelectValue placeholder="Offer type" />
+              <SelectValue placeholder="discount type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ABSOLUTE">Flat off</SelectItem>
