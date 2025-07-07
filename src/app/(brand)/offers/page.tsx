@@ -95,6 +95,10 @@ export default function Page() {
   };
 
   const { draft, upcoming, ongoing, past } = categorizeOffers();
+  console.log("draft", draft);
+  console.log("upcoming", upcoming);
+  console.log("ongoing", ongoing);
+  console.log("past", past);
 
   if (isLoadingOutlets || isLoadingOffers) return <Loading />;
   if (outletsError || offersError)
@@ -123,7 +127,7 @@ export default function Page() {
               height={16}
               className="text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
             />
-            <Filter width={16} height={16} />
+            {/* <Filter width={16} height={16} /> */}
           </div>
         </div>
       </div>

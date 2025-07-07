@@ -13,6 +13,7 @@ export const useGetOffers = (brand_id: string) => {
 };
 
 export const useGetOffer = (id: string) => {
+
     const { data, error, isLoading } = useQuery({
         queryKey: ['offer', id],
         queryFn: () => getOffer(id),

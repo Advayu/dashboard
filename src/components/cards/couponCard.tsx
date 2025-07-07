@@ -68,15 +68,16 @@ const User = () => (
   </svg>
 );
 
-const CouponCard: React.FC<CouponCardProps> = ({
+const CouponCard: React.FC<any> = ({
   id,
   title,
   number_of_redemptions,
   total_coupons,
   expiry_date,
   start_date,
-  unique_code,
+  offer_type,
 }) => {
+  console.log("offer_type", offer_type);
   const router = useRouter();
   // percentage of offer redemption
   const percentage_of_offer_redemption = Math.floor(
@@ -156,8 +157,8 @@ const CouponCard: React.FC<CouponCardProps> = ({
 
         {/* Unique code of coupon */}
         <div className="flex items-center justify-center border-l-2 border-dashed border-blueTilt border-black">
-          <p className="transform -rotate-90 text-[1.02rem] font-bold leading-4 text-gray-700 uppercase">
-            {unique_code}
+          <p className="transform -rotate-90 text-xs font-bold  text-gray-700 uppercase">
+            {offer_type === "COUPON_CODE" ? "Coupon Code" : "Auto Apply"}
           </p>
         </div>
       </div>

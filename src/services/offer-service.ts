@@ -12,7 +12,9 @@ export const getOffers = async (brand_id: string) => {
 
 
 export const getOffer = async (id: string) => {
+    console.log("id", id)
     const response = await axiosInstance.get(`/offers/${id}`);
+    console.log("response", response)
     return response.data;
 };
 
@@ -24,7 +26,7 @@ export const getOfferByOutletId = async (id: string) => {
 
 
 export const updateOffer = async (id: string, data: any) => {
-    const response = await axiosInstance.put(`/offers/${id}`, data);
+    const response = await axiosInstance.patch(`/offers/${id}`, data);
     return response.data;
 };
 

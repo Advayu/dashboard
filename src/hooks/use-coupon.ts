@@ -1,6 +1,6 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCoupons, createCoupon, updateCoupon, deleteCoupon, getCoupon } from '@/services/coupon-service';
+import { getCoupons, createCoupon, updateCoupon, deleteCoupon, getCoupon, getCouponByOfferId } from '@/services/coupon-service';
 
 
 // Create a new coupon
@@ -70,6 +70,16 @@ export function useGetCoupon(id: string) {
     return useQuery({
         queryKey: ['coupon', id],
         queryFn: () => getCoupon(id),
+        enabled: !!id,
+        staleTime: 5 * 60 * 1000, // cache for 5 minutes, tweak as needed
+        retry: 1, // retry once on failure
+    });
+}
+
+export function useGetCouponsByOfferId(id: string) {
+    return useQuery({
+        queryKey: ['couponsByOfferId', id],
+        queryFn: () => getCouponByOfferId(id),
         enabled: !!id,
         staleTime: 5 * 60 * 1000, // cache for 5 minutes, tweak as needed
         retry: 1, // retry once on failure

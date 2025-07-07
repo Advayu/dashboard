@@ -20,6 +20,11 @@ export const getCoupon = async (id: string) => {
     return response.data;
 };
 
+export const getCouponByOfferId = async (id: string) => {
+    const response = await axiosInstance.get(`/coupons?offer_id=${id}`);
+    return response.data;
+};
+
 export const updateCoupon = async (id: string, data: any) => {
     const response = await axiosInstance.put(`/coupons/${id}`, data);
     return response.data;

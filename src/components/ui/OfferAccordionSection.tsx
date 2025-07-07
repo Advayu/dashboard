@@ -44,7 +44,7 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
                   title={offer.title}
                   start_date={offer.start_date}
                   expiry_date={offer.end_date}
-                  unique_code={offer.code}
+                  offer_type={offer.offer_type}
                   number_of_redemptions={0}
                   total_coupons={offer.total_limit}
                 />
