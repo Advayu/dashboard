@@ -10,8 +10,9 @@ import Mail from "@/components/icons/Mail";
 import Lock from "@/components/icons/Lock";
 import logo from "../../../public/logo/advayuClubLogo.svg";
 import { useRouter } from "next/navigation";
-import { LAMBDA_URL } from "@/utils/constants";
-import axios from "axios";
+import { motion } from "motion/react";
+
+import { Mail as MailIcon, Phone } from "lucide-react";
 
 const Auth = () => {
   const router = useRouter();
@@ -44,75 +45,82 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white  via-[#A1F6FF] to-[#189EAC]/80 px-6">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg shadow-gray-500/40 ">
-        <div className="flex items-center justify-center flex-row pb-2">
-          <Image
-            src={logo}
-            width={170}
-            height={14}
-            alt="Advayu Club Logo"
-            priority
-          />
-        </div>
-
-        <div className="mt-4 space-y-4">
-          <div className="relative w-full">
-            <Mail
-              color="#199ead"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-            />
-            <Input
-              required
-              autoFocus
-              aria-details="Enter your Email Id"
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className={` pl-10 w-full border  rounded-md text-sm`}
+    <>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white  via-[#A1F6FF] to-[#189EAC]/80 px-6">
+        <motion.form
+          initial={{ scale: 0.3 }}
+          animate={{ scale: 1, animationDuration: 0.3 }}
+          transition={{ type: "spring" }}
+          onSubmit={handleSubmit}
+          className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg shadow-gray-500/40 ">
+          <div className="flex items-center justify-center flex-row pb-2">
+            <Image
+              src={logo}
+              width={170}
+              height={14}
+              alt="Advayu Club Logo"
+              priority
             />
           </div>
-          <div className="relative w-full">
-            <Lock
-              color="#199ead"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-            />
-            <Input
-              aria-details="Password"
-              type={showPassword ? "text" : "password"}
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className={`pl-10 pr-10 w-full border rounded-md text-sm`}
-            />
+
+          <div className="mt-4 space-y-4">
+            <div className="relative w-full">
+              <Mail
+                color="#199ead"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              />
+              <Input
+                required
+                autoFocus
+                aria-details="Enter your Email Id"
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                className={` pl-10 w-full border  rounded-md text-sm`}
+              />
+            </div>
+            <div className="relative w-full">
+              <Lock
+                color="#199ead"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              />
+              <Input
+                required
+                aria-details="Password"
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className={`pl-10 pr-10 w-full border rounded-md text-sm`}
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                onClick={() => setShowPassword((v) => !v)}>
+                <EyeIcon open={showPassword} />
+              </button>
+            </div>
+            {loginError && (
+              <p className="mb-4 text-sm text-red-600">Incorrect Credients</p>
+            )}
             <button
-              type="button"
-              tabIndex={-1}
-              className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-              onClick={() => setShowPassword((v) => !v)}>
-              <EyeIcon open={showPassword} />
+              disabled={isPending}
+              type="submit"
+              className={`w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300`}>
+              Sign in
             </button>
           </div>
-          {loginError && (
-            <p className="mb-4 text-sm text-red-600">Incorrect Credients</p>
-          )}
-          <button
-            disabled={isPending}
-            type="submit"
-            className={`w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300`}>
-            Sign in
-          </button>
-        </div>
-        <OrDivider />
+          <OrDivider />
 
-        <LoginWithGoogle />
-      </form>
-    </div>
+          <LoginWithGoogle />
+        </motion.form>
+        <Contact className="mt-4 text-center  flex" />
+      </div>
+    </>
   );
 };
 
@@ -155,3 +163,27 @@ const EyeIcon = ({
     )}
   </span>
 );
+
+type ContactProps = {
+  className?: string;
+};
+
+const Contact: React.FC<ContactProps> = ({ className = "" }) => {
+  return (
+    <div
+      className={` items-center text-gray-600/70  gap-4 md:text-lg text-xs  ${className}`}>
+      <div className="flex flex-row  items-center md:space-x-2 space-x-1 ">
+        <MailIcon className="w-5 h-5 " />
+        <a href="mailto:support@advayu.club" className="underline">
+          support@advayu.club
+        </a>
+      </div>
+      <div className="flex flex-row items-center md:space-x-2 space-x-1">
+        <Phone className="w-5 h-5 " />{" "}
+        <a href="tel:+919660657811" className="underline">
+          +91 9660657811
+        </a>
+      </div>
+    </div>
+  );
+};
