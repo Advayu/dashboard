@@ -19,6 +19,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDeleteOffer, useGetOffer, useUpdateOffer } from "@/hooks/use-offer";
 import Loading from "@/components/loading";
 import User from "@/components/icons/User";
+import { useGetCoupons, useGetCouponsByOfferId } from "@/hooks/use-coupon";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import CouponTable from "@/components/CouponTable";
+import UpdateOffer from "./components/offer-update";
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,27 +37,8 @@ const Page = () => {
   const { offer: offerDetails, isLoading } = useGetOffer(offerId);
   const { mutate: deleteOffer } = useDeleteOffer();
   const { mutate: updateOffer } = useUpdateOffer();
-  console.log("offerDetails>>", offerDetails);
-
-  type Day =
-    | "Monday"
-    | "Tuesday"
-    | "Wednesday"
-    | "Thursday"
-    | "Friday"
-    | "Saturday"
-    | "Sunday";
-
-  // Define the mapping of day names to their short form
-  const dayMap: Record<Day, string> = {
-    Sunday: "S",
-    Monday: "M",
-    Tuesday: "T",
-    Wednesday: "W",
-    Thursday: "T",
-    Friday: "F",
-    Saturday: "S",
-  };
+  console.log("offerDetails", offerDetails);
+  const { data: coupons } = useGetCouponsByOfferId(offerId);
 
   // handle back click to go back to previous page
   const handleBackClick = () => {
@@ -105,105 +97,9 @@ const Page = () => {
 
       <section className="flex md:flex-row flex-col space-x-2 px-10">
         <div className="mx-2 pr-[40px] ">
-          <ReadOnlyInput
-            label="Offer Title"
-            id="offerTitle"
-            defaultValue={offerDetails.title}
-            containerClassName="custom-container-class"
-            labelClassName="custom-label-class"
-            inputClassName="custom-input-class no-select"
-          />
-          <div className="md:block flex space-x-4 md:space-x-0 ">
-            <div className="flex flex-col md:flex-row my-4 md:space-y-0 space-y-2 md:space-x-4 md:items-center">
-              <Label>Discount type</Label>
-              <Input
-                disabled
-                className="border-none font-bold bg-[#F3F3F3] w-40"
-                type="text"
-                defaultValue={offerDetails.discount_type}
-              />
-            </div>
-          </div>
-
-          <div className="flex my-4 items-center space-x-4">
-            <Label>Status of offer</Label>
-            <Input
-              disabled
-              className="border-none font-bold bg-[#F3F3F3]"
-              type="text"
-              defaultValue={offerDetails.is_active ? "Active" : "Inactive"}
-            />
-          </div>
-
-          {/* steper  */}
-
-          <div className="flex items-center">
-            {/* Vertical Line with Circles */}
-            <div className="relative flex flex-col items-center mr-4">
-              {/* Line */}
-              <div className="h-16 w-0.5 bg-teal-600"></div>
-              {/* Circles */}
-              <div className="absolute top-0 h-2 w-2 bg-teal-600 rounded-full"></div>
-              <div className="absolute top-16 h-2 w-2 bg-teal-600 rounded-full"></div>
-            </div>
-
-            {/* Form Section */}
-            <div>
-              {/* Start Date */}
-              <div className="flex items-center mb-6">
-                <label className="text-lg font-medium mr-4">Start date</label>
-
-                <Input
-                  disabled
-                  type="date"
-                  defaultValue={
-                    offerDetails?.start_date
-                      ? offerDetails.start_date.split("T")[0]
-                      : ""
-                  }
-                  className="border border-black rounded-md px-4 py-2 text-center w-36"
-                />
-              </div>
-
-              {/* Expiry Date */}
-              <div className="flex items-center">
-                <label className="text-lg font-medium mr-4">Expiry date</label>
-                <Input
-                  disabled
-                  type="date"
-                  defaultValue={
-                    offerDetails?.end_date
-                      ? offerDetails.end_date.split("T")[0]
-                      : ""
-                  }
-                  className="border border-black rounded-md px-4 py-2 text-center w-36"
-                />
-              </div>
-            </div>
-          </div>
+          <UpdateOffer offerDetails={offerDetails} />
 
           {/* steper */}
-
-          <div className="my-4">
-            <Label>Maximum offer redemption</Label>
-            <Input
-              disabled
-              className="border-none font-bold w-full mt-2"
-              type="text"
-              defaultValue={offerDetails.total_limit}
-            />
-          </div>
-
-          <ToggleGroup
-            type="multiple"
-            value={offerDetails.applicable_days || []}
-            className="pointer-events-none opacity-50">
-            {Object.keys(dayMap).map((day) => (
-              <ToggleGroupItem key={day} value={day} className="w-full">
-                {dayMap[day as Day]}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
         </div>
         {/* separator */}
         {/* dotted */}
@@ -278,6 +174,15 @@ const Page = () => {
               Disable
             </Button>
           </div>
+        </div>
+
+        <Separator
+          className="md:block hidden  border-[#D1D1D1]  border-l-2 border-dashed"
+          orientation="vertical"
+        />
+        {/* coupons section  */}
+        <div className="">
+          <CouponTable coupons={coupons} />
         </div>
       </section>
     </div>

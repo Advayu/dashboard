@@ -36,16 +36,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { VerticalCarousel } from "@/components/crasoul/EmblaCarousel";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import Stack from "@mui/material/Stack";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
 import { styled } from "@mui/material/styles";
-import { LAMBDA_URL } from "@/utils/constants";
-import axiosInstance from "@/utils/axiosInstance";
+
 import { useGetOutlets } from "@/hooks/use-outlet";
+import { useGetOfferByOutletId } from "@/hooks/use-offer";
+import { getOfferByOutletId } from "@/services/offer-service";
 
 // sales with advayu
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -61,6 +62,10 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
 }));
 
 export default function Page() {
+  const [loadingOffers, setLoadingOffers] = useState<Record<string, boolean>>(
+    {}
+  );
+
   const brand = useSelector((state: any) => state.brand);
   const [outlet, setOultet] = useState<any>([]);
   const [filteredOutlets, setFilteredOutlets] = useState<any[]>([]); // For filtered outlets
@@ -77,12 +82,31 @@ export default function Page() {
   const { data: outlets, isLoading: isLoadingOutlets } =
     useGetOutlets(brand_id);
 
-  const handleAccordionClick = (id: string) => {
-    if (openAccordion !== id) {
-      setOpenAccordion(id); // Set the clicked outlet ID as open
-      // fetchOutletOfferDetailsByOutletId(id); // Fetch offers when the accordion is opened
-    } else {
-      setOpenAccordion(null); // Close the accordion if it's already open
+  const handleAccordionClick = async (id: string) => {
+    if (openAccordion === id) {
+      // collapse if already open
+      setOpenAccordion(null);
+      return;
+    }
+
+    setOpenAccordion(id);
+
+    // Avoid re-fetching if already cached
+    if (offerByOutletId[id]) return;
+
+    // Set per-outlet loading
+    setLoadingOffers((prev) => ({ ...prev, [id]: true }));
+
+    try {
+      const offers = await getOfferByOutletId(id);
+      setOfferByOutletId((prev: any) => ({
+        ...prev,
+        [id]: offers,
+      }));
+    } catch (error) {
+      console.error("Failed to fetch offers:", error);
+    } finally {
+      setLoadingOffers((prev) => ({ ...prev, [id]: false }));
     }
   };
 
@@ -206,6 +230,7 @@ export default function Page() {
                     </span>
                   </div>
                 </div>
+                <div></div>
               </AccordionTrigger>
 
               <AccordionContent>
@@ -289,30 +314,24 @@ export default function Page() {
 
                     {/* Scrollable Container */}
                     <div className="mt-4 max-h-[29rem] overflow-y-auto">
-                      {isLoadingOffer
-                        ? // Shimmer effect while loading
+                      {loadingOffers[outletItem.id]
+                        ? // shimmer
                           Array.from({ length: 3 }).map((_, index) => (
-                            <div
-                              key={index}
-                              className="flex flex-col space-y-2 p-10 animate-pulse">
+                            <div key={index} className="p-10 animate-pulse">
                               <div className="h-4 w-72 bg-gray-300 rounded"></div>
-                              <div className="h-3 w-72 bg-gray-300 rounded"></div>
-                              <div className="h-5 w-72 bg-gray-300 rounded"></div>
                             </div>
                           ))
-                        : // Render offers when loaded
-                          offerByOutletId[outletItem.id]?.map((offer: any) => (
-                            <div key={offer.id} className="flex flex-col">
-                              <CouponCard
-                                id={offer.id}
-                                title={offer.title}
-                                start_date={offer.start_date}
-                                expiry_date={offer.end_date}
-                                unique_code={offer.code}
-                                number_of_redemptions={0}
-                                total_coupons={offer.total_limit}
-                              />
-                            </div>
+                        : offerByOutletId[outletItem.id]?.map((offer: any) => (
+                            <CouponCard
+                              key={offer.id}
+                              id={offer.id}
+                              title={offer.title}
+                              start_date={offer.start_date}
+                              expiry_date={offer.end_date}
+                              unique_code={offer.code}
+                              number_of_redemptions={0}
+                              total_coupons={offer.total_limit}
+                            />
                           ))}
                     </div>
                   </div>
