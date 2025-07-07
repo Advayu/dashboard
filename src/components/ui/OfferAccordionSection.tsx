@@ -19,13 +19,14 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
   offers,
   value,
 }) => {
+  console.log("offers", offers);
   return (
     <AccordionItem value={value}>
       <AccordionTrigger className="font-bold text-xl">
-        {title} ({offers.length})
+        {title} ({offers?.length})
       </AccordionTrigger>
       <AccordionContent className="flex space-x-2">
-        {offers.length === 0 ? (
+        {offers?.length === 0 ? (
           <div className="flex flex-col md:items-center md:justify-center w-full h-full md:text-center">
             <h1 className="text-xl text-gray-500 font-bold">
               No {title} found!
@@ -36,7 +37,7 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
           </div>
         ) : (
           <HorizontalCarousel>
-            {offers.map((offer, index) => (
+            {offers?.map((offer, index) => (
               <div className="embla__slide " key={index}>
                 <CouponCard
                   id={offer.id}

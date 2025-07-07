@@ -1,4 +1,4 @@
-import { createOffer, deleteOffer, getOffer, getOffers, updateOffer } from "@/services/offer-service";
+import { createOffer, deleteOffer, getOffer, getOfferByOutletId, getOffers, updateOffer } from "@/services/offer-service";
 import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -65,3 +65,11 @@ export const useDeleteOffer = () => {
     return { mutate, error, isLoading: isPending, isSuccess };
 };
 
+export const useGetOfferByOutletId = (outletId: string) => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['offerByOutletId', outletId],
+        queryFn: () => getOfferByOutletId(outletId),
+        enabled: !!outletId,
+    });
+    return { offer: data, error, isLoading };
+};

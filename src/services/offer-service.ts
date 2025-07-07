@@ -16,6 +16,11 @@ export const getOffer = async (id: string) => {
     return response.data;
 };
 
+export const getOfferByOutletId = async (id: string) => {
+    const response = await axiosInstance.get(`/offers?outlet_id=${id}`);
+    return response.data;
+};
+
 
 
 export const updateOffer = async (id: string, data: any) => {

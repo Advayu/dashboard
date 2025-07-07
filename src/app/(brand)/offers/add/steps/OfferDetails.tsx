@@ -115,6 +115,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
               selected={field.value ?? []}
               onChange={field.onChange}
               placeholder="Select outlets"
+              className="w-48"
             />
           )}
         />
@@ -189,6 +190,19 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
           placeholder="Enter maximum number"
           className="w-52 mt-[7.5px]"
           {...register("total_limit")}
+        />
+      </div>
+
+      <div className="mt-4">
+        <Label className="flex items-center text-xl font-bold">
+          Maximum limit per user
+          <InfoTooltip message="Maximum number of redemptions allowed" />
+        </Label>
+        <Input
+          type="text"
+          placeholder="max per user"
+          className="w-52 mt-[7.5px]"
+          {...register("max_per_user")}
         />
       </div>
     </div>

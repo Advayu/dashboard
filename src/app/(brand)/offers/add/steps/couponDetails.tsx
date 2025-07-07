@@ -32,18 +32,6 @@ const CouponDetails = () => {
 
         {/* form to start creating Coupon */}
 
-        <div className="mt-4">
-          <Label className="flex items-center text-xl font-bold">
-            Maximum limit per user
-            <InfoTooltip message="Maximum number of redemptions allowed" />
-          </Label>
-          <Input
-            type="text"
-            placeholder="max per user"
-            className="w-52 mt-[7.5px]"
-            {...register("max_per_user")}
-          />
-        </div>
         <div>
           {offerType === "COUPON_CODE" && (
             <div>
