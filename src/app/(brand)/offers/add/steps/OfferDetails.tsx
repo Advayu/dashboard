@@ -98,26 +98,27 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
     <div className="flex flex-col ">
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl	font-black">Offer details</h1>
-        <p>Curate your offer</p>
+        <p className="text-sm text-muted-foreground mb-2">Curate your offer</p>
       </div>
 
       {/* form to start creating offer */}
-
-      <h1 className="text-xl font-bold mt-6">
-        Select Your Outlet <span className="text-red-500">*</span>
-      </h1>
-      <Controller
-        control={control}
-        name="outletIds"
-        render={({ field }) => (
-          <MultiSelect
-            options={outletOptions}
-            selected={field.value ?? []}
-            onChange={field.onChange}
-            placeholder="Select outlets"
-          />
-        )}
-      />
+      <div>
+        <h1 className="text-xl font-bold mt-6">
+          Select Your Outlet <span className="text-red-500">*</span>
+        </h1>
+        <Controller
+          control={control}
+          name="outletIds"
+          render={({ field }) => (
+            <MultiSelect
+              options={outletOptions}
+              selected={field.value ?? []}
+              onChange={field.onChange}
+              placeholder="Select outlets"
+            />
+          )}
+        />
+      </div>
       {/* {errors.outletIds && (
         <p className="text-sm text-red-500 mt-1">
           {errors?.outletIds?.message}
@@ -150,32 +151,32 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
         />
       </div>
 
-      <h1 className="text-xl font-bold mt-6">
-        Discount type <span className="text-red-500">*</span>
-      </h1>
+      <div>
+        <h1 className="text-xl font-bold mt-6">
+          Discount type <span className="text-red-500">*</span>
+        </h1>
 
-      <Controller
-        control={control}
-        name="discountType"
-        render={({ field }) => (
-          <Select onValueChange={field.onChange} value={field.value}>
-            <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
-              <SelectValue placeholder="discount type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ABSOLUTE">Flat off</SelectItem>
-              <SelectItem value="PERCENTAGE">Percentage off</SelectItem>
-              {/* <SelectItem value="Buy n Get n">Buy n Get n</SelectItem>
+        <Controller
+          control={control}
+          name="discountType"
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
+                <SelectValue placeholder="discount type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ABSOLUTE">Flat off</SelectItem>
+                <SelectItem value="PERCENTAGE">Percentage off</SelectItem>
+                {/* <SelectItem value="Buy n Get n">Buy n Get n</SelectItem>
               <SelectItem value="Free gift">Free gift</SelectItem>
               <SelectItem value="Items at set price">
                 Items at set price
               </SelectItem> */}
-            </SelectContent>
-          </Select>
-        )}
-      />
-
-      {/* select your outlet */}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
 
       {renderOfferDetailsComponent()}
       <div className="mt-4">

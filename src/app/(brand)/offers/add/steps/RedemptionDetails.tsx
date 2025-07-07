@@ -28,8 +28,6 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
     formState: { errors },
   } = useFormContext();
 
-  const offerDetails = watch();
-
   // Function to toggle the selection of a day
   const toggleDaySelection = (
     selectedDays: string[],
@@ -43,10 +41,8 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div>
         <header>
-          <h1 className="font-bold text-3xl">Redemption details</h1>
-          <p className="text-2xl mt-2">
-            Set validity and redemption conditions
-          </p>
+          <h1 className="font-bold text-3xl">Validity details</h1>
+          <p className="text-2xl mt-2">Set validity and timing</p>
         </header>
 
         {/* Date Range */}

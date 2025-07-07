@@ -5,28 +5,44 @@ import { useFormContext } from "react-hook-form";
 
 const FlatOff = () => {
   const { register } = useFormContext();
-  return (
-    <div className="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0 md:items-center">
-      <div className="flex items-center space-x-2">
-        <Label className="font-black  text-lg md:text-xl">FLAT Rs.</Label>
-        <Input
-          {...register("discount_value")}
-          type="text"
-          placeholder="e.g 150"
-          name="discount_value"
-          className="font-bold  text-lg w-2/5 md:w-auto px-3 py-2 border text-blueTilt rounded-lg focus:outline-none focus:ring focus:ring-teal-500"
-        />
-      </div>
 
-      <div className="flex items-center space-x-2">
-        <Label className="font-black  text-lg md:text-xl">OFF above Rs.</Label>
-        <Input
-          {...register("min_order_value")}
-          type="text"
-          name="min_order_value"
-          placeholder="e.g 400"
-          className="font-bold  text-lg w-2/5 md:w-auto px-3 py-2 border text-blueTilt rounded-lg focus:outline-none focus:ring focus:ring-teal-500"
-        />
+  return (
+    <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 max-w-[30vw]">
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">
+        Flat Discount
+      </h3>
+      <div className="flex flex-col md:flex-row gap-6 md:items-end">
+        {/* Flat Discount */}
+        <div className="flex flex-col">
+          <Label
+            htmlFor="discount_value"
+            className="text-sm font-medium text-muted-foreground mb-1">
+            Flat Discount (Rs.)
+          </Label>
+          <Input
+            {...register("discount_value")}
+            id="discount_value"
+            type="text"
+            placeholder="e.g. 150"
+            className="w-48 md:w-40" // fixed width on larger screens
+          />
+        </div>
+
+        {/* Minimum Order */}
+        <div className="flex flex-col">
+          <Label
+            htmlFor="min_order_value"
+            className="text-sm font-medium text-muted-foreground mb-1">
+            Min Order Value (Rs.)
+          </Label>
+          <Input
+            {...register("min_order_value")}
+            id="min_order_value"
+            type="text"
+            placeholder="e.g. 400"
+            className="w-48 md:w-40"
+          />
+        </div>
       </div>
     </div>
   );

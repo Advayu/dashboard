@@ -7,51 +7,61 @@ const PercentageOff = () => {
   const { register } = useFormContext();
 
   return (
-    <div className="flex flex-col space-y-4">
-      {/* First Row */}
-      <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 md:items-center">
-        <div className="flex space-x-2">
-          <Input
-            {...register("discount_percent")}
-            className="font-black border border-black text-lg md:text-xl text-blueTilt  md:w-48 w-2/5 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-            type="text"
-            name="discount_percent"
-            placeholder="e.g 10%"
-          />
-          <Label className="font-black text-lg md:text-xl">OFF </Label>
+    <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 max-w-[45vw]">
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">
+        Percentage Discount
+      </h3>
+      <div className="flex flex-col md:flex-row gap-6 md:items-end">
+        {/* Discount Percentage */}
+        <div className="flex flex-col">
+          <Label
+            htmlFor="discount_percent"
+            className="text-sm font-medium text-gray-700">
+            Discount Percentage
+          </Label>
+          <div className="flex items-center space-x-2">
+            <Input
+              {...register("discount_percent")}
+              id="discount_percent"
+              type="text"
+              placeholder="e.g. 10"
+              className="w-48 md:w-40"
+            />
+            <span className="font-semibold text-base text-muted-foreground">
+              %
+            </span>
+          </div>
         </div>
-        {/* <Input
-          className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
-          type="text"
-          name="price"
-          placeholder="Value"
-          // Todo: review
-          defaultValue={"All Items"}
-          readOnly
-        /> */}
-      </div>
 
-      {/* Second Row */}
-      <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 md:items-center">
-        <div className="flex space-x-2">
-          <Label className="font-black text-lg md:text-xl">above Rs.</Label>
+        {/* Min Order Value */}
+        <div className="flex flex-col">
+          <Label
+            htmlFor="min_order_value"
+            className="text-sm font-medium text-gray-700">
+            Minimum Order Value
+          </Label>
           <Input
             {...register("min_order_value")}
-            className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
+            id="min_order_value"
             type="text"
-            name="min_order_value"
-            placeholder="e.g 1000"
+            placeholder="e.g. 1000"
+            className="w-48 md:w-40"
           />
         </div>
 
-        <div className="flex space-x-2">
-          <Label className="font-black text-lg md:text-xl">upto Rs.</Label>
+        {/* Max Discount Cap */}
+        <div className="flex flex-col">
+          <Label
+            htmlFor="max_discount_value"
+            className="text-sm font-medium text-gray-700">
+            Maximum Discount Cap
+          </Label>
           <Input
             {...register("max_discount_value")}
-            className="font-black border border-black text-lg md:text-xl text-blueTilt w-full md:w-48 px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-500 w-2/5"
+            id="max_discount_value"
             type="text"
-            name="max_discount_value"
-            placeholder="e.g 300"
+            placeholder="e.g. 300"
+            className="w-48 md:w-40"
           />
         </div>
       </div>

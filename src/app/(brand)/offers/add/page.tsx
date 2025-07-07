@@ -56,10 +56,12 @@ function OfferCreationLayout() {
         <Navbar />
         <div className="grid grid-cols-1 md:grid-cols-[370px_auto]">
           <StepperLayout />
-          {StepComponent ? <StepComponent /> : null}
+          <div className="px-10 flex md:flex-col flex-row justify-center">
+            {StepComponent ? <StepComponent /> : null}
+          </div>
         </div>
         {/* Example navigation buttons */}
-        <div className="flex space-x-2 md:justify-end ">
+        <div className="flex space-x-2 md:justify-end justify-center ">
           <Button
             type="button"
             variant={"outline"}
