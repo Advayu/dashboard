@@ -1,6 +1,7 @@
 import { generateOfferTitle } from "../generateOfferTitle";
 
-// src/utils/offerSubmission.ts
+
+// handle offer creation form submission
 export const handleOfferSubmission = async (
     data: any,
     brandId: string,
@@ -63,6 +64,7 @@ export const handleOfferSubmission = async (
                     }
                 }
             }
+            window.location.href = `/offers`
         } catch (error) {
             console.error(`Failed to process outlet ${outlet_id}:`, error);
         }

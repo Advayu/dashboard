@@ -50,9 +50,3 @@ const CouponPreview: React.FC<CouponPreviewProps> = ({}) => {
 };
 
 export default CouponPreview;
-function dispatch(arg0: {
-  payload: undefined;
-  type: "offerDetails/resetOfferDetails";
-}) {
-  throw new Error("Function not implemented.");
-}

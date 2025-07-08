@@ -16,24 +16,22 @@ const TermsConditions: React.FC = () => {
     : "N/A";
 
   const termsAndConditions = [
-    <span key="1">
-      Offer is valid at <b>{brandName}</b>&rsquo;s outlets
-    </span>,
+    <span key="1">Offer is valid at selected outlets only.</span>,
     <span key="3">
       Offer valid on <b>{applicableDays.join(", ")}</b>
     </span>,
     <span key="4">
       Offer valid till <b>{formattedDate}</b>
     </span>,
-    <span key="6">
-      Discount can only be availed when paying your bill at <b>{brand?.name}</b>
-    </span>,
+    // <span key="6">
+    //   Discount can only be availed when paying your bill at <b>{brand?.name}</b>
+    // </span>,
     <span key="8">
-      Once redeemed, the offer cannot be modified or transferred
+      Once redeemed, the offer cannot be modified or transferred.
     </span>,
-    <span key="9">The offer is guaranteed</span>,
+    <span key="9">The offer is guaranteed.</span>,
     <span key="10">
-      <b>Advayu</b> shall not be responsible for any loss you may incur
+      <b>Advayu</b> shall not be responsible for any loss you may incur.
     </span>,
   ];
 

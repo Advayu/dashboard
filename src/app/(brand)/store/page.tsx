@@ -98,7 +98,9 @@ export default function Page() {
     setLoadingOffers((prev) => ({ ...prev, [id]: true }));
 
     try {
-      const offers = await getOfferByOutletId(id);
+      let offers = await getOfferByOutletId(id);
+      offers = offers.data;
+
       setOfferByOutletId((prev: any) => ({
         ...prev,
         [id]: offers,

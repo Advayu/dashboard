@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Accordion } from "@/components/ui/accordion";
@@ -38,11 +38,13 @@ export default function Page() {
     error: outletsError,
   } = useGetOutlets(brand_id);
 
-  const {
+  let {
     offer: offers = [],
     isLoading: isLoadingOffers,
     error: offersError,
   } = useGetOfferByOutletId(outletId);
+
+  const offersData = Array.isArray(offers?.data) ? offers.data : [];
 
   // Set initial outletId once outlets load
   useEffect(() => {
@@ -66,10 +68,11 @@ export default function Page() {
   // Categorize offers
   const today = new Date();
 
-  const filteredOffers = offers?.filter((offer: any) =>
+  const filteredOffers = offersData?.filter((offer: any) =>
     offer?.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  console.log("filteredOffers", filteredOffers);
   const categorizeOffers = () => {
     const draft: any[] = [];
     const upcoming: any[] = [];
@@ -77,6 +80,7 @@ export default function Page() {
     const past: any[] = [];
 
     for (const offer of filteredOffers) {
+      console.log("offer", offer);
       const start = parseISO(offer.start_date);
       const end = parseISO(offer.end_date);
 
@@ -95,10 +99,6 @@ export default function Page() {
   };
 
   const { draft, upcoming, ongoing, past } = categorizeOffers();
-  console.log("draft", draft);
-  console.log("upcoming", upcoming);
-  console.log("ongoing", ongoing);
-  console.log("past", past);
 
   if (isLoadingOutlets || isLoadingOffers) return <Loading />;
   if (outletsError || offersError)

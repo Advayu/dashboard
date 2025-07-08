@@ -73,7 +73,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
     formState: { errors },
   } = useFormContext();
 
-  const discountType = watch("discountType");
+  const discountType = watch("discountType") || "PERCENTAGE";
 
   const renderOfferDetailsComponent = () => {
     switch (discountType) {
@@ -161,7 +161,10 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
           control={control}
           name="discountType"
           render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue="PERCENTAGE"
+              value={field.value}>
               <SelectTrigger className="w-[180px] my-2 border border-black mb-6">
                 <SelectValue placeholder="discount type" />
               </SelectTrigger>

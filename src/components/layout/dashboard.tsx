@@ -13,10 +13,7 @@ import { useDispatch } from "react-redux";
 
 import { useGetOffers } from "@/hooks/use-offer";
 import { useLogout } from "@/hooks/use-auth";
-import {
-  setBrandUser,
-  setBrandUserId,
-} from "@/store/globalSlice/brandUserSlice";
+import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 
 const ShimmerLoader: React.FC = () => (
   <div className="embla__slide w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
@@ -32,10 +29,15 @@ const Dashboard = ({ user }: any) => {
   const is_password_changed = useSelector(
     (state: RootState) => state.brandUser.is_password_changed
   );
-  const [data, setData] = useState<any>(null);
-  const brand = useSelector((state: RootState) => state.brand);
+  // ✅ Pagination states
+  const [limit, setLimit] = useState(4); // Adjust as needed
+  const [page, setPage] = useState(1);
   // Todo: replace with actual brand_id from the redux store
-  const { offers, error, isLoading } = useGetOffers(user?.brand_id);
+  const { offers, error, isLoading } = useGetOffers(
+    user?.brand_id,
+    limit,
+    page
+  );
 
   const router = useRouter();
 
@@ -59,6 +61,17 @@ const Dashboard = ({ user }: any) => {
     };
   }, []);
 
+  // ✅ Pagination controls
+  const totalPages = Math.ceil((offers?.total || 0) / limit);
+
+  const handlePrevious = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
   useEffect(() => {
     dispatch(
       setBrandUser({
@@ -80,29 +93,68 @@ const Dashboard = ({ user }: any) => {
   }, [user]);
 
   const renderOfferCards = () => {
-    if (offers?.length === 0) {
+    if (isLoading) {
       return (
-        <div className="w-full flex justify-center ">
+        <div className="flex gap-4 overflow-x-auto py-4">
+          {Array.from({ length: limit }).map((_, i) => (
+            <ShimmerLoader key={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (!offers?.data?.length) {
+      return (
+        <div className="w-full flex justify-center mt-6">
           <NoActiveOffers />
         </div>
       );
     }
 
     return (
-      offers &&
-      offers.map((offer: any, index: number) => (
-        <div className="embla__slide" key={index}>
-          <CouponCard
-            id={offer.id}
-            title={offer.title}
-            number_of_redemptions={50} // Placeholder
-            total_coupons={offer.total_limit}
-            start_date={offer.start_date}
-            expiry_date={offer.end_date}
-            unique_code={offer.code} // Placeholder
-          />
-        </div>
-      ))
+      <div className="flex gap-4 overflow-x-auto py-4">
+        {offers.data.map((offer: any, index: number) => (
+          <div className="embla__slide mx-4" key={index}>
+            <CouponCard
+              id={offer.id}
+              title={offer.title}
+              number_of_redemptions={50} // Placeholder
+              total_coupons={offer.total_limit}
+              start_date={offer.start_date}
+              expiry_date={offer.end_date}
+              unique_code={offer.code}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderPaginationButton = () => {
+    if (!offers?.data?.length) return null;
+
+    return (
+      <div className="flex justify-center mt-4 space-x-4">
+        <button
+          onClick={handlePrevious}
+          disabled={page === 1}
+          className={`px-4 py-2 border rounded ${
+            page === 1 ? "opacity-50 cursor-not-allowed" : ""
+          }`}>
+          Previous
+        </button>
+        <span className="px-4 py-2 border rounded">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={page === totalPages}
+          className={`px-4 py-2 border rounded ${
+            page === totalPages ? "opacity-50 cursor-not-allowed" : ""
+          }`}>
+          Next
+        </button>
+      </div>
     );
   };
 
@@ -157,6 +209,7 @@ const Dashboard = ({ user }: any) => {
               <HorizontalCarousel>{renderOfferCards()}</HorizontalCarousel>
             )}
           </div>
+          {renderPaginationButton()}
         </div>
       </div>
 
