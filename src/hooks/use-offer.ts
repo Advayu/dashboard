@@ -3,6 +3,7 @@ import {
     deleteOffer,
     fetchOffers,
     getOffer,
+    getOfferAnalytics,
     getOfferByOutletId,
     getOffers,
     updateOffer,
@@ -152,3 +153,19 @@ export function useGetOfferUsingParams(params: any): any {
         total: data?.total || 0,
     };
 }
+
+// offer analytics
+
+export const useGetOfferAnalytics = (
+    id: string,
+    start?: string,
+    end?: string,
+    enabled: boolean = true
+) => {
+    return useQuery({
+        queryKey: ["offer-analytics", id, start, end],
+        queryFn: () => getOfferAnalytics(id, start, end),
+        enabled: enabled && !!id, // only run if ID is valid and explicitly enabled
+        staleTime: 1000 * 60 * 5, // optional: cache for 5 minutes
+    });
+};

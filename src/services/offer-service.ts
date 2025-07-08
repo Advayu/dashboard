@@ -62,3 +62,21 @@ export async function fetchOffers(params: any) {
     const response = await axiosInstance.get('/offers', params);
     return response.data;
 }
+
+// 8. get offer analytics
+
+export const getOfferAnalytics = async (
+    id: string,
+    start?: string,
+    end?: string
+) => {
+    const params: Record<string, string> = {};
+    if (start) params.start = start;
+    if (end) params.end = end;
+
+    const response = await axiosInstance.get(`/offers/${id}/analytics`, {
+        params,
+    });
+
+    return response.data;
+};
