@@ -26,7 +26,7 @@ export const getOffer = async (id: string) => {
 // 3. Get offer(s) by outlet ID (with optional pagination)
 export const getOfferByOutletId = async (
     outlet_id: string,
-    limit: number = 10,
+    limit: number = 4,
     page: number = 1
 ) => {
     const response = await axiosInstance.get(`/offers`, {
@@ -56,3 +56,9 @@ export const createOffer = async (data: any) => {
     const response = await axiosInstance.post(`/offers`, data);
     return response.data;
 };
+
+// 7. get offer using parama
+export async function fetchOffers(params: any) {
+    const response = await axiosInstance.get('/offers', params);
+    return response.data;
+}

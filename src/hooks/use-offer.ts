@@ -1,6 +1,7 @@
 import {
     createOffer,
     deleteOffer,
+    fetchOffers,
     getOffer,
     getOfferByOutletId,
     getOffers,
@@ -105,17 +106,49 @@ export const useDeleteOffer = () => {
 export const useGetOfferByOutletId = (
     outletId: string,
     limit: number = 10,
-    page: number = 1
+    page: number = 1,
+    enabled: boolean = true // add this parameter
+
 ) => {
     const { data, error, isLoading } = useQuery({
         queryKey: ['offerByOutletId', outletId, limit, page],
         queryFn: () => getOfferByOutletId(outletId, limit, page),
-        enabled: !!outletId,
+        enabled: enabled && !!outletId,
     });
 
     return {
         offer: data,
         error,
         isLoading,
+        totalPages: data?.totalPages || 0,
+        currentPage: data?.currentPage || 0,
+        page: data?.page || 0,
+        total: data?.total || 0,
+        pageSize: data?.pageSize || 0,
+
+
     };
 };
+
+
+
+export function useGetOfferUsingParams(params: any): any {
+    const { searchType, filters, page, limit } = params;
+    console.log("searchType", searchType);
+    console.log("filters", filters);
+    console.log("page", page);
+    console.log("limit", limit);
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['offers', searchType, filters, page, limit],
+        queryFn: () => fetchOffers(params),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+    console.log(data)
+    return {
+        data: data?.data || [],
+        isLoading,
+        error,
+        total: data?.total || 0,
+    };
+}

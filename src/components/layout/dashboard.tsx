@@ -8,7 +8,6 @@ import GaugeComponent from "@/components/ui/ProgressBar";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/store";
-import Link from "next/link";
 import { useDispatch } from "react-redux";
 
 import { useGetOffers } from "@/hooks/use-offer";
@@ -16,7 +15,7 @@ import { useLogout } from "@/hooks/use-auth";
 import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 
 const ShimmerLoader: React.FC = () => (
-  <div className="embla__slide w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
+  <div className="w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
 );
 
 const Dashboard = ({ user }: any) => {
@@ -29,8 +28,8 @@ const Dashboard = ({ user }: any) => {
   const is_password_changed = useSelector(
     (state: RootState) => state.brandUser.is_password_changed
   );
-  // ✅ Pagination states
-  const [limit, setLimit] = useState(4); // Adjust as needed
+  //  Pagination states
+  const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
   // Todo: replace with actual brand_id from the redux store
   const { offers, error, isLoading } = useGetOffers(
@@ -38,7 +37,6 @@ const Dashboard = ({ user }: any) => {
     limit,
     page
   );
-
   const router = useRouter();
 
   // Toggles the menu visibility
@@ -49,7 +47,6 @@ const Dashboard = ({ user }: any) => {
   // Handles clicks outside the menu
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      console.log("Clicked outside menu");
       setIsMenuVisible(false);
     }
   };
@@ -112,9 +109,9 @@ const Dashboard = ({ user }: any) => {
     }
 
     return (
-      <div className="flex gap-4 overflow-x-auto py-4">
+      <div className="flex gap-2 py-4">
         {offers.data.map((offer: any, index: number) => (
-          <div className="embla__slide mx-4" key={index}>
+          <div className=" mx-4" key={index}>
             <CouponCard
               id={offer.id}
               title={offer.title}
@@ -206,27 +203,26 @@ const Dashboard = ({ user }: any) => {
             {isLoading ? (
               <ShimmerLoader />
             ) : (
-              <HorizontalCarousel>{renderOfferCards()}</HorizontalCarousel>
+              <div className="overflow-x-auto">{renderOfferCards()}</div>
             )}
           </div>
-          {renderPaginationButton()}
         </div>
       </div>
 
       <div className="md:hidden">
         <GaugeComponent />
-        <div className="md:ml-[16.3px]">
+        <div className="md:ml-[16.3px] mx-4">
           <h2 className="text-xl font-bold mb-4">
             Active offers ({offers && offers.length})
           </h2>
           {isLoading ? (
             <ShimmerLoader />
           ) : (
-            <HorizontalCarousel>{renderOfferCards()}</HorizontalCarousel>
+            <div className="overflow-x-auto">{renderOfferCards()}</div>
           )}
         </div>
       </div>
-
+      {renderPaginationButton()}
       {/* Error Handling */}
       {error && (
         <div className="error-message text-red-500">

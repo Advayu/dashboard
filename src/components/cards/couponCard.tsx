@@ -77,7 +77,6 @@ const CouponCard: React.FC<any> = ({
   start_date,
   offer_type,
 }) => {
-  console.log("offer_type", offer_type);
   const router = useRouter();
   // percentage of offer redemption
   const percentage_of_offer_redemption = Math.floor(

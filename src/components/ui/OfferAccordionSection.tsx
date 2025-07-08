@@ -4,9 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion"; // Ensure the correct import path
-import { HorizontalCarousel } from "@/components/crasoul/EmblaCarousel"; // Ensure the correct import path
-import CouponCard from "@/components/cards/couponCard"; // Ensure the correct import path
+} from "@/components/ui/accordion";
+import { HorizontalCarousel } from "@/components/crasoul/EmblaCarousel";
+import CouponCard from "@/components/cards/couponCard";
 
 interface OfferAccordionSectionProps {
   title: string;
@@ -19,7 +19,6 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
   offers,
   value,
 }) => {
-  console.log("offers", offers);
   return (
     <AccordionItem value={value}>
       <AccordionTrigger className="font-bold text-xl">
@@ -36,21 +35,20 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
             </Link>
           </div>
         ) : (
-          <HorizontalCarousel>
+          <div className="flex flex-row  gap-4 overflow-x-auto">
             {offers?.map((offer, index) => (
-              <div className="embla__slide " key={index}>
-                <CouponCard
-                  id={offer.id}
-                  title={offer.title}
-                  start_date={offer.start_date}
-                  expiry_date={offer.end_date}
-                  offer_type={offer.offer_type}
-                  number_of_redemptions={0}
-                  total_coupons={offer.total_limit}
-                />
-              </div>
+              <CouponCard
+                key={index}
+                id={offer.id}
+                title={offer.title}
+                start_date={offer.start_date}
+                expiry_date={offer.end_date}
+                offer_type={offer.offer_type}
+                number_of_redemptions={0}
+                total_coupons={offer.total_limit}
+              />
             ))}
-          </HorizontalCarousel>
+          </div>
         )}
       </AccordionContent>
     </AccordionItem>
