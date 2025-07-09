@@ -104,14 +104,13 @@ const CouponCard: React.FC<any> = ({
 
   const handleOfferClick = (id: number) => {
     //TODO: Redirect to offer analytics page with offer id
-    console.log("offer id coupon card component", id);
     router.push(`/offers/analytics?offerId=${id}`);
   };
 
   return (
     <div
       onClick={() => handleOfferClick(id)}
-      className="border border-blueTilt rounded-xl my-2 flex min-h-[7.5rem] min-w-72 relative bg-white">
+      className="border border-blueTilt rounded-xl my-2 flex min-h-[7.5rem] min-w-72 max-w-[72%] relative bg-white">
       {expirySoon && (
         <div className="ribbon absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold rounded-full px-3 ">
           expires soon
@@ -122,7 +121,7 @@ const CouponCard: React.FC<any> = ({
       <div className="grid max-w-[3rem] border-l-0 border-blueTilt flex-col absolute ml-[3px] left-[-4px] top-1/2 transform -translate-y-1/2 w-4 h-6 bg-white border rounded-r-full"></div>
 
       {/* Coupon content */}
-      <div className="grid grid-cols-[15rem_3rem] w-full ">
+      <div className="grid grid-cols-[15rem_3rem] max-w-[86%] ">
         <div className="flex flex-col   w-full pl-[24px] ">
           <h3
             className="text-sm font-bold text-gray-900 pb-[16px] truncate mt-[6px]"

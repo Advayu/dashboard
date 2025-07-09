@@ -30,8 +30,8 @@ export default function OfferList({
 }: Props) {
   return (
     <div>
-      <h2 className="text-lg font-semibold">Active Offers</h2>
-      <div className="mt-4 space-y-4 max-h-[29rem] overflow-y-auto">
+      <h2 className="text-lg font-semibold ">Active Offers</h2>
+      <div className="flex flex-row lg:flex-col mt-4 gap-2 lg:max-h-[29rem] overflow-y-auto lg:min-h-[26rem]">
         {loading
           ? Array.from({ length: 3 }).map((_, i) => (
               <div
@@ -53,16 +53,18 @@ export default function OfferList({
             ))}
       </div>
       {offers.length > 0 && (
-        <div className="flex justify-center mt-4 space-x-2">
-          <Button disabled={currentPage === 1} onClick={onPrev}>
-            Prev
-          </Button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button disabled={currentPage === totalPages} onClick={onNext}>
-            Next
-          </Button>
+        <div className="mt-6 flex justify-center items-center space-x-4 border-t pt-4 mb-4">
+          <div className="flex items-center gap-2">
+            <Button type="button" onClick={onPrev} variant="outline" size="lg">
+              Prev
+            </Button>
+            <span className="text-muted-foreground text-">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button type="button" onClick={onNext} size="lg">
+              Next
+            </Button>
+          </div>
         </div>
       )}
     </div>

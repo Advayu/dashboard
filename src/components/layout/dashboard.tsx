@@ -73,7 +73,7 @@ const Dashboard = ({ user }: any) => {
     dispatch(
       setBrandUser({
         id: user?.userId ?? "",
-        name: user?.name ?? "",
+        name: user?.brandName ?? "",
         email: user?.email ?? "",
         phone: user?.phone ?? "",
         password_hash: user?.password_hash ?? "",

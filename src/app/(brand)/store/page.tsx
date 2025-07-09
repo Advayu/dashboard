@@ -12,15 +12,18 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/store/store";
 
 export default function Page() {
-  const brand = useSelector((state: any) => state.brand);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredOutlets, setFilteredOutlets] = useState<any[]>([]);
   const router = useRouter();
 
   // Get outlets from the API
-  const brand_id = useSelector((state: RootState) => state.brandUser.brand_id);
+  const brand_user = useSelector((state: RootState) => state.brandUser);
 
-  const { data: outlets = [], isLoading } = useGetOutlets(brand_id);
+  const {
+    data: outlets = [],
+    isLoading,
+    error,
+  } = useGetOutlets(brand_user.brand_id);
 
   useEffect(() => {
     if (outlets.length) {
@@ -37,7 +40,7 @@ export default function Page() {
     <div className="md:w-[93%] w-full flex flex-col md:pl-10 md:mt-16 md:pr-4 mt-10 px-5">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl md:text-3xl font-bold">
-          {brand?.name || "Brand"}
+          {brand_user?.name || ""}
         </h1>
         <div className="flex gap-4 items-center">
           <Button variant="outline" onClick={handleAddOutletClick}>
@@ -51,7 +54,11 @@ export default function Page() {
           </div>
         </div>
       </div>
-
+      {error && (
+        <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">
+          Error: Failed to load outlets.
+        </div>
+      )}
       {/* Mobile Search */}
       <div className="block md:hidden mb-4">
         <SearchBar

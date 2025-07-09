@@ -22,7 +22,7 @@ interface Props {
 
 export default function OutletAccordion({ outlet }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(3);
   const [page, setPage] = useState(1);
   const { offer, isLoading, error, total, currentPage, totalPages } =
     useGetOfferByOutletId(outlet.id, limit, page);
@@ -52,7 +52,7 @@ export default function OutletAccordion({ outlet }: Props) {
             />
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4 flex md:flex-row flex-col gap-10 ">
+            <div className="space-y-4 flex lg:flex-row flex-col gap-10 ">
               <SalesGraph id={outlet.id} />
               {isLoading ? (
                 <div> Loading...</div>

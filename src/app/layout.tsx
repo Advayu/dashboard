@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import localFont from "next/font/local";
-import QueryProvider from "@/components/QueryProvider";
-import { cookies } from "next/headers";
+import AppProviders from "@/components/AppProviders";
 
 const satoshiFont = localFont({
   src: [
@@ -27,13 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const getToken = async () => {
-    const cookieStore = await cookies();
-    return cookieStore.get("access_token")?.value;
-  };
-
-  // const decoded = token ? jwt.decode(token) : null;
-  // const email = decoded?.email;
   return (
     <html lang="en" className={satoshiFont.variable}>
       <head>
@@ -46,7 +38,7 @@ export default function RootLayout({
 
       <body className={satoshiFont.className}>
         {/* <Navbar /> */}
-        <QueryProvider>{children}</QueryProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

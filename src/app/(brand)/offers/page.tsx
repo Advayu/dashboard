@@ -15,28 +15,21 @@ import { useGetOfferByOutletId } from "@/hooks/use-offer";
 import OfferAccordionSection from "@/components/ui/OfferAccordionSection";
 import Loading from "@/components/loading";
 import { isAfter, isBefore, isWithinInterval, parseISO } from "date-fns";
+import { RootState } from "@/store/store";
 
 export default function Page() {
   const router = useRouter();
-  const brand = useSelector((state: any) => state.brand);
 
   const [outletId, setOutletId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const brandUserStr =
-    typeof window !== "undefined"
-      ? localStorage.getItem("persist:brandUser")
-      : null;
-
-  const brand_id = brandUserStr
-    ? JSON.parse(brandUserStr)?.brand_id
-    : undefined;
+  const brand_user = useSelector((state: RootState) => state.brandUser);
 
   const {
     data: outlets,
     isLoading: isLoadingOutlets,
     error: outletsError,
-  } = useGetOutlets(brand_id);
+  } = useGetOutlets(brand_user?.brand_id);
 
   let {
     offer: offers = [],
@@ -51,7 +44,7 @@ export default function Page() {
     if (outlets?.length && !outletId) {
       setOutletId(outlets[0].id);
     }
-  }, [outlets]);
+  }, [outlets, outletId]);
 
   const handleOutletChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setOutletId(event.target.value);
@@ -72,7 +65,6 @@ export default function Page() {
     offer?.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  console.log("filteredOffers", filteredOffers);
   const categorizeOffers = () => {
     const draft: any[] = [];
     const upcoming: any[] = [];
@@ -80,7 +72,6 @@ export default function Page() {
     const past: any[] = [];
 
     for (const offer of filteredOffers) {
-      console.log("offer", offer);
       const start = parseISO(offer.start_date);
       const end = parseISO(offer.end_date);
 
@@ -100,15 +91,24 @@ export default function Page() {
 
   const { draft, upcoming, ongoing, past } = categorizeOffers();
 
-  if (isLoadingOutlets || isLoadingOffers) return <Loading />;
+  if (isLoadingOutlets || isLoadingOffers)
+    return (
+      <div className="flex w-full h-full items-center justify-center">
+        <Loading />
+      </div>
+    );
   if (outletsError || offersError)
-    return <div className="text-red-500 mt-10">Error loading data.</div>;
+    return (
+      <div className="w-full h-full items-center text-center justify-center text-red-500 mt-10 border">
+        Error loading data.
+      </div>
+    );
 
   return (
-    <div className="flex flex-col md:mt-16 md:pl-10 mt-10 px-5 md:w-[93%] w-full h-full transition-all duration-300 mb-28">
+    <div className="flex flex-col md:mt-16 md:pl-10 mt-10 px-5 md:w-[93%] w-full h-full  mb-28">
       <div className="flex justify-between md:pr-8">
         <h1 className="md:text-3xl text-xl font-bold">
-          {brand?.name || "Your"} Offers
+          {brand_user?.name || "Your"} Offers
         </h1>
         <div className="flex space-x-6 items-center">
           <Button onClick={handleAddOffer} variant="outline">

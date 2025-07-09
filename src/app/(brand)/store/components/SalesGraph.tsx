@@ -77,10 +77,10 @@ export default function SalesGraph({ id }: { id: string }) {
   const chartData = data?.[id] ?? [];
 
   return (
-    <div className="min-w-[720px]">
+    <div className="max-w-[720px]">
       {/*  Filters */}
-      <div className="flex flex-wrap md:space-x-4 mb-4 items-center">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-wrap md:space-x-4 mb-4 items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 ">
           <h3>Sales with Advayu</h3>
           <Select
             onValueChange={(val) => handleInputChange("fy", val)}
@@ -98,7 +98,7 @@ export default function SalesGraph({ id }: { id: string }) {
           </Select>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex  items-center">
           {renderDateInput("startDate")}
           <div className="h-[0.1rem] w-[1rem] bg-black rounded-full" />
           {renderDateInput("endDate")}
