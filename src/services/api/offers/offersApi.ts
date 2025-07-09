@@ -1,11 +1,10 @@
 import { generateUniqueUUID } from "@/functions/function";
 import { LAMBDA_URL } from "@/utils/constants";
-import { OfferDetailsType } from "@/Types/type"
 import axiosInstance from "@/utils/axiosInstance";
 
 // draft offerdetails by signing is_active: false
 export const saveOfferAsDraft = async (
-    offerDetail: OfferDetailsType,
+    offerDetail: any,
     outletId: string,
     brandId: string
 ) => {
