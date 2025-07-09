@@ -9,8 +9,10 @@ type OfferDetails = {
 
 export const generateOfferTitle = (offerDetail: any): string => {
     const { discountType, discount_value, min_order_value, discount_percent, max_discount_value } = offerDetail;
-
-    switch (discountType) {
+    console.log(offerDetail)
+    console.log("discountType", discountType)
+    console.log("discount_type", offerDetail.discount_type)
+    switch (discountType || offerDetail.discount_type) {
         case "ABSOLUTE":
             return `Flat Rs ${discount_value} off above Rs ${min_order_value}`;
 

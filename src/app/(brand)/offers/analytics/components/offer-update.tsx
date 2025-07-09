@@ -2,15 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import React, { useState } from "react";
+import React from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
-import { PercentageOff } from "../../add/components";
 import { Accordion } from "@radix-ui/react-accordion";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useUpdateOffer } from "@/hooks/use-offer";
+import { generateOfferTitle } from "../../add/generateOfferTitle";
+import { offerSchema } from "@/schemas/offer.schema";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useStatusMessage } from "@/hooks/use-status-message";
+import { Toast } from "@/components/statusMessage";
 
 type Day =
   | "Monday"
@@ -30,9 +36,13 @@ const dayMap: Record<Day, string> = {
   Friday: "F",
   Saturday: "S",
 };
+type OfferFormData = z.infer<typeof offerSchema>;
 
 const UpdateOffer = ({ offerDetails }: any) => {
-  const methods = useForm({
+  const { mutate: updateOffer, error, isLoading, isSuccess } = useUpdateOffer();
+
+  const methods = useForm<OfferFormData>({
+    resolver: zodResolver(offerSchema),
     defaultValues: {
       ...offerDetails,
       status: offerDetails?.is_active ? "Active" : "Inactive",
@@ -46,22 +56,24 @@ const UpdateOffer = ({ offerDetails }: any) => {
     register,
     control,
     handleSubmit,
-    setValue,
     watch,
     formState: { errors },
   } = methods;
 
   const onSubmit = (data: any) => {
-    console.log("Submitted Data:", data);
+    console.log("data", data);
+    data.title = generateOfferTitle(data);
+    data.is_active = data.status === "Active";
+    delete data.discount_type;
+    delete data.status;
+
+    updateOffer({ id: offerDetails.id, data });
   };
 
-  const selectedDays = watch("applicable_days");
-
   return (
-    <div className="flex items-center">
+    <div className={`flex items-center md:justify-center `}>
       <FormProvider {...methods}>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* Offer Title */}
           <div className="flex flex-col gap-2 mb-6">
             <Label className="text-xl font-semi-bold">Offer title</Label>
             <Input
@@ -93,18 +105,28 @@ const UpdateOffer = ({ offerDetails }: any) => {
                     <div>
                       <Label>Discount Percentage</Label>
                       <Input
-                        {...register("discount_percent")}
+                        {...register("discount_percent", {
+                          valueAsNumber: true,
+                        })}
                         type="number"
                         placeholder="Discount percentage"
                       />
                     </div>
                     <div>
                       <Label>Minimum Order Value</Label>
-                      <Input {...register("min_order_value")} type="number" />
+                      <Input
+                        {...register("min_order_value", {
+                          valueAsNumber: true,
+                        })}
+                        type="number"
+                      />
                     </div>
                     <div>
                       <Label>Maximum Discount Cap</Label>
-                      <Input {...register("discount_value")} type="number" />
+                      <Input
+                        {...register("discount_value", { valueAsNumber: true })}
+                        type="number"
+                      />
                     </div>
                   </div>
                 </AccordionContent>
@@ -121,11 +143,19 @@ const UpdateOffer = ({ offerDetails }: any) => {
                   <div className="border border-blueTilt rounded-md p-4 space-y-4">
                     <div>
                       <Label>Discount Value</Label>
-                      <Input {...register("discount_value")} type="number" />
+                      <Input
+                        {...register("discount_value", { valueAsNumber: true })}
+                        type="number"
+                      />
                     </div>
                     <div>
                       <Label>Minimum Order Value</Label>
-                      <Input {...register("min_order_value")} type="number" />
+                      <Input
+                        {...register("min_order_value", {
+                          valueAsNumber: true,
+                        })}
+                        type="number"
+                      />
                     </div>
                   </div>
                 </AccordionContent>
@@ -204,7 +234,9 @@ const UpdateOffer = ({ offerDetails }: any) => {
           </div>
 
           <div className="">
-            <Button type="submit">Update</Button>
+            <Button disabled={isLoading} type="submit">
+              {isLoading ? "Updating..." : "Update"}
+            </Button>
           </div>
         </form>
       </FormProvider>

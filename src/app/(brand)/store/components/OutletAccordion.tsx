@@ -36,7 +36,7 @@ export default function OutletAccordion({ outlet }: Props) {
   };
 
   return (
-    <div className="bg-gray-100 rounded px-4 my-4">
+    <div className="bg-blueTilt/5 rounded px-4 my-4">
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value={outlet.id}>
           <AccordionTrigger
@@ -53,7 +53,7 @@ export default function OutletAccordion({ outlet }: Props) {
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 flex md:flex-row flex-col gap-10 ">
-              <SalesGraph />
+              <SalesGraph id={outlet.id} />
               {isLoading ? (
                 <div> Loading...</div>
               ) : (

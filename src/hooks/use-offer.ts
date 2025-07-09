@@ -9,6 +9,7 @@ import {
     updateOffer,
 } from "@/services/offer-service";
 import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+import { toast } from "./use-toast";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ export const useUpdateOffer = () => {
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['offers'] });
             queryClient.invalidateQueries({ queryKey: ['offer', variables.id] });
+
         },
     });
 
@@ -92,6 +94,11 @@ export const useDeleteOffer = () => {
         onSuccess: (_data, id) => {
             queryClient.invalidateQueries({ queryKey: ['offers'] });
             queryClient.invalidateQueries({ queryKey: ['offer', id] });
+            toast({ title: "Offer updated successfully", variant: "success" });
+        },
+        onError: (error) => {
+            console.error(error);
+            toast({ title: "Failed to update the offer", variant: "destructive" });
         },
     });
 

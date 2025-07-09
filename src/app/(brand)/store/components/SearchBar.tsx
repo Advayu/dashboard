@@ -22,7 +22,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
         width={16}
         height={16}
       />
-      <Filter width={16} height={16} />
+      {/* <Filter width={16} height={16} /> */}
     </div>
   );
 }

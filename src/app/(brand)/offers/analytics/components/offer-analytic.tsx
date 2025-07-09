@@ -13,8 +13,8 @@ const OfferAnalytic = ({ offerDetails }: any) => {
   const { mutate: updateOffer } = useUpdateOffer();
   const { data: analytics } = useGetOfferAnalytics(
     offerDetails?.id,
-    "2025-07-07",
-    "2025-07-10",
+    offerDetails.start_date,
+    offerDetails.end_date,
     !!offerDetails?.id
   );
   const ranking = analytics?.ranking;
@@ -48,31 +48,30 @@ const OfferAnalytic = ({ offerDetails }: any) => {
   };
 
   return (
-    <div className="flex flex-col ml-10">
-      <h1 className="text-xl font-bold pl-[40px]">Analytics</h1>
+    <div className="flex flex-col  ">
+      <h1 className="text-xl font-bold ">Analytics</h1>
       {/* offer redemption */}
-      <div className="flex md:flex-row md:space-y-0 space-y-[24.5px] flex-col space-x-10 my-8 md:items-center">
-        <div className=" mx-10">
-          <p>Offer redemption</p>
-          <div className="flex items-center text-center">
+      <div className="flex md:flex-row  flex-col gap-10 my-8 md:items-center">
+        <div className=" ">
+          <p className="text-lg font-semibold">Offer redemption</p>
+          <div className="flex items-center flex-row">
             <User />
-            <p className="text-3xl mx-2">{offerDetails.total_redemption} </p>
+            <p className="text-3xl md:mx-2">{offerDetails.total_redemption} </p>
             <span className="text-[#2AA000] font-bold">
               ( {analytics?.redemptions}%)
             </span>
           </div>
         </div>
-        <div className="md:space-y-0 space-y-[5px]">
-          <p>offer ranking</p>
-          <p className=" text-3xl font-bold">
-            {ranking?.rank}{" "}
+        <div className="">
+          <p className="text-lg font-semibold">Offer ranking</p>
+          <p className="flex items-center flex-row text-3xl font-medium">
+            {ranking?.rank}/
             <span className="text-base font-normal"> {ranking?.total} </span>
           </p>
         </div>
       </div>
 
-      <div></div>
-      <div className="flex justify-between mx-10">
+      <div className="flex justify-center ">
         <CouponCard
           id={offerDetails.id}
           title={offerDetails.title}
@@ -91,7 +90,7 @@ const OfferAnalytic = ({ offerDetails }: any) => {
 
         {/* <Image src={qrcode} alt="qr code" /> */}
       </div>
-      <div className="flex justify-end pr-[40px] my-8 space-x-2">
+      <div className="flex justify-center md:pr-[40px] my-8 space-x-2">
         <Button
           onClick={handleDeleteOffer}
           className="px-4 bg-red-500 text-white"

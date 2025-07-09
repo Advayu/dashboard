@@ -42,6 +42,44 @@ export const getOutlets = async (brand_id: string) => {
 
     const URL = `/v1/outlets?brand_id=${brand_id}`;
     const response = await axiosInstance.get(URL);
-    console.log("response outlets", response)
+
+    return response.data;
+};
+
+interface TrafficParams {
+    brand_id: string;
+    outlet_ids?: string[]; // optional
+    fy?: string;
+    start?: string;
+    end?: string;
+}
+
+export const getRedemptionTraffic = async ({
+    brand_id,
+    outlet_ids = [],
+    fy,
+    start,
+    end,
+}: TrafficParams) => {
+    const params = new URLSearchParams();
+    params.append("brand_id", brand_id);
+
+    outlet_ids.forEach((id) => {
+        if (id) params.append("outlet_ids", id);
+    });
+
+    if (fy) params.append("fy", fy);
+    if (start) params.append("start", start);
+    if (end) params.append("end", end);
+
+    const response = await axiosInstance.get(
+        `/redemption/traffic?${params.toString()}`,
+        {
+            headers: {
+                accept: "*/*",
+            },
+        }
+    );
+
     return response.data;
 };

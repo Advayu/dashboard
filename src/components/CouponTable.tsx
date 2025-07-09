@@ -1,4 +1,3 @@
-// components/CouponTable.tsx
 import React from "react";
 
 type Coupon = {
@@ -12,10 +11,12 @@ type CouponTableProps = {
 
 export default function CouponTable({ coupons }: CouponTableProps) {
   return (
-    <div className="max-h-[50vh] overflow-y-auto border rounded-md">
-      <table className="min-w-full border-collapse">
-        <thead className="shadow-md shadow-gray-500/10 border-b-2 sticky top-0 bg-white z-10">
-          <tr className="">
+    <div className="rounded-lg border bg-white shadow-sm max-h-[500px] overflow-y-auto">
+      <h2 className="text-lg font-semibold mb-2 px-4">Coupon Codes</h2>{" "}
+      {/* Title moved here */}
+      <table className="w-full text-sm table-fixed border-collapse">
+        <thead className="shadow-md shadow-gray-500/10 border-b-2 sticky top-0 z-10 ">
+          <tr className="bg-white">
             <th className="text-black font-bold py-3 px-4 text-left border-b">
               Code
             </th>
@@ -24,7 +25,7 @@ export default function CouponTable({ coupons }: CouponTableProps) {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="p-4">
           {coupons?.map((coupon, index) => (
             <tr key={index} className="hover:bg-gray-50 transition">
               <td className="py-3 px-4 border-b">{coupon.code}</td>

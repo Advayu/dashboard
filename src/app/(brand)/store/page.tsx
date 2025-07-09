@@ -9,21 +9,17 @@ import OutletAccordion from "./components//OutletAccordion";
 import { Button } from "@/components/ui/button";
 import { filterOutlets } from "./utils/filter";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/store/store";
 
 export default function Page() {
   const brand = useSelector((state: any) => state.brand);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredOutlets, setFilteredOutlets] = useState([]);
+  const [filteredOutlets, setFilteredOutlets] = useState<any[]>([]);
   const router = useRouter();
 
   // Get outlets from the API
-  const brandUserStr =
-    typeof window !== "undefined"
-      ? localStorage.getItem("persist:brandUser")
-      : null;
-  const brand_id = brandUserStr
-    ? JSON.parse(brandUserStr)?.brand_id
-    : undefined;
+  const brand_id = useSelector((state: RootState) => state.brandUser.brand_id);
+
   const { data: outlets = [], isLoading } = useGetOutlets(brand_id);
 
   useEffect(() => {
@@ -74,7 +70,7 @@ export default function Page() {
 
       {/* Outlet List */}
       {filteredOutlets.map((outlet) => (
-        <OutletAccordion key={outlet.id} outlet={outlet} />
+        <OutletAccordion key={outlet?.id} outlet={outlet} />
       ))}
     </div>
   );

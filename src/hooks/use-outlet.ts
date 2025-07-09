@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getOutlet, createOutlet, updateOutlet, deleteOutlet, getOutlets } from '@/services/outlet-service';
+import { getOutlet, createOutlet, updateOutlet, deleteOutlet, getOutlets, getRedemptionTraffic } from '@/services/outlet-service';
 
 export function useGetOutlets(brand_id: string) {
     return useQuery({
@@ -62,3 +62,27 @@ export function useDeleteOutlet() {
         },
     });
 }
+
+// redemption traffic
+interface TrafficParams {
+    brand_id: string;
+    outlet_ids?: string[];
+    fy?: string;
+    start?: string;
+    end?: string;
+}
+
+export const useRedemptionTraffic = (params: TrafficParams) => {
+    return useQuery({
+        queryKey: [
+            "redemptionTraffic",
+            params.brand_id,
+            params.outlet_ids,
+            params.fy,
+            params.start,
+            params.end,
+        ],
+        queryFn: () => getRedemptionTraffic(params),
+        enabled: !!params.brand_id,
+    });
+};
