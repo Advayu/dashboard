@@ -7,11 +7,11 @@ const PercentageOff = () => {
   const { register } = useFormContext();
 
   return (
-    <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 max-w-[45vw]">
+    <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 ">
       <h3 className="text-lg font-semibold text-gray-800 mb-2">
         Percentage Discount
       </h3>
-      <div className="flex flex-col md:flex-row gap-6 md:items-end">
+      <div className="flex flex-col lg:flex-row gap-6 lg:items-end">
         {/* Discount Percentage */}
         <div className="flex flex-col">
           <Label

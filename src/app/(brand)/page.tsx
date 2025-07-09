@@ -17,7 +17,7 @@ export default async function Page() {
   const data = await decodeJWT();
 
   return (
-    <div className="md:w-[93%] w-full md:mx-0 mx-4">
+    <div className="md:w-[100vw] w-full md:mx-0 px-4">
       <Dashboard user={data} />
 
       <div className="flex flex-row  md:ml-10 mt-16 md:mb-0 mb-20">

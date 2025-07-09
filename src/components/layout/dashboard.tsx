@@ -211,7 +211,7 @@ const Dashboard = ({ user }: any) => {
 
       <div className="md:hidden">
         <GaugeComponent />
-        <div className="md:ml-[16.3px] mx-4">
+        <div className="md:ml-[16.3px] px-4">
           <h2 className="text-xl font-bold mb-4">
             Active offers ({offers && offers.length})
           </h2>

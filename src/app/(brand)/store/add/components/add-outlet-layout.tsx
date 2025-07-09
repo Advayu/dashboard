@@ -2,6 +2,7 @@ import { ChevronLeft } from "lucide-react";
 import React, { ReactNode } from "react";
 import Image from "next/image";
 import SupportIcon from "../../../../../../public/image/contact.svg";
+import { navigateToPreviousPage } from "@/functions/function";
 
 interface AddOutletLayoutProps {
   children: ReactNode;
@@ -30,7 +31,7 @@ const Navbar = () => {
     <div className="flex justify-between my-10 mx-8 items-center">
       <div className="flex items-center">
         <button className="flex items-center">
-          <ChevronLeft />
+          <ChevronLeft onClick={navigateToPreviousPage} />
           <h1 className="md:text-3xl font-black"> New Outlet</h1>
         </button>
       </div>

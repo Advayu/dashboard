@@ -61,7 +61,7 @@ export const DynamicInputList: React.FC<DynamicInputListProps> = ({
         {values.map((val, i) => (
           <li
             key={i}
-            className="flex justify-between items-center bg-gray-100 rounded px-3 py-2 text-sm">
+            className="flex justify-between items-center bg-gray-100 rounded px-3 py-2 text-sm max-h-[2.5rem] overflow-y-auto">
             <span className="break-words max-w-[80%]">{val}</span>
             <button
               type="button"

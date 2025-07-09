@@ -171,11 +171,6 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
               <SelectContent>
                 <SelectItem value="ABSOLUTE">Flat off</SelectItem>
                 <SelectItem value="PERCENTAGE">Percentage off</SelectItem>
-                {/* <SelectItem value="Buy n Get n">Buy n Get n</SelectItem>
-              <SelectItem value="Free gift">Free gift</SelectItem>
-              <SelectItem value="Items at set price">
-                Items at set price
-              </SelectItem> */}
               </SelectContent>
             </Select>
           )}
