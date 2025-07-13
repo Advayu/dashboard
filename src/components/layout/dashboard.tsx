@@ -31,7 +31,6 @@ const Dashboard = ({ user }: any) => {
     page,
   });
 
-  console.log("offers", offers);
   // Toggles the menu visibility
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev);

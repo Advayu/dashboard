@@ -65,13 +65,19 @@ export default function SalesGraph({ id }: { id: string }) {
   };
 
   const renderDateInput = (field: "startDate" | "endDate") => (
-    <input
-      name={field}
-      type="date"
-      className="border border-black rounded-md px-4 py-2 text-center"
-      value={formState[field]}
-      onChange={(e) => handleInputChange(field, e.target.value)}
-    />
+    <div className="flex flex-col md:flex-row  gap-2">
+      <label className="md:hidden inline" htmlFor={field}>
+        {field === "startDate" ? "Start Date" : "End Date"}
+      </label>
+      <input
+        id={field}
+        name={field}
+        type="date"
+        className="border border-black rounded-md px-4 py-2 text-center"
+        value={formState[field]}
+        onChange={(e) => handleInputChange(field, e.target.value)}
+      />
+    </div>
   );
 
   const chartData = data?.[id] ?? [];
@@ -91,16 +97,16 @@ export default function SalesGraph({ id }: { id: string }) {
             <SelectContent>
               {fiscalYears.map((year) => (
                 <SelectItem key={year} value={year}>
-                  {year.replace("FY ", "")}
+                  {year}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="flex  items-center">
+        <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center">
           {renderDateInput("startDate")}
-          <div className="h-[0.1rem] w-[1rem] bg-black rounded-full" />
+          <div className=" md:block hidden h-[0.1rem] w-[1rem] bg-black rounded-full" />
           {renderDateInput("endDate")}
         </div>
       </div>
