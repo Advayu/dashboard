@@ -14,23 +14,50 @@ import { toast } from "./use-toast";
 const queryClient = new QueryClient();
 
 // ✅ 1. Hook to fetch offers with pagination
-export const useGetOffers = (
-    brand_id: string,
-    limit: number = 10,
-    page: number = 1
-) => {
+type getOffersParams = {
+    brand_id: string;
+    outlet_id?: string;
+    start_date?: string;
+    end_date?: string;
+    status?: string;
+    limit?: number;
+    page?: number;
+};
+
+export const useGetOffers = (params: getOffersParams) => {
+    const {
+        brand_id,
+        outlet_id,
+        start_date,
+        end_date,
+        status,
+        limit,
+        page,
+    } = params;
+
     const { data, error, isLoading } = useQuery({
-        queryKey: ['offers', brand_id, limit, page],
-        queryFn: () => getOffers(brand_id, limit, page),
+        queryKey: [
+            'offers',
+            brand_id,
+            outlet_id,
+            start_date,
+            end_date,
+            status,
+            limit,
+            page,
+        ],
+        queryFn: () =>
+            getOffers({ brand_id, outlet_id, start_date, end_date, status, limit, page }),
         enabled: !!brand_id,
     });
 
     return {
-        offers: data,
+        offers: data ?? { data: [], totalPages: 1 },
         error,
         isLoading,
     };
 };
+
 
 // ✅ 2. Hook to fetch single offer
 export const useGetOffer = (id: string) => {

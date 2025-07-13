@@ -1,21 +1,33 @@
 import axiosInstance from "@/utils/axiosInstance";
 import { LAMBDA_URL } from "@/utils/constants";
 
-// 1. Get offers with pagination
-export const getOffers = async (
-    brand_id: string,
-    limit: number = 10,
-    page: number = 1
-) => {
+// 1. Get offers with pagination and filters
+export const getOffers = async ({ page, limit, brand_id, outlet_id, start_date, end_date, status }: any) => {
     const response = await axiosInstance.get(`/offers`, {
         params: {
             brand_id,
             limit,
             page,
+            outlet_id,
+            start_date,
+            end_date,
+            status
         },
     });
+
+
     return response.data;
-};
+
+}
+
+
+
+
+
+
+
+
+
 
 // 2. Get a single offer by ID
 export const getOffer = async (id: string) => {

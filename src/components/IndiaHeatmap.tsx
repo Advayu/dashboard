@@ -4,7 +4,24 @@ import L from "leaflet";
 import { CircleMarker, Tooltip } from "react-leaflet";
 
 import "leaflet.heat";
-import React from "react";
+import React, { useEffect } from "react";
+
+function FitBounds({ points }: { points: [number, number, number][] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !points.length) return;
+
+    const latlngs = points.map(([lat, lng]) => [lat, lng]) as [
+      number,
+      number,
+    ][];
+    const bounds = L.latLngBounds(latlngs);
+    map.fitBounds(bounds, { padding: [30, 30] });
+  }, [map, points]);
+
+  return null;
+}
 
 function OutletMarkers({ data }: { data: any[] }) {
   return (
@@ -57,7 +74,6 @@ declare module "leaflet" {
 
 function HeatLayer({ points }: { points: Array<[number, number, number]> }) {
   const map = useMap();
-  console.log("points", points);
   React.useEffect(() => {
     if (!map || !points.length) return;
 
@@ -65,7 +81,7 @@ function HeatLayer({ points }: { points: Array<[number, number, number]> }) {
       radius: 20,
       blur: 20,
       maxZoom: 17,
-      minOpacity: 0.4,
+      minOpacity: 0.8,
       gradient: {
         0.0: "#daeeef", // very light blue
         0.4: "#a6d8dc", // soft teal
@@ -89,31 +105,31 @@ export default function RedemptionHeatMap({ data = [] }: { data?: any[] }) {
     return <p>No data available for heatmap.</p>;
   }
 
-  const max = Math.max(...safeData.map((d) => d.total_redemptions));
+  const max = Math.max(...safeData.map((d) => d.total_redemptions || 0)) || 1;
   const maxLog = Math.log10(max + 1);
 
   const heatPoints: [number, number, number][] = safeData
-    .filter((d) => d.lat && d.lng && d.total_redemptions)
+    .filter((d) => d.latitude && d.longitude && d.total_redemptions)
     .map((d) => [
-      d.lat,
-      d.lng,
-      d.total_redemptions,
-      // Math.min(1, (Math.log10(d.total_redemptions + 1) / maxLog) * 2), // scaled up
+      parseFloat(d.latitude),
+      parseFloat(d.longitude),
+      Math.max(Math.log10(d.total_redemptions + 1) / maxLog, 0.1), // scaled and min 0.1
     ]);
 
   return (
     <MapContainer
       keyboard={true}
-      center={[22.9734, 78.6569]}
-      zoom={5}
+      center={[22.6, 80.9629]}
+      zoom={3.5}
       scrollWheelZoom={true}
-      style={{ height: "800px", width: "40vw" }}>
+      style={{ height: "360px", width: "100%" }}>
       <TileLayer
         attribution='&copy; <a href="https://osm.org">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <HeatLayer points={heatPoints} />
       <OutletMarkers data={safeData} />
+      <FitBounds points={heatPoints} />
     </MapContainer>
   );
 }

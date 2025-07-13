@@ -27,15 +27,15 @@ const AppProviders = ({ children }: Props) => {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <QueryClientProvider client={queryClient}>
-            <UIProviders>{children}</UIProviders>
-          </QueryClientProvider>
-        </PersistGate>
-      </Provider>
-    </ErrorBoundary>
+    // <ErrorBoundary>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <UIProviders>{children}</UIProviders>
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
+    // </ErrorBoundary>
   );
 };
 

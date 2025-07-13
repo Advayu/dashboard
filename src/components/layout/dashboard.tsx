@@ -3,42 +3,35 @@
 import { useState, useEffect, useRef } from "react";
 import CouponCard, { NoActiveOffers } from "@/components/cards/couponCard";
 import { UserRound } from "lucide-react";
-import { HorizontalCarousel } from "@/components/crasoul/EmblaCarousel";
 import GaugeComponent from "@/components/ui/ProgressBar";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
-
 import { useGetOffers } from "@/hooks/use-offer";
 import { useLogout } from "@/hooks/use-auth";
 import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
-
-const ShimmerLoader: React.FC = () => (
-  <div className="w-[300px] h-[140px] bg-gray-200 animate-pulse rounded-md mt-2"></div>
-);
+import { CouponCardSkeleton } from "../ui/skeleton";
+import PaginationButton from "../pagination-button";
 
 const Dashboard = ({ user }: any) => {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const { mutate: logout } = useLogout();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
-  const [brandUserName, setBrandUserName] = useState<string>("");
-  const is_password_changed = useSelector(
-    (state: RootState) => state.brandUser.is_password_changed
-  );
   //  Pagination states
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
-  // Todo: replace with actual brand_id from the redux store
-  const { offers, error, isLoading } = useGetOffers(
-    user?.brand_id,
+  // Get active offers
+  const { offers, error, isLoading } = useGetOffers({
+    brand_id: user?.brand_id,
+    status: "active",
     limit,
-    page
-  );
-  const router = useRouter();
+    page,
+  });
 
+  console.log("offers", offers);
   // Toggles the menu visibility
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev);
@@ -58,8 +51,8 @@ const Dashboard = ({ user }: any) => {
     };
   }, []);
 
-  // ✅ Pagination controls
-  const totalPages = Math.ceil((offers?.total || 0) / limit);
+  //  Pagination controls
+  const totalPages = offers.totalPages;
 
   const handlePrevious = () => {
     if (page > 1) setPage((prev) => prev - 1);
@@ -92,9 +85,9 @@ const Dashboard = ({ user }: any) => {
   const renderOfferCards = () => {
     if (isLoading) {
       return (
-        <div className="flex gap-4 overflow-x-auto py-4">
+        <div className="flex gap-4 py-4">
           {Array.from({ length: limit }).map((_, i) => (
-            <ShimmerLoader key={i} />
+            <CouponCardSkeleton key={i} />
           ))}
         </div>
       );
@@ -111,11 +104,11 @@ const Dashboard = ({ user }: any) => {
     return (
       <div className="flex gap-2 py-4">
         {offers.data.map((offer: any, index: number) => (
-          <div className=" mx-4" key={index}>
+          <div className="mx-4" key={index}>
             <CouponCard
               id={offer.id}
               title={offer.title}
-              number_of_redemptions={50} // Placeholder
+              number_of_redemptions={50}
               total_coupons={offer.total_limit}
               start_date={offer.start_date}
               expiry_date={offer.end_date}
@@ -123,34 +116,6 @@ const Dashboard = ({ user }: any) => {
             />
           </div>
         ))}
-      </div>
-    );
-  };
-
-  const renderPaginationButton = () => {
-    if (!offers?.data?.length) return null;
-
-    return (
-      <div className="flex justify-center mt-4 space-x-4">
-        <button
-          onClick={handlePrevious}
-          disabled={page === 1}
-          className={`px-4 py-2 border rounded ${
-            page === 1 ? "opacity-50 cursor-not-allowed" : ""
-          }`}>
-          Previous
-        </button>
-        <span className="px-4 py-2 border rounded">
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={handleNext}
-          disabled={page === totalPages}
-          className={`px-4 py-2 border rounded ${
-            page === totalPages ? "opacity-50 cursor-not-allowed" : ""
-          }`}>
-          Next
-        </button>
       </div>
     );
   };
@@ -195,16 +160,11 @@ const Dashboard = ({ user }: any) => {
 
         <div className="flex flex-col mt-8">
           <h2 className="text-xl font-bold md:block hidden">
-            Active offers {offers && offers.length}
+            Active offers ({offers?.total || 0})
           </h2>
 
-          {/* Embla carousel for desktop */}
           <div className="md:block hidden">
-            {isLoading ? (
-              <ShimmerLoader />
-            ) : (
-              <div className="overflow-x-auto">{renderOfferCards()}</div>
-            )}
+            <div className="overflow-x-auto">{renderOfferCards()}</div>
           </div>
         </div>
       </div>
@@ -213,16 +173,21 @@ const Dashboard = ({ user }: any) => {
         <GaugeComponent />
         <div className="md:ml-[16.3px] px-4">
           <h2 className="text-xl font-bold mb-4">
-            Active offers ({offers && offers.length})
+            Active offers ({offers && offers.total})
           </h2>
           {isLoading ? (
-            <ShimmerLoader />
+            <CouponCardSkeleton />
           ) : (
             <div className="overflow-x-auto">{renderOfferCards()}</div>
           )}
         </div>
       </div>
-      {renderPaginationButton()}
+      <PaginationButton
+        onNext={handleNext}
+        onPrev={handlePrevious}
+        currentPage={page}
+        totalPages={totalPages}
+      />
       {/* Error Handling */}
       {error && (
         <div className="error-message text-red-500">

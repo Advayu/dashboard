@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useGetOfferByOutletId } from "@/hooks/use-offer";
 import SalesGraph from "./SalesGraph";
 import OfferList from "./OfferList";
+import { CouponCardSkeleton } from "@/components/ui/skeleton";
 
 interface Outlet {
   id: string;
@@ -52,10 +53,10 @@ export default function OutletAccordion({ outlet }: Props) {
             />
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4 flex lg:flex-row flex-col gap-10 ">
+            <div className="space-y-4 flex lg:flex-row flex-col gap-10">
               <SalesGraph id={outlet.id} />
               {isLoading ? (
-                <div> Loading...</div>
+                <CouponCardSkeleton />
               ) : (
                 <OfferList
                   offers={offer.data}

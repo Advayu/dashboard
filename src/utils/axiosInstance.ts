@@ -12,5 +12,19 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-export default axiosInstance;
+// Add a response interceptor to handle 401 Unauthorized
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Handle 401 error: unauthorized
+      console.warn("Unauthorized access - maybe redirect to login?");
+      window.location.href = "/login";
+    }
 
+    // Pass other errors down the chain
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

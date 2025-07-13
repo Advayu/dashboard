@@ -2,44 +2,80 @@
 import React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 
-const formatValue = (value: number) => `${value / 1000}k`;
+const formatValue = (value: number) => `${Math.round(value)}`;
 
-const colors = ["#4682B4"];
+const colors = ["#199EAD"];
 
 interface GraphsProps {
   dataset: { month: string; total: number }[];
+  year?: number; // Optional: default to current year
 }
 
-const LineGraph: React.FC<GraphsProps> = ({ dataset = [] }) => {
+const LineGraph: React.FC<GraphsProps> = ({
+  dataset = [],
+  year = new Date().getFullYear(),
+}) => {
   if (!dataset.length) return <p className="text-center">No data available!</p>;
 
+  const monthLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const monthMap = new Map<number, number>();
+  dataset.forEach((item) => {
+    const date = new Date(item.month);
+    if (date.getFullYear() === year) {
+      const month = date.getMonth(); // 0 = Jan
+      const currentTotal = monthMap.get(month) ?? 0;
+      monthMap.set(month, currentTotal + item.total);
+    }
+  });
+
+  const normalizedData = monthLabels.map((label, index) => ({
+    month: label,
+    total: monthMap.get(index) ?? 0,
+  }));
+
   return (
-    <LineChart
-      xAxis={[
-        {
-          dataKey: "month",
-          valueFormatter: (value) =>
-            new Date(value).toLocaleString("default", { month: "short" }),
-          scaleType: "band",
-        },
-      ]}
-      yAxis={[
-        {
-          valueFormatter: formatValue,
-        },
-      ]}
-      series={[
-        {
-          dataKey: "total",
-          color: colors[0],
-        },
-      ]}
-      dataset={dataset}
-      width={688}
-      height={311}
-      margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
-      grid={{ vertical: true, horizontal: true }}
-    />
+    <div className=" border border-blueTilt/30 rounded-md">
+      {" "}
+      <p className="text-center font-semibold text-lg mb-2">
+        Total Redemptions:{" "}
+        {normalizedData.reduce((sum, item) => sum + item.total, 0)}
+      </p>
+      <LineChart
+        xAxis={[{ dataKey: "month", scaleType: "band" }]}
+        yAxis={[
+          {
+            valueFormatter: formatValue,
+            label: "Total Redemptions",
+            tickMinStep: 1,
+          },
+        ]}
+        series={[
+          {
+            dataKey: "total",
+            color: colors[0],
+          },
+        ]}
+        dataset={normalizedData}
+        width={688}
+        height={400}
+        margin={{ left: 70, right: 30, top: 30, bottom: 30 }}
+        grid={{ vertical: true, horizontal: true }}
+      />
+    </div>
   );
 };
 
