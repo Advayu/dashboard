@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 
 import { Mail as MailIcon, Phone } from "lucide-react";
+import Link from "next/link";
 
 const Auth = () => {
   const router = useRouter();
@@ -28,18 +29,21 @@ const Auth = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    setError(null);
-
+    setFormError(null);
     if (!email || !password) {
-      setError("Please fill in all fields.");
+      setFormError("Please fill in all fields.");
       return;
     }
-    login({ email, password });
+    login(
+      { email, password },
+      {
+        onSuccess: () => router.push("/"), // Or whatever your redirect path is
+      }
+    );
 
     console.log(data);
   };
@@ -63,8 +67,8 @@ const Auth = () => {
             />
           </div>
 
-          <div className="mt-4 space-y-4">
-            <div className="relative w-full">
+          <div className="mt-4 ">
+            <div className="relative w-full my-4">
               <Mail
                 color="#199ead"
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
@@ -81,32 +85,44 @@ const Auth = () => {
                 className={` pl-10 w-full border  rounded-md text-sm`}
               />
             </div>
-            <div className="relative w-full">
-              <Lock
-                color="#199ead"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-              />
-              <Input
-                required
-                aria-details="Password"
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className={`pl-10 pr-10 w-full border rounded-md text-sm`}
-              />
-              <button
-                type="button"
-                tabIndex={-1}
-                className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                onClick={() => setShowPassword((v) => !v)}>
-                <EyeIcon open={showPassword} />
-              </button>
+            <div>
+              <div className="relative w-full">
+                <Lock
+                  color="#199ead"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                />
+                <Input
+                  required
+                  aria-details="Password"
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className={`pl-10 pr-10 w-full border rounded-md text-sm`}
+                />
+
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  onClick={() => setShowPassword((v) => !v)}>
+                  <EyeIcon open={showPassword} />
+                </button>
+              </div>
+              <Link
+                className="flex underline justify-end w-full text-gray-600 mb-2"
+                href={"/login/reset-password"}>
+                Forget Password
+              </Link>
             </div>
-            {loginError && (
-              <p className="mb-4 text-sm text-red-600">Incorrect Credients</p>
+            {/* Error Message */}
+            {(formError || loginError) && (
+              <p className="mb-4 text-sm text-red-600">
+                {formError || "Incorrect credentials. Please try again."}
+              </p>
             )}
+
             <button
               disabled={isPending}
               type="submit"

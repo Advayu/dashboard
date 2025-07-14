@@ -1,6 +1,16 @@
 // hooks/useAuth.ts
-import { useMutation } from "@tanstack/react-query";
-import { login, logout } from "@/services/auth-service";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { login, logout, passwordResetConfirm, resetPassword } from "@/services/auth-service";
+import { toast } from "@/hooks/use-toast"; // Assuming you're using ShadCN or similar
+import { useCallback } from "react";
+
+// Replace `any` with your actual user type
+type User = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+};
 
 type LoginVariables = {
   email: string;
@@ -9,32 +19,134 @@ type LoginVariables = {
 
 type LoginResponse = {
   token: string;
-  user: any; // replace with your user type
+  user: User;
 };
 
+
+// login
 export function useLogin() {
+
+
   return useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: login,
+
     onSuccess: (data) => {
-      console.log("Login successful", data);
-      window.location.href = "/";
+
+      localStorage.setItem("brandUser", JSON.stringify(data.user));
+
     },
+
+
+  });
+}
+
+
+// logout 
+export function useLogout() {
+
+  const clearSession = useCallback(() => {
+    localStorage.removeItem("brandUser");
+  }, []);
+
+  return useMutation<void, Error, void>({
+    mutationFn: logout,
+
+    onSuccess: () => {
+      clearSession();
+
+      toast({
+        title: "Logged Out",
+        description: "You've been successfully logged out.",
+        variant: "default",
+      });
+
+    },
+
     onError: (error) => {
-      console.error("Login failed", error.message);
+      clearSession();
+
+      toast({
+        title: "Logout Error",
+        description: error.message || "Unable to logout cleanly.",
+        variant: "destructive",
+      });
+
+
     },
   });
 }
 
-export function useLogout() {
-  return useMutation<void, Error, void>({
-    mutationFn: logout,
-    onSuccess: () => {
-      window.location.href = "/login";
+
+// reset password
+
+export function useResetPassword() {
+
+  return useMutation<void, Error, string>({
+    mutationFn: resetPassword,
+
+    onSuccess: (data) => {
+      toast({
+        title: "Password Reset",
+        description: "You have received an email with instructions to reset your password.",
+        variant: "success",
+      });
+
     },
 
-    onError: (error: any) => {
-      console.error("Logout failed", error);
-      window.location.href = "/login";
+    onError: (error) => {
+      toast({
+        title: "Password Reset Failed",
+        description: error.message || "Something went wrong.",
+        variant: "destructive",
+      });
+      console.error("Password reset error:", error);
     },
+  });
+}
+
+// confirm password reset
+
+type ResetPasswordInput = {
+  token: string;
+  password: string;
+};
+
+
+export function useConfirmPasswordReset(
+  options?: UseMutationOptions<void, Error, ResetPasswordInput>
+) {
+  return useMutation<void, Error, ResetPasswordInput>({
+    mutationFn: ({ token, password }) => passwordResetConfirm(token, password),
+
+    onSuccess: (...args) => {
+      toast({
+        title: "Password Reset Confirmed",
+        description: "Your password has been reset successfully.",
+        variant: "success",
+      });
+
+      // Call custom onSuccess handler if provided
+      options?.onSuccess?.(...args);
+    },
+
+    onError: (error, ...args) => {
+      const message =
+        (error as any)?.response?.data?.message ||
+        error.message ||
+        "Something went wrong.";
+
+      toast({
+        title: "Password Reset Failed",
+        description: message,
+        variant: "destructive",
+      });
+
+      console.error("Password reset error:", error);
+
+      // Call custom onError handler if provided
+      options?.onError?.(error, ...args);
+    },
+
+    ...options, // Spread last to allow overriding other options like retry, etc.
   });
 }

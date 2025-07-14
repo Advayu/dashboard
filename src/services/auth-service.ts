@@ -14,10 +14,31 @@ export const login = async ({
     email: string;
     password: string;
 }) => {
-    const response = await axiosInstance.post(`${LAMBDA_URL}/auth/login`, {
+    const response = await axios.post(`${LAMBDA_URL}/auth/login`, {
         email,
         password,
-    });
+    }, { withCredentials: true });
+
+    return response.data;
+};
+
+// password reset
+
+export const resetPassword = async (email: string) => {
+    const response = await axios.post(`${LAMBDA_URL}/password-reset/request`, {
+        email,
+    }, { withCredentials: true });
+
+    return response.data;
+};
+
+
+// confirm reset password
+export const passwordResetConfirm = async (token: string, password: string) => {
+    const response = await axios.post(`${LAMBDA_URL}/password-reset/confirm`, {
+        token,
+        password,
+    }, { withCredentials: true });
 
     return response.data;
 };
