@@ -17,10 +17,13 @@ import { useConfirmPasswordReset } from "@/hooks/use-auth";
 
 const Page = () => {
   const [passwordChanged, setPasswordChanged] = useState(false);
-
+  const [error, setError] = useState(null);
   const { mutateAsync: confirmPasswordReset } = useConfirmPasswordReset({
     onSuccess() {
       setPasswordChanged(true);
+    },
+    onError(error: any) {
+      setError(error.response.data.message);
     },
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -70,6 +73,7 @@ const Page = () => {
     confirmPasswordReset({ token, password });
   }
 
+  console.log(error);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white via-[#A1F6FF] to-[#189EAC]/80 px-6">
       <motion.form
@@ -87,6 +91,7 @@ const Page = () => {
             priority
           />
         </div>
+
         {passwordChanged ? (
           <div className="flex flex-col items-center text-center space-y-4">
             {/* Replace with your custom SVG or use lucide-react */}
@@ -110,7 +115,11 @@ const Page = () => {
             <h1 className="text-xl font-bold text-center my-4">
               Choose a new password
             </h1>
-
+            {error && (
+              <p className="text-red-500">
+                {"Link expired. Request a new one."}
+              </p>
+            )}
             <div className="relative w-full mb-3">
               <Lock
                 color="#199ead"
@@ -126,6 +135,7 @@ const Page = () => {
                 placeholder="Password"
                 className="pl-10 pr-10 w-full border rounded-md text-sm"
               />
+
               <button
                 type="button"
                 tabIndex={-1}
