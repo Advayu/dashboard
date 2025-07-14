@@ -6,15 +6,16 @@ export const handleOfferSubmission = async (
     data: any,
     brandId: string,
     createOffer: any,
-    createCoupon: any
+    createCoupon: any,
+    is_draft: boolean
 ) => {
     for (const outlet_id of data.outletIds) {
         const offer_payload: any = {
             brand_id: brandId,
             offer_type: data.offer_type,
             discount_type: data.discountType,
-            start_date: data.startDate + "T23:59:59.000Z",
-            end_date: data.endDate + "T23:59:59.000Z",
+            start_date: data.startDate ? data.startDate + "T23:59:59.000Z" : null,
+            end_date: data.endDate ? data.endDate + "T23:59:59.000Z" : null,
             applicable_days: data.applicableDays,
             max_per_user: Number(data.max_per_user),
             total_limit: Number(data.total_limit),
@@ -22,7 +23,8 @@ export const handleOfferSubmission = async (
             terms_conditions: "terms and conditions", // change later
             title: generateOfferTitle(data),
             outlet_id: outlet_id,
-            is_active: true,
+            is_active: is_draft,
+            is_draft: is_draft,
         };
 
         if (offer_payload.discount_type === "PERCENTAGE") {

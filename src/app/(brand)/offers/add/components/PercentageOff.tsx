@@ -1,10 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import NumericInput from "@/components/ui/NumericInput";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 const PercentageOff = () => {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 ">
@@ -21,16 +25,35 @@ const PercentageOff = () => {
           </Label>
           <div className="flex items-center space-x-2">
             <Input
-              {...register("discount_percent")}
-              id="discount_percent"
+              placeholder="eg. 10"
               type="text"
-              placeholder="e.g. 10"
-              className="w-48 md:w-40"
+              inputMode="numeric"
+              onKeyDown={(e) => {
+                const allowedKeys = [
+                  "Backspace",
+                  "Delete",
+                  "ArrowLeft",
+                  "ArrowRight",
+                ];
+                if (!/[0-9]/.test(e.key) && !allowedKeys.includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+              {...register("discount_percent", {
+                required: "This field is required",
+                min: { value: 1, message: "Min is 1" },
+                max: { value: 100, message: "Max is 100" },
+              })}
             />
             <span className="font-semibold text-base text-muted-foreground">
               %
             </span>
           </div>
+          {errors.discount_percent && (
+            <p className="text-red-500 text-xs">
+              {errors?.discount_percent?.message?.toString()}
+            </p>
+          )}
         </div>
 
         {/* Min Order Value */}

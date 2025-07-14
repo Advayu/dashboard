@@ -24,19 +24,9 @@ const CouponPreview: React.FC<CouponPreviewProps> = ({}) => {
       <div className="coupon-preview mt-10  bg-white ">
         {/* Coupon Card */}
         <div className="max-w-[30rem]">
-          {/* <CouponCard
-            id={1}
-            title="Get 20% off on all items"
-            number_of_redemptions={0}
-            total_coupons={offerDetail.totalLimit}
-            expiry_date= {offerDetail.endDate.split("T")[0]}
-            start_date= {offerDetail.startDate.split("T")[0]}
-            unique_code= {offerDetail.discountCode}
-          /> */}
-
           <Couponbig
             totalLimit={offerDetail.totalLimit}
-            discountCode={offerDetail.discountCode}
+            discountCode={offerDetail.offer_type}
             startDate={offerDetail.startDate}
             endDate={offerDetail.endDate}
             title={title}

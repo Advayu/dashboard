@@ -6,7 +6,7 @@ import OfferDetails from "./steps/OfferDetails";
 import RedemptionDetails from "./steps/RedemptionDetails";
 import TermsConditions from "./steps/TermsConditions";
 import CouponPreview from "./steps/CouponPreview";
-import StepperLayout from "./newComp/StepperLayout";
+import StepperLayout from "./components/StepperLayout";
 import { StepperProvider, useStepper } from "./contexts/StepperContext";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -57,8 +57,15 @@ function OfferCreationLayout() {
   const { mutateAsync: createCouponAsync } = useCreateCoupon();
   const brandId = useSelector((state: any) => state.brandUser.brand_id);
   const methods = useFormContext();
+
+  // launch offer
   const onSubmit = async (data: any) => {
-    handleOfferSubmission(data, brandId, createOffer, createCouponAsync);
+    handleOfferSubmission(data, brandId, createOffer, createCouponAsync, false);
+  };
+
+  // save offer as draft
+  const handleDraftSubmit = async (data: any) => {
+    handleOfferSubmission(data, brandId, createOffer, createCouponAsync, true);
   };
 
   return (
@@ -76,7 +83,8 @@ function OfferCreationLayout() {
           type="button"
           variant={"outline"}
           className="my-5 w-40 "
-          size={"thin"}>
+          size={"thin"}
+          onClick={methods.handleSubmit(handleDraftSubmit)}>
           Save draft
         </Button>
 
