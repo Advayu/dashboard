@@ -14,18 +14,20 @@ import clsx from "clsx";
 import { CheckCircle, XCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useConfirmPasswordReset } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const [error, setError] = useState(null);
-  const { mutateAsync: confirmPasswordReset } = useConfirmPasswordReset({
-    onSuccess() {
-      setPasswordChanged(true);
-    },
-    onError(error: any) {
-      setError(error.response.data.message);
-    },
-  });
+  const [error, setError] = useState("");
+  const { mutateAsync: confirmPasswordReset, isPending } =
+    useConfirmPasswordReset({
+      onSuccess() {
+        setPasswordChanged(true);
+      },
+      onError(error: any) {
+        setError("Link expired. Request a new one.");
+      },
+    });
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const searchParams = useSearchParams();
@@ -70,10 +72,37 @@ const Page = () => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!token) return;
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+    if (!criteria.upper) {
+      setError("Password must contain at least one uppercase letter");
+      return;
+    }
+    if (!criteria.lower) {
+      setError("Password must contain at least one lowercase letter");
+      return;
+    }
+    if (!criteria.number) {
+      setError("Password must contain at least one number");
+      return;
+    }
+    if (!criteria.special) {
+      setError("Password must contain at least one special character");
+      return;
+    }
     confirmPasswordReset({ token, password });
   }
 
-  console.log(error);
+  const disabled =
+    isPending ||
+    passwordChanged ||
+    !!error ||
+    !criteria.upper ||
+    !criteria.lower ||
+    !criteria.number ||
+    !criteria.special;
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white via-[#A1F6FF] to-[#189EAC]/80 px-6">
       <motion.form
@@ -115,11 +144,7 @@ const Page = () => {
             <h1 className="text-xl font-bold text-center my-4">
               Choose a new password
             </h1>
-            {error && (
-              <p className="text-red-500">
-                {"Link expired. Request a new one."}
-              </p>
-            )}
+            {error && <p className="text-red-500">{error}</p>}
             <div className="relative w-full mb-3">
               <Lock
                 color="#199ead"
@@ -178,11 +203,12 @@ const Page = () => {
               ))}
             </ul>
 
-            <button
+            <Button
+              disabled={disabled}
               type="submit"
               className="w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300">
               Continue
-            </button>
+            </Button>
 
             <Link
               href="/login"
