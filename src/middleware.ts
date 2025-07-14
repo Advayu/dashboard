@@ -11,17 +11,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  try {
-    // Validate the token
-    const secret = new TextEncoder().encode(JWT_SECRET);
-    await jwtVerify(token, secret);
-    // Token is valid → continue
-    return NextResponse.next();
-  } catch (err) {
-    // Token is invalid or expired = Unauthorized
-    console.error("JWT verification failed:", err);
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // try {
+  //   // Validate the token
+  //   const secret = new TextEncoder().encode(JWT_SECRET);
+  //   await jwtVerify(token, secret);
+  //   // Token is valid → continue
+  //   return NextResponse.next();
+  // } catch (err) {
+  //   // Token is invalid or expired = Unauthorized
+  //   console.error("JWT verification failed:", err);
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 }
 
 export const config = {

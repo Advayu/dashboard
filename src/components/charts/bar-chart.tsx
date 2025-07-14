@@ -53,27 +53,30 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarDefault({ rawData }: any) {
-  if (!rawData)
+  if (rawData === undefined || Object.keys(rawData).length === 0) {
     return (
-      <div className="text-center">
-        <p>No data available for bar chart.</p>
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">No data available</p>
       </div>
     );
+  }
   const chartData = Object.entries(rawData).map(([id, data]: any) => ({
     outlet: id, // or use a name map if available
-    redemptions: data[0].total,
+    Redemptions: data[0].total,
     name: data[0].outlet_name,
   }));
   return (
     <ChartContainer
       className="max-h-[20rem] w-full bg-blueTilt/10 p-4 rounded-md"
-      config={chartConfig}>
+      config={chartConfig}
+    >
       <BarChart
         accessibilityLayer
         data={chartData}
         margin={{
           top: 20,
-        }}>
+        }}
+      >
         <CartesianGrid vertical={true} />
         <XAxis
           dataKey="name"
@@ -87,12 +90,13 @@ export function ChartBarDefault({ rawData }: any) {
           content={<ChartTooltipContent hideLabel />}
         />
         <Bar
-          dataKey="redemptions"
+          dataKey="Redemptions"
           fill="var(--color-desktop)"
           radius={8}
-          barSize={40}>
+          barSize={40}
+        >
           <LabelList
-            dataKey="redemptions"
+            dataKey="Redemptions"
             position="top"
             offset={12}
             fontSize={12}
