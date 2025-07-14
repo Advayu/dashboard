@@ -30,8 +30,6 @@ function Page() {
         email: fetchedUser.email,
         phone: fetchedUser.phone,
         role: fetchedUser.role,
-        password: "",
-        confirmPassword: "",
       });
     }
   }, [fetchedUser, reset]);
@@ -64,6 +62,9 @@ function Page() {
             required
           />
         </div>
+        {errors.name && (
+          <p className="text-sm text-red-500 mt-1">Name is required.</p>
+        )}
 
         {/* Email Field */}
         <div className="mb-4">
@@ -76,12 +77,10 @@ function Page() {
             disabled
             type="email"
             id="email"
-            {...register("email", { required: true })}
+            {...register("email")}
             className="w-full px-3 py-2 mt-1 border rounded-md"
-            required
           />
         </div>
-
         {/* Phone Field */}
         <div className="mb-4">
           <Label
@@ -90,14 +89,13 @@ function Page() {
             Phone
           </Label>
           <Input
-            {...register("phone", { required: true })}
+            {...register("phone")}
             type="tel"
             id="phone"
             placeholder="Enter your phone with country code"
             className="w-full px-3 py-2 mt-1 border rounded-md"
             minLength={12}
             maxLength={12}
-            required
           />
         </div>
         <div className="mb-4">
@@ -114,41 +112,8 @@ function Page() {
             className="w-full px-3 py-2 mt-1 border rounded-md"
             minLength={12}
             maxLength={12}
-            required
           />
         </div>
-        {/* {fetchedUser?.provider !== "GOOGLE" && (
-          <>
-            <div className="mb-4">
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
-                New Password
-              </Label>
-              <Input
-                {...register("password")}
-                type="password"
-                id="password"
-                placeholder="Enter your new password"
-                className="w-full px-3 py-2 mt-1 border rounded-md"
-              />
-            </div>
-            <div className="mb-4">
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
-                Confirm Password
-              </Label>
-              <Input
-                {...register("confirmPassword")}
-                type="password"
-                id="confirmPassword"
-                placeholder="Enter your new password"
-                className="w-full px-3 py-2 mt-1 border rounded-md"
-              />
-            </div>
-          </>
-        )} */}
 
         <div className="flex justify-between items-center">
           <Button type="submit" className=" text-white px-4 py-2 rounded-md ">

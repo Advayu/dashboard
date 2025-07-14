@@ -39,11 +39,10 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 export default function Page() {
   const router = useRouter();
-  const reduxBrandId = useSelector(
-    (state: RootState) => state.brandUser?.brand_id
-  );
+  const brand_user = useSelector((state: RootState) => state.brandUser);
+
   // const brandId = reduxBrandId || localStorage.getItem("brandId");
-  const brandId = reduxBrandId || "";
+  const brandId = brand_user?.brand_id || "";
 
   const handleLogoutClick = async () => {
     console.log("Logout clicked");
@@ -122,24 +121,22 @@ export default function Page() {
           ))}
         </div>
         <div className="space-y-[1rem] md:mt-0 mt-[1.5rem]">
-          {[
-            {
-              name: "Outlets",
-              link: `store/all`,
-            },
-            // {
-            //   name: "Inventory",
-            //   link: "",
-            // },
-          ].map((item, idx) => (
+          <Link
+            href={"store/all"}
+            className=" group w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
+            <span className="text-xl text-gray-900">{"Outlets"}</span>
+            <ChevronRight className="group-hover:translate-x-2 transition-transform ease-in-out h-[1.5rem] w-[1.5rem]" />
+          </Link>
+          {brand_user.role === "admin" && (
             <Link
-              href={item.link}
-              key={idx}
+              href={`/manage-users`}
               className=" group w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">
-              <span className="text-xl text-gray-900">{item.name}</span>
+              <span className="text-xl text-gray-900">
+                {"Manage brand users"}
+              </span>
               <ChevronRight className="group-hover:translate-x-2 transition-transform ease-in-out h-[1.5rem] w-[1.5rem]" />
             </Link>
-          ))}
+          )}
         </div>
       </div>
 

@@ -30,10 +30,6 @@ export const getBrandUser = async (brandUserId: string): Promise<any> => {
 
 
 
-
-
-
-
 export const putBrandUser = async (
     data: any,
     brandId: string
@@ -54,10 +50,6 @@ export const putBrandUser = async (
         requestData.password_hash = data.password;
     }
 
-
-
-
-    console.log("requestData", requestData);
     const response = await axiosInstance.put(apiUrl, requestData, {
     });
 
@@ -65,4 +57,37 @@ export const putBrandUser = async (
 };
 
 
+export const deleteBrandUser = async (id: string): Promise<any> => {
+    const apiUrl = `/brand-users/${id}`;
+    const response = await axiosInstance.delete(apiUrl);
 
+    return response.data;
+};
+
+
+
+export const getBrandUsers = async (): Promise<any> => {
+    const apiUrl = `/brand-users`;
+    const response = await axiosInstance.get(apiUrl);
+
+    return response.data;
+};
+
+
+export const inviteBrandUser = async ({ brand_id, email }: { brand_id: string, email: string }): Promise<any> => {
+    const apiUrl = `${LAMBDA_URL}/brand-users/invite`;
+    const response = await axiosInstance.post(apiUrl, { brandId: brand_id, email });
+    return response.data;
+}
+
+export const setBrandUserStatus = async ({ id, status }: { id: string, status: boolean }): Promise<any> => {
+    const apiUrl = `${LAMBDA_URL}/brand-users/${id}/status`;
+    const response = await axiosInstance.patch(apiUrl, { active: status });
+    return response.data;
+}
+
+export const transferAdmin = async ({ id, newAdminId }: { id: string, newAdminId: string }): Promise<any> => {
+    const apiUrl = `${LAMBDA_URL}/brand-users/${id}/transfer-admin`;
+    const response = await axiosInstance.post(apiUrl, { targetUserId: newAdminId });
+    return response.data;
+}

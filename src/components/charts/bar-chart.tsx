@@ -53,6 +53,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarDefault({ rawData }: any) {
+  if (!rawData)
+    return (
+      <div className="text-center">
+        <p>No data available for bar chart.</p>
+      </div>
+    );
   const chartData = Object.entries(rawData).map(([id, data]: any) => ({
     outlet: id, // or use a name map if available
     redemptions: data[0].total,
