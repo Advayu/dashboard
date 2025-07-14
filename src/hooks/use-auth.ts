@@ -79,30 +79,44 @@ export function useLogout() {
 
 // reset password
 
-export function useResetPassword() {
-
+export function useResetPassword(
+  options?: UseMutationOptions<void, Error, string>
+) {
   return useMutation<void, Error, string>({
     mutationFn: resetPassword,
 
-    onSuccess: (data) => {
+    onSuccess: (...args) => {
       toast({
         title: "Password Reset",
-        description: "You have received an email with instructions to reset your password.",
+        description:
+          "You have received an email with instructions to reset your password.",
         variant: "success",
       });
 
+      options?.onSuccess?.(...args); // Custom behavior if passed
     },
 
-    onError: (error) => {
+    onError: (error, ...args) => {
+      const message =
+        (error as any)?.response?.data?.message ||
+        error.message ||
+        "Something went wrong.";
+
       toast({
         title: "Password Reset Failed",
-        description: error.message || "Something went wrong.",
+        description: message,
         variant: "destructive",
       });
+
       console.error("Password reset error:", error);
+
+      options?.onError?.(error, ...args); // Forward to custom handler if passed
     },
+
+    ...options,
   });
 }
+
 
 // confirm password reset
 

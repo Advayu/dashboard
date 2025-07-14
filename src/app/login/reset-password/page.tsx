@@ -12,20 +12,21 @@ import Link from "next/link";
 import { useResetPassword } from "@/hooks/use-auth";
 
 const Page = () => {
+  const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
-  const { mutateAsync: resetPassword, isPending } = useResetPassword();
+  const { mutateAsync: resetPassword, isPending } = useResetPassword({
+    onError: (error: any) => {
+      setError(error.response.data.message);
+    },
+  });
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
 
-    try {
-      await resetPassword(email);
-      setEmailSent(true);
-    } catch (err) {
-      console.error("Error sending reset email", err);
-    }
+    await resetPassword(email);
+    setEmailSent(true);
   }
 
   return (
@@ -72,7 +73,7 @@ const Page = () => {
               <label className="text-sm font-bold text-gray-600">
                 We'll send a recovery link to:
               </label>
-              <div className="relative w-full my-1 mb-4">
+              <div className="relative w-full mt-1 ">
                 <Mail
                   color="#199ead"
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
@@ -88,10 +89,11 @@ const Page = () => {
                   className="pl-10 w-full border rounded-md text-sm"
                 />
               </div>
+              {error && <p className="text-red-500">{error}</p>}
               <button
                 disabled={isPending}
                 type="submit"
-                className="w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300">
+                className="w-full px-4 py-2 font-bold text-white bg-[#199EAD] rounded-lg hover:bg-[#1A9EB0]/50 transition-all duration-300 mt-2">
                 {isPending ? "Sending..." : "Send recovery link"}
               </button>
               <Link
