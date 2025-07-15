@@ -1,27 +1,30 @@
 import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
-import { Label } from "./ui/label";
 import { daysOfWeek } from "@/utils/constants";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 interface DaysOpenSelectorProps {
   name: string; // Field name
+  required?: boolean;
 }
 
-const WeekdaySelector: React.FC<DaysOpenSelectorProps> = ({ name }) => {
+const WeekdaySelector: React.FC<DaysOpenSelectorProps> = ({
+  name,
+  required = false,
+}) => {
   const { control } = useFormContext(); // Access control from context
 
+  const validationRules = required
+    ? { required: "Please select at least one day" }
+    : {};
   return (
-    <div className="my-6">
-      <Label className="text-base md:text-lg font-bold">
-        Days Open in a Week
-      </Label>
-
+    <div className="">
       <div className="mt-2 flex flex-wrap gap-2 items-center">
         <Controller
           name={name}
           control={control}
-          defaultValue={[]} // Default value
+          defaultValue={[]}
+          rules={validationRules}
           render={({ field: { value, onChange } }) => {
             const allDaysSelected =
               Array.isArray(value) &&

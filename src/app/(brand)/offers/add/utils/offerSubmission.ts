@@ -1,6 +1,7 @@
 import { generateOfferTitle } from "../generateOfferTitle";
-
-
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 // handle offer creation form submission
 export const handleOfferSubmission = async (
     data: any,
@@ -14,8 +15,8 @@ export const handleOfferSubmission = async (
             brand_id: brandId,
             offer_type: data.offer_type,
             discount_type: data.discountType,
-            start_date: data.startDate ? data.startDate + "T23:59:59.000Z" : null,
-            end_date: data.endDate ? data.endDate + "T23:59:59.000Z" : null,
+            start_date: data.startDate ? dayjs.utc(data.startDate).startOf('day').toDate() : null,
+            end_date: data.endDate ? dayjs.utc(data.endDate).endOf('day').toDate() : null,
             applicable_days: data.applicableDays,
             max_per_user: Number(data.max_per_user),
             total_limit: Number(data.total_limit),
@@ -23,7 +24,7 @@ export const handleOfferSubmission = async (
             terms_conditions: "terms and conditions", // change later
             title: generateOfferTitle(data),
             outlet_id: outlet_id,
-            is_active: is_draft,
+            is_active: !is_draft,
             is_draft: is_draft,
         };
 

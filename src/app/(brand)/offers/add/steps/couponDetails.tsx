@@ -26,13 +26,13 @@ const CouponDetails = () => {
     <div>
       <div className="flex flex-col ">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl	font-black">Offer details</h1>
+          <h1 className="text-3xl	font-black">Coupon details</h1>
           <p>Curate your Coupon</p>
         </div>
 
         {/* form to start creating Coupon */}
 
-        <div>
+        <div className="mt-6">
           {offerType === "COUPON_CODE" && (
             <div>
               <h1>Coupon type</h1>

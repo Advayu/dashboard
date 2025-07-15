@@ -15,39 +15,28 @@ const PercentageOff = () => {
       <h3 className="text-lg font-semibold text-gray-800 mb-2">
         Percentage Discount
       </h3>
-      <div className="flex flex-col lg:flex-row gap-6 lg:items-end">
+      <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
         {/* Discount Percentage */}
-        <div className="flex flex-col">
-          <Label
-            htmlFor="discount_percent"
-            className="text-sm font-medium text-gray-700">
-            Discount Percentage
-          </Label>
-          <div className="flex items-center space-x-2">
-            <Input
-              placeholder="eg. 10"
-              type="text"
-              inputMode="numeric"
-              onKeyDown={(e) => {
-                const allowedKeys = [
-                  "Backspace",
-                  "Delete",
-                  "ArrowLeft",
-                  "ArrowRight",
-                ];
-                if (!/[0-9]/.test(e.key) && !allowedKeys.includes(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-              {...register("discount_percent", {
-                required: "This field is required",
-                min: { value: 1, message: "Min is 1" },
-                max: { value: 100, message: "Max is 100" },
-              })}
-            />
-            <span className="font-semibold text-base text-muted-foreground">
-              %
-            </span>
+
+        <div className="flex flex-col  ">
+          <div className="flex flex-col  flex-row">
+            <Label className="mb-2"> Discount Percentage</Label>
+            <div className="flex flex-row items-center gap-2">
+              <NumericInput
+                placeholder="eg. 10"
+                register={register("discount_percent", {
+                  required: {
+                    value: true,
+                    message: "Discount Percentage is required",
+                  },
+                  max: { value: 100, message: "Maximum value is 100" },
+                })}
+              />
+
+              <span className="font-semibold text-base  text-muted-foreground">
+                %
+              </span>
+            </div>
           </div>
           {errors.discount_percent && (
             <p className="text-red-500 text-xs">
@@ -57,35 +46,45 @@ const PercentageOff = () => {
         </div>
 
         {/* Min Order Value */}
+
         <div className="flex flex-col">
-          <Label
-            htmlFor="min_order_value"
-            className="text-sm font-medium text-gray-700">
-            Minimum Order Value
-          </Label>
-          <Input
-            {...register("min_order_value")}
-            id="min_order_value"
-            type="text"
-            placeholder="e.g. 1000"
-            className="w-48 md:w-40"
-          />
+          <Label className="mb-2">Minimum Order Value</Label>
+          <div>
+            <NumericInput
+              placeholder="e.g. 1000"
+              register={{
+                ...register("min_order_value", {
+                  required: { value: true, message: "Please enter a value" },
+                }),
+              }}
+            />
+          </div>
+          {errors.min_order_value && (
+            <p className="text-red-500 text-xs">
+              {errors?.min_order_value?.message?.toString()}
+            </p>
+          )}
         </div>
 
         {/* Max Discount Cap */}
         <div className="flex flex-col">
-          <Label
-            htmlFor="max_discount_value"
-            className="text-sm font-medium text-gray-700">
-            Maximum Discount Cap
-          </Label>
-          <Input
-            {...register("max_discount_value")}
-            id="max_discount_value"
-            type="text"
-            placeholder="e.g. 300"
-            className="w-48 md:w-40"
-          />
+          <Label className="mb-2"> Maximum Discount Cap</Label>
+          <div>
+            {" "}
+            <NumericInput
+              placeholder="e.g. 300"
+              register={{
+                ...register("max_discount_value", {
+                  required: { value: true, message: "Please enter a value" },
+                }),
+              }}
+            />
+          </div>
+          {errors.max_discount_value && (
+            <p className="text-red-500 text-xs">
+              {errors?.max_discount_value?.message?.toString()}
+            </p>
+          )}
         </div>
       </div>
     </div>

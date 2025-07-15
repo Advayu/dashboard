@@ -15,7 +15,7 @@ const StepperLayout = () => {
   return (
     <div>
       <div className="relative md:min-w-[370px] min-w-full ">
-        <Box className="md:pl-24 md:h-[400px] md:pb-0	pb-10   relative rounded-b-full md:left-[-65px] md:bg-gradient-to-t from-blueTilt/10 to-blueTilt/0">
+        <Box className="md:pl-24 md:h-[420px] md:pb-0	pb-10   relative rounded-b-full md:left-[-65px] md:bg-gradient-to-t from-blueTilt/10 to-blueTilt/0">
           <div>
             <h1 className="text-2xl font-bold md:block hidden">
               Easily create an offer

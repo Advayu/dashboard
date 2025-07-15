@@ -1,17 +1,17 @@
 import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Input } from "./input";
 
 interface NumericInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
   register: UseFormRegisterReturn;
-  error?: string;
+
+  placeholder?: string;
 }
 
 const NumericInput: React.FC<NumericInputProps> = ({
-  label,
   register,
-  error,
+
   ...rest
 }) => {
   const blockNonNumericKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -28,9 +28,8 @@ const NumericInput: React.FC<NumericInputProps> = ({
   };
 
   return (
-    <div className="flex flex-col">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
-      <input
+    <div>
+      <Input
         type="text"
         inputMode="numeric"
         onKeyDown={blockNonNumericKeys}
@@ -38,7 +37,6 @@ const NumericInput: React.FC<NumericInputProps> = ({
         {...rest}
         className="w-48 md:w-40"
       />
-      {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
 };

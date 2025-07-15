@@ -11,6 +11,7 @@ import { daysOfWeek } from "@/app/Constants/constant";
 import OfferDetailsShow from "../OfferDetailsShow";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
+import WeekdaySelector from "@/components/WeekdaySelector";
 
 interface RedemptionDetailsProps {}
 
@@ -23,7 +24,6 @@ dayjs.extend(timezone);
 const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
   const {
     register,
-    watch,
     control,
     formState: { errors },
   } = useFormContext();
@@ -39,10 +39,10 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div>
+      <div className="">
         <header>
-          <h1 className="font-bold text-3xl">Validity details</h1>
-          <p className="text-2xl mt-2">Set validity and timing</p>
+          <h1 className="font-bold text-3xl text-2xl">Validity details</h1>
+          <p className="text-2xl mt-2 text-xl">Set validity and timing</p>
         </header>
 
         {/* Date Range */}
@@ -53,36 +53,54 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
           </h2>
           {/* <OfferDetailsShow {...offerDetails} /> */}
           <div className="flex space-x-4 mt-[24.4px]">
-            <div className="flex  items-center">
+            <div className="flex md:flex-row flex-col md:gap-0 gap-2   items-center">
               <div className="flex flex-col gap-2">
                 <label className="text-xl font-bold flex items-center gap-1">
                   Start date
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
+                <div className="">
                   <input
-                    {...register("startDate")}
+                    {...register("startDate", {
+                      required: {
+                        value: true,
+                        message: "Please enter start date ",
+                      },
+                    })}
                     type="date"
-                    // onChange={handleStartDateChange}
                     className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase border border-black"
                     required
                     min={dayjs().format("YYYY-MM-DD")}
                   />
+                  {errors.startDate && (
+                    <p className="text-red-500 text-xs">
+                      {errors?.startDate?.message?.toString()}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div className="h-[1.5px] w-12 bg-black  mt-[2rem]" />
+              <div className=" md:block hidden h-[1.5px] w-12 bg-black  mt-[2rem]" />
 
               <div className="flex flex-col gap-2">
                 <label className="text-xl font-bold">Expiry date</label>
                 <div className="relative">
                   <input
-                    {...register("endDate")}
+                    {...register("endDate", {
+                      required: {
+                        value: true,
+                        message: "Please enter expiry date",
+                      },
+                    })}
                     type="date"
-                    // onChange={handleEndDateChange}
                     className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase border border-black"
                     required
                   />
+                  {errors.endDate && (
+                    <p className="text-red-500 text-xs">
+                      {errors?.endDate?.message?.toString()}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -93,10 +111,18 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
         <div className="mt-6">
           <h2 className="text-xl font-bold flex items-center">
             Select days it will run
+            <span className="text-red-500">*</span>
             <InfoTooltip message="Select days to run" />
           </h2>
 
-          <Controller
+          <WeekdaySelector name="applicableDays" required={true} />
+          {errors.applicableDays && (
+            <p className="text-red-500 text-xs">
+              {errors?.applicableDays?.message?.toString()}
+            </p>
+          )}
+
+          {/* <Controller
             name="applicableDays"
             control={control}
             defaultValue={[]}
@@ -125,44 +151,8 @@ const RedemptionDetails: React.FC<RedemptionDetailsProps> = () => {
                 })}
               </div>
             )}
-          />
+          /> */}
         </div>
-
-        {/* Input Fields */}
-
-        {/* <div className="my-6">
-            <Label className="flex items-center text-xl font-bold">
-              Maximum offer redemptions{" "}
-              <span className=" ml-2 underline">per user</span>
-              <InfoTooltip message="Maximum number of redemptions per user" />
-            </Label>
-            <Input
-              id="maximumRedemptionsPerUser"
-              type="text"
-              name="maximumRedemptionsPerUser"
-              placeholder="Enter maximum number"
-              className="w-52 mt-[7.5px]"
-              defaultValue={""}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="mt-4">
-            <Label className="flex items-center text-xl font-bold">
-              Duration between redemptions (days)
-              <InfoTooltip message="Enter the number of days between redemptions" />
-            </Label>
-            <Input
-              id="durationBetweenRedemptions"
-              name="durationBetweenRedemptions"
-              type="text"
-              placeholder="Enter duration"
-              className="w-52 mt-[7.5px]"
-              onChange={handleInputChange}
-            />
-          </div> */}
-
-        {/* Buttons */}
       </div>
     </LocalizationProvider>
   );

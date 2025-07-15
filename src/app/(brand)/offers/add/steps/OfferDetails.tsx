@@ -24,6 +24,7 @@ import { useGetOutlets } from "@/hooks/use-outlet";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
+import NumericInput from "@/components/ui/NumericInput";
 interface OfferDetailsProps {}
 
 interface OfferDetails {
@@ -109,22 +110,30 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
         <Controller
           control={control}
           name="outletIds"
-          render={({ field }) => (
-            <MultiSelect
-              options={outletOptions}
-              selected={field.value ?? []}
-              onChange={field.onChange}
-              placeholder="Select outlets"
-              className="w-48"
-            />
+          rules={{
+            required: "Please select at least one outlet",
+            validate: (value) =>
+              value.length > 0 || "Please select at least one outlet",
+          }}
+          render={({ field, fieldState }) => (
+            <div className="flex flex-col gap-1">
+              <MultiSelect
+                ref={field.ref}
+                options={outletOptions}
+                selected={field.value ?? []}
+                onChange={field.onChange}
+                placeholder="Select outlets"
+                className="w-48"
+              />
+              {fieldState.error && (
+                <p className="text-red-500 text-xs">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
           )}
         />
       </div>
-      {/* {errors.outletIds && (
-        <p className="text-sm text-red-500 mt-1">
-          {errors?.outletIds?.message}
-        </p>
-      )} */}
 
       <div className="space-y-2">
         <h1 className="text-xl font-bold mt-6">Offer type</h1>
@@ -183,11 +192,11 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
           Maximum offer redemptions
           <InfoTooltip message="Maximum number of redemptions allowed" />
         </Label>
-        <Input
+        <NumericInput
           type="text"
           placeholder="Enter maximum number"
           className="w-52 mt-[7.5px]"
-          {...register("total_limit")}
+          register={{ ...register("total_limit") }}
         />
       </div>
 
@@ -196,11 +205,11 @@ const OfferDetails: React.FC<OfferDetailsProps> = () => {
           Maximum limit per user
           <InfoTooltip message="Maximum number of redemptions allowed" />
         </Label>
-        <Input
+        <NumericInput
           type="text"
           placeholder="max per user"
           className="w-52 mt-[7.5px]"
-          {...register("max_per_user")}
+          register={{ ...register("max_per_user") }}
         />
       </div>
     </div>

@@ -16,6 +16,8 @@ import { useCreateCoupon } from "@/hooks/use-coupon";
 import { useSelector } from "react-redux";
 import { handleOfferSubmission } from "./utils/offerSubmission";
 import { navigateToPreviousPage } from "@/functions/function";
+import { RootState } from "@/store/store";
+import { useState } from "react";
 
 export default function Page() {
   const methods = useForm({
@@ -49,55 +51,87 @@ export default function Page() {
     </>
   );
 }
+type SubmitAction = "launch" | "draft" | null;
 
 function OfferCreationLayout() {
   const { activeStep, steps, handleNext } = useStepper();
   const StepComponent = steps[activeStep]?.component;
-  const { mutateAsync: createOffer } = useCreateOffer();
-  const { mutateAsync: createCouponAsync } = useCreateCoupon();
-  const brandId = useSelector((state: any) => state.brandUser.brand_id);
+
+  const { mutateAsync: createOffer, isLoading: isLoadingOffer } =
+    useCreateOffer();
+  const { mutateAsync: createCouponAsync, isLoading: isLoadingCoupon } =
+    useCreateCoupon();
+
+  const brandId = useSelector((state: RootState) => state.brandUser.brand_id);
   const methods = useFormContext();
 
-  // launch offer
-  const onSubmit = async (data: any) => {
-    handleOfferSubmission(data, brandId, createOffer, createCouponAsync, false);
+  const [submittingAction, setSubmittingAction] = useState<SubmitAction>(null);
+
+  const handleFormSubmit = async (data: any, isDraft: boolean) => {
+    setSubmittingAction(isDraft ? "draft" : "launch");
+
+    try {
+      await handleOfferSubmission(
+        data,
+        brandId,
+        createOffer,
+        createCouponAsync,
+        isDraft
+      );
+    } finally {
+      setSubmittingAction(null);
+    }
   };
 
-  // save offer as draft
-  const handleDraftSubmit = async (data: any) => {
-    handleOfferSubmission(data, brandId, createOffer, createCouponAsync, true);
+  const handleProceedOrLaunch = () => {
+    if (activeStep === steps.length - 1) {
+      methods.handleSubmit((data) => handleFormSubmit(data, false))();
+    } else {
+      methods.handleSubmit(() => handleNext())();
+    }
   };
+
+  const isSubmittingDraft = submittingAction === "draft" && isLoadingOffer;
+  const isSubmittingLaunch = submittingAction === "launch" && isLoadingOffer;
 
   return (
-    <form className="w-full" onSubmit={methods.handleSubmit(onSubmit)}>
+    <form
+      className="w-full"
+      onSubmit={methods.handleSubmit((data) => handleFormSubmit(data, false))}>
       <Navbar />
+
       <div className="grid grid-cols-1 md:grid-cols-[370px_auto]">
         <StepperLayout />
-        <div className="md:px-10 px-4 flex lg:flex-col flex-row justify-center md:items-start items-center w-full">
-          {StepComponent ? <StepComponent /> : null}
+        <div className="md:px-10 px-4 flex lg:flex-col flex-row md:items-start items-center w-full">
+          {StepComponent && <StepComponent />}
         </div>
       </div>
-      {/* buttons */}
-      <div className="flex gap-4 justify-end px-2 max-w-[1200px]">
+
+      {/* Button controls */}
+      <div className="flex gap-4 px-2 max-w-[1200px] fixed bottom-0 right-0 bg-white py-3 shadow-md">
+        {/* Save as Draft */}
         <Button
           type="button"
-          variant={"outline"}
-          className="my-5 w-40 "
-          size={"thin"}
-          onClick={methods.handleSubmit(handleDraftSubmit)}>
-          Save draft
+          variant="outline"
+          className="w-40"
+          size="thin"
+          onClick={methods.handleSubmit((data) => handleFormSubmit(data, true))}
+          disabled={isLoadingOffer || isLoadingCoupon}>
+          {isSubmittingDraft ? "Saving Draft..." : "Save as Draft"}
         </Button>
 
+        {/* Launch or Proceed */}
         <Button
           type="button"
-          onClick={
-            activeStep === steps.length - 1
-              ? methods.handleSubmit(onSubmit)
-              : handleNext
-          }
-          className="my-5 w-40"
-          size={"thin"}>
-          {activeStep === steps.length - 1 ? "Launch Offer" : "Proceed"}
+          onClick={handleProceedOrLaunch}
+          className="w-40"
+          size="thin"
+          disabled={isLoadingOffer || isLoadingCoupon}>
+          {activeStep === steps.length - 1
+            ? isSubmittingLaunch
+              ? "Launching..."
+              : "Launch Offer"
+            : "Proceed"}
         </Button>
       </div>
     </form>

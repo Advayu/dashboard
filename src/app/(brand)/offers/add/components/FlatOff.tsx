@@ -1,10 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import NumericInput from "@/components/ui/NumericInput";
+import { error } from "console";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 const FlatOff = () => {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="bg-white border  rounded-xl p-6 shadow-sm space-y-4 transition-all duration-200 border-teal-500 max-w-[30vw]">
@@ -19,13 +24,22 @@ const FlatOff = () => {
             className="text-sm font-medium text-muted-foreground mb-1">
             Flat Discount (Rs.)
           </Label>
-          <Input
-            {...register("discount_value")}
-            id="discount_value"
-            type="text"
-            placeholder="e.g. 150"
-            className="w-48 md:w-40" // fixed width on larger screens
-          />
+          <div>
+            {" "}
+            <NumericInput
+              placeholder="eg. 150"
+              register={{
+                ...register("discount_value", {
+                  required: { value: true, message: "Please enter a value" },
+                }),
+              }}
+            />
+            {errors && errors.discount_value && (
+              <p className="text-red-500 text-xs">
+                {errors?.discount_value?.message?.toString()}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Minimum Order */}
@@ -35,13 +49,22 @@ const FlatOff = () => {
             className="text-sm font-medium text-muted-foreground mb-1">
             Min Order Value (Rs.)
           </Label>
-          <Input
-            {...register("min_order_value")}
-            id="min_order_value"
-            type="text"
-            placeholder="e.g. 400"
-            className="w-48 md:w-40"
-          />
+          <div>
+            {" "}
+            <NumericInput
+              register={{
+                ...register("min_order_value", {
+                  required: { value: true, message: "Please enter a value" },
+                }),
+              }}
+              placeholder="e.g. 400"
+            />
+            {errors && errors.min_order_value && (
+              <p className="text-red-500 text-xs">
+                {errors?.min_order_value?.message?.toString()}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
