@@ -24,7 +24,11 @@ type getOffersParams = {
     page?: number;
 };
 
-export const useGetOffers = (params: getOffersParams) => {
+
+export const useGetOffers = (
+    params: getOffersParams,
+    options?: any // ideally use `UseQueryOptions` type for better DX
+) => {
     const {
         brand_id,
         outlet_id,
@@ -35,9 +39,9 @@ export const useGetOffers = (params: getOffersParams) => {
         page,
     } = params;
 
-    const { data, error, isLoading } = useQuery({
+    return useQuery({
         queryKey: [
-            'offers',
+            "offers",
             brand_id,
             outlet_id,
             start_date,
@@ -48,16 +52,10 @@ export const useGetOffers = (params: getOffersParams) => {
         ],
         queryFn: () =>
             getOffers({ brand_id, outlet_id, start_date, end_date, status, limit, page }),
-        enabled: !!brand_id,
+        enabled: !!brand_id && !!outlet_id, // sensible default
+        ...options, // allow overriding from component
     });
-
-    return {
-        offers: data ?? { data: [], totalPages: 1 },
-        error,
-        isLoading,
-    };
 };
-
 
 // ✅ 2. Hook to fetch single offer
 export const useGetOffer = (id: string) => {

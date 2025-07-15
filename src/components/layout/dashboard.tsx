@@ -24,13 +24,22 @@ const Dashboard = ({ user }: any) => {
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
   // Get active offers
-  const { offers, error, isLoading } = useGetOffers({
-    brand_id: user?.brand_id,
-    status: "active",
-    limit,
-    page,
-  });
-
+  const { data, error, isLoading } = useGetOffers(
+    {
+      brand_id: user?.brand_id,
+      status: "active",
+      limit,
+      page,
+    },
+    { enabled: !!user?.brand_id }
+  ) as {
+    data: { data: any[]; total: number; totalPages: number } | undefined;
+    error: any;
+    isLoading: boolean;
+  };
+  const offers = data?.data || [];
+  const totalPages = data?.totalPages || 1;
+  const total = data?.total || 0;
   // Toggles the menu visibility
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev);
@@ -51,7 +60,7 @@ const Dashboard = ({ user }: any) => {
   }, []);
 
   //  Pagination controls
-  const totalPages = offers.totalPages;
+  // const totalPages = offers?.totalPages;
 
   const handlePrevious = () => {
     if (page > 1) setPage((prev) => prev - 1);
@@ -91,8 +100,10 @@ const Dashboard = ({ user }: any) => {
         </div>
       );
     }
+    if (isLoading) return <div>Loading offers...</div>;
 
-    if (!offers?.data?.length) {
+    if (error) return <div>Error loading offers</div>;
+    if (!offers?.length) {
       return (
         <div className="w-full flex justify-center mt-6">
           <NoActiveOffers />
@@ -102,7 +113,7 @@ const Dashboard = ({ user }: any) => {
 
     return (
       <div className="flex gap-2 py-4">
-        {offers.data.map((offer: any, index: number) => (
+        {offers.map((offer: any, index: number) => (
           <div className="mx-4" key={index}>
             <CouponCard
               id={offer.id}
@@ -159,7 +170,7 @@ const Dashboard = ({ user }: any) => {
 
         <div className="flex flex-col mt-8">
           <h2 className="text-xl font-bold md:block hidden">
-            Active offers ({offers?.total || 0})
+            Active offers ({total || 0})
           </h2>
 
           <div className="md:block hidden">
@@ -172,7 +183,7 @@ const Dashboard = ({ user }: any) => {
         <GaugeComponent />
         <div className="md:ml-[16.3px] px-4">
           <h2 className="text-xl font-bold mb-4">
-            Active offers ({offers && offers.total})
+            Active offers ({offers && total})
           </h2>
           {isLoading ? (
             <CouponCardSkeleton />

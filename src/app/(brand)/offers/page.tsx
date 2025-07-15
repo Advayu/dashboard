@@ -10,7 +10,6 @@ import { useGetOffers } from "@/hooks/use-offer";
 import OfferAccordionSection from "@/components/ui/OfferAccordionSection";
 import { RootState } from "@/store/store";
 import Link from "next/link";
-import { CouponCardSkeleton } from "@/components/ui/skeleton";
 
 type OfferStatus = "active" | "draft" | "upcoming" | "expired";
 
@@ -38,6 +37,8 @@ export default function Page() {
 
   // OutletId state initializes once outlets are loaded
   const [outletId, setOutletId] = useState<string>("");
+
+  const shouldFetchOffers = Boolean(outletId && brandUser?.brand_id);
 
   useEffect(() => {
     if (outlets && outlets.length > 0 && !outletId) {
@@ -74,44 +75,49 @@ export default function Page() {
   );
 
   // Separate hook calls for each status
-  const activeOffers = useGetOffers({
-    brand_id: brandUser?.brand_id,
-    outlet_id: outletId,
-    status: "active",
-    page: pagination.active.page,
-    limit: pagination.active.limit,
-  });
+  const activeOffers = useGetOffers(
+    {
+      brand_id: brandUser?.brand_id,
+      outlet_id: outletId,
+      status: "active",
+      page: pagination.active.page,
+      limit: pagination.active.limit,
+    },
+    { enabled: shouldFetchOffers }
+  );
 
-  const draftOffers = useGetOffers({
-    brand_id: brandUser?.brand_id,
-    outlet_id: outletId,
-    status: "draft",
-    page: pagination.draft.page,
-    limit: pagination.draft.limit,
-  });
+  const draftOffers = useGetOffers(
+    {
+      brand_id: brandUser?.brand_id,
+      outlet_id: outletId,
+      status: "draft",
+      page: pagination.draft.page,
+      limit: pagination.draft.limit,
+    },
+    { enabled: shouldFetchOffers }
+  );
 
-  const upcomingOffers = useGetOffers({
-    brand_id: brandUser?.brand_id,
-    outlet_id: outletId,
-    status: "upcoming",
-    page: pagination.upcoming.page,
-    limit: pagination.upcoming.limit,
-  });
+  const upcomingOffers = useGetOffers(
+    {
+      brand_id: brandUser?.brand_id,
+      outlet_id: outletId,
+      status: "upcoming",
+      page: pagination.upcoming.page,
+      limit: pagination.upcoming.limit,
+    },
+    { enabled: shouldFetchOffers }
+  );
 
-  const expiredOffers = useGetOffers({
-    brand_id: brandUser?.brand_id,
-    outlet_id: outletId,
-    status: "expired",
-    page: pagination.expired.page,
-    limit: pagination.expired.limit,
-  });
-
-  const offersData = {
-    active: activeOffers,
-    draft: draftOffers,
-    upcoming: upcomingOffers,
-    expired: expiredOffers,
-  };
+  const expiredOffers = useGetOffers(
+    {
+      brand_id: brandUser?.brand_id,
+      outlet_id: outletId,
+      status: "expired",
+      page: pagination.expired.page,
+      limit: pagination.expired.limit,
+    },
+    { enabled: shouldFetchOffers }
+  );
 
   const handleOutletChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOutletId(e.target.value);

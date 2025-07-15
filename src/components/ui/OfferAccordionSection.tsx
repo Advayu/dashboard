@@ -27,8 +27,12 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
   onPageChange,
 }) => {
   console.log("offerQuery", offerQuery);
-  const { offers, isLoading, error } = offerQuery;
-  const { data, total, page, totalPages } = offers ?? {};
+  const { data, isLoading, isError } = offerQuery;
+
+  const offers = data?.data || [];
+  const total = data?.total || 0;
+  const page = Number(data?.page) || 1;
+  const totalPages = data?.totalPages || 1;
 
   function onNextPage() {
     onPageChange(
@@ -57,7 +61,7 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
             <CouponCardSkeleton />
           </div>
         )}
-        {data?.length === 0 && !isLoading && (
+        {offers?.length === 0 && !isLoading && (
           <div className="flex flex-col md:items-center md:justify-center w-full h-full md:text-center">
             <h1 className="text-xl text-gray-500 font-bold">
               No {title} found!
@@ -67,10 +71,10 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
             </Link>
           </div>
         )}
-        {!isLoading && data?.length > 0 && (
+        {!isLoading && offers?.length > 0 && (
           <div className="flex flex-col w-full  ">
             <div className="flex flex-row  gap-4 overflow-x-auto">
-              {data?.map((offer: any, index: number) => (
+              {offers?.map((offer: any, index: number) => (
                 <CouponCard
                   key={index}
                   id={offer.id}
