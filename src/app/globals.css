@@ -65,11 +65,13 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-  .active{
-    @apply underline decoration-tealBlue underline-offset-4	 decoration-dashed;
+
+  .active {
+    @apply underline decoration-tealBlue underline-offset-4 decoration-dashed;
     /* create an animation */
     @apply transition-transform duration-500;
 
@@ -77,41 +79,48 @@
   }
 }
 
- @layer utilities { 
-   /* Todo: fix border of coupon card */ 
-   .notched-border {
-    @apply  border relatiave  border-teal-400 ; /* Adjust width, height, and border color as needed */
- 
+@layer utilities {
 
-      -webkit-mask-image: radial-gradient(circle at 8px 50%, transparent 13px, black 13.5px);
-      -webkit-mask-position: -13px 0 0 0;
-      -webkit-mask-border: blue; 
- };
-} 
+  /* Todo: fix border of coupon card */
+  .notched-border {
+    @apply border relatiave border-teal-400;
+    /* Adjust width, height, and border color as needed */
 
 
+    -webkit-mask-image: radial-gradient(circle at 8px 50%, transparent 13px, black 13.5px);
+    -webkit-mask-position: -13px 0 0 0;
+    -webkit-mask-border: blue;
+  }
 
-.line{
+  ;
+}
+
+input:disabled {
+  @apply bg-gray-200;
+  cursor: not-allowed;
+}
+
+.line {
   background-image: url('../../public/image/line.svg');
-  background-size: cover; /* Ensure the image covers the entire element */
-  background-repeat: no-repeat; /* Prevent the image from repeating */
-border: 2px solid yellow;
+  background-size: cover;
+  /* Ensure the image covers the entire element */
+  background-repeat: no-repeat;
+  /* Prevent the image from repeating */
+  border: 2px solid yellow;
   width: 100%;
   height: 100%;
 }
 
-.shape{
+.shape {
   background-image: url('../../public/shape.png');
   border-radius: 0% 20% 20% 0% / 50% 50% 50% 50%;
   width: 60%;
   position: relative;
 }
 
-.shape-horizontal{
+.shape-horizontal {}
 
-}
-
-.shape-horizontal::before{
+.shape-horizontal::before {
   content: '';
   background-image: url('../../public/shape.png');
   border-radius: 0% 20% 20% 0% / 50% 50% 50% 50%;
@@ -141,26 +150,28 @@ border: 2px solid yellow;
   background-color: #c2e1e5;
   background: linear-gradient(to right, white, #c2e1e5);
 }
+
 .rounded-left-corner {
   border-top-left-radius: 9999px;
   border-bottom-left-radius: 9999px;
   background-color: #c2e1e5;
-  background: linear-gradient(to right, #c2e1e5,white);
+  background: linear-gradient(to right, #c2e1e5, white);
 }
 
-.shape{
+.shape {
   background-image: url('../../public//shape (1).png') no-repeat center center;
   /* bacground gradiant */
 }
-.shapeReverse{
-  background-image: url("../../public/shape\ \(4\).png") no-repeat ;
+
+.shapeReverse {
+  background-image: url("../../public/shape\ \(4\).png") no-repeat;
 }
 
-.bg-logo{
+.bg-logo {
   background: url("../../public/image/Vector.svg") no-repeat center center;
   /* background: url("../../public/image/Vector.png") no-repeat center center; */
   border: 2px solid yellow;
-  
+
 }
 
 .shape__top {
@@ -171,27 +182,27 @@ border: 2px solid yellow;
 }
 
 
-.mx-12{
+.mx-12 {
   margin-left: 12px !important;
 }
 
-.h-48{
+.h-48 {
   font-size: 48px !important;
 }
 
-.h-24{
+.h-24 {
   font-size: 24px !important;
 }
 
-.pt-66{
-  padding-top: 30px  !important;
+.pt-66 {
+  padding-top: 30px !important;
 }
 
-.p0{
+.p0 {
   padding: 0px !important;
 }
 
-.bg-right-rounded{
+.bg-right-rounded {
   background-image: url("../../public/waitlistshape.png") no-repeat center center;
   width: 100%;
   height: 100%;
@@ -202,19 +213,26 @@ border: 2px solid yellow;
 /* Custom css for ribon used in expires soon offer card */
 .clip-cut {
   position: absolute;
-  top: -10px; /* Adjust as needed */
-  left: -10px; /* Adjust as needed */
-  width: 20px; /* Size of the clip */
-  height: 20px; /* Size of the clip */
-  clip-path: path('M 0 200 L 0,75 A 5,5 0,0,1 150,75 L 200 200 z'); /* Custom path */
+  top: -10px;
+  /* Adjust as needed */
+  left: -10px;
+  /* Adjust as needed */
+  width: 20px;
+  /* Size of the clip */
+  height: 20px;
+  /* Size of the clip */
+  clip-path: path('M 0 200 L 0,75 A 5,5 0,0,1 150,75 L 200 200 z');
+  /* Custom path */
 }
+
 .ribbon {
   font-size: 0.5rem;
   font-weight: bold;
   color: #fff;
 }
- .ribbon {
-  --f: .5em; 
+
+.ribbon {
+  --f: .5em;
   position: absolute;
   top: 0;
   left: 0;
@@ -222,13 +240,12 @@ border: 2px solid yellow;
   padding-inline: 1lh;
   padding-bottom: var(--f);
   border-image: conic-gradient(#0008 0 0) 51%/var(--f);
-  clip-path: polygon(
-    100% calc(100% - var(--f)),100% 100%,calc(100% - var(--f)) calc(100% - var(--f)),var(--f) calc(100% - var(--f)), 0 100%,0 calc(100% - var(--f)),999px calc(100% - var(--f) - 999px),calc(100% - 999px) calc(100% - var(--f) - 999px));
+  clip-path: polygon(100% calc(100% - var(--f)), 100% 100%, calc(100% - var(--f)) calc(100% - var(--f)), var(--f) calc(100% - var(--f)), 0 100%, 0 calc(100% - var(--f)), 999px calc(100% - var(--f) - 999px), calc(100% - 999px) calc(100% - var(--f) - 999px));
   transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg);
   transform-origin: 100% 100%;
-  background-color: #EB0000; 
+  background-color: #EB0000;
   opacity: 63%;
-}  
+}
 
 
 
@@ -236,13 +253,14 @@ border: 2px solid yellow;
 /* material ui stepper overwrite css */
 .css-14yr603-MuiStepContent-root {
   display: none !important;
-    margin-left: 12px;
-    padding-left: 20px;
-    padding-right: 8px;
-    border-left-style: dashed;
-    border-left-width: 3px;
+  margin-left: 12px;
+  padding-left: 20px;
+  padding-right: 8px;
+  border-left-style: dashed;
+  border-left-width: 3px;
 
-    font-size: 1.25rem; /* 16px / 16px */
+  font-size: 1.25rem;
+  /* 16px / 16px */
 }
 
 .css-15lbqqq-MuiStepConnector-root.MuiStepConnector-alternativeLabel {
@@ -256,25 +274,28 @@ border: 2px solid yellow;
 .css-1hv8oq8-MuiStepLabel-label.Mui-active {
   color: black !important;
   font-weight: 700;
-  font-size: 1.25rem; /* 20px / 16px */
+  font-size: 1.25rem;
+  /* 20px / 16px */
 }
 
 /* Font size for small devices */
 @media (max-width: 600px) {
   .css-1hv8oq8-MuiStepLabel-label.Mui-active {
-    font-size: 0.75rem; /* 12px / 16px */
+    font-size: 0.75rem;
+    /* 12px / 16px */
   }
 }
-.css-1hv8oq8-MuiStepLabel-label.Mui-completed{
-  color:rgb(25, 158, 173) !important;
+
+.css-1hv8oq8-MuiStepLabel-label.Mui-completed {
+  color: rgb(25, 158, 173) !important;
   font-weight: 700;
   /* font-size: 20px; */
 }
 
 .css-1twozzw-MuiStepConnector-root {
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    margin-left: 7px;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  margin-left: 7px;
 }
 
 
@@ -283,31 +304,31 @@ border: 2px solid yellow;
   /* border-color: #bdbdbd; */
   border-left-style: dashed;
   border-left-width: 2px;
-  
+
   min-height: 2rem;
 }
 
-.css-14yr603-MuiStepContent-root{
+.css-14yr603-MuiStepContent-root {
   border-left-style: dashed;
   border-left-width: 3px;
 }
 
-.css-15lbqqq-MuiStepConnector-root .MuiStepConnector-line{
+.css-15lbqqq-MuiStepConnector-root .MuiStepConnector-line {
   border-top-style: dashed;
   border-top-width: 3px;
 }
 
-.css-15lbqqq-MuiStepConnector-root.Mui-completed{
+.css-15lbqqq-MuiStepConnector-root.Mui-completed {
   border-top-style: dashed;
   border-top-width: 3px;
   border-top-color: rgb(25, 158, 173);
 }
 
-.css-12eb3rq-MuiStepLabel-label{
-  font-size: 1rem!important;
+.css-12eb3rq-MuiStepLabel-label {
+  font-size: 1rem !important;
 }
 
-.css-12eb3rq-MuiStepLabel-label.MuiStepLabel-alternativeLabel{
+.css-12eb3rq-MuiStepLabel-label.MuiStepLabel-alternativeLabel {
   margin-top: 8px !important;
 }
 
@@ -326,11 +347,13 @@ border: 2px solid yellow;
   display: flex;
   touch-action: pan-y pinch-zoom;
   /* Optional: Adjust spacing between slides dynamically */
-  gap: 1rem; /* Adds spacing between slides */
+  gap: 1rem;
+  /* Adds spacing between slides */
 }
 
 .embla__slide {
-  flex: 0 0 17rem; /* Default for larger screens */
+  flex: 0 0 17rem;
+  /* Default for larger screens */
   position: relative;
   transform: translate3d(0, 0, 0);
   min-width: 0;
@@ -339,7 +362,8 @@ border: 2px solid yellow;
 /* Responsive behavior for smaller screens */
 @media (max-width: 768px) {
   .embla__slide {
-    flex: 0 0 18rem; /* Slides take up more space on smaller screens */
+    flex: 0 0 18rem;
+    /* Slides take up more space on smaller screens */
   }
 }
 
@@ -352,17 +376,20 @@ border: 2px solid yellow;
 /* Responsive height adjustments for vertical container */
 @media (max-width: 768px) {
   .embla__container-vertical {
-    height: 25rem; /* Reduce height for smaller screens */
+    height: 25rem;
+    /* Reduce height for smaller screens */
   }
 }
 
 @media (max-width: 480px) {
   .embla__slide {
-    flex: 0 0 18rem; /* Slides take up even more space on very small screens */
+    flex: 0 0 18rem;
+    /* Slides take up even more space on very small screens */
   }
 
   .embla__container-vertical {
-    height: 20rem; /* Further reduce height for extra small screens */
+    height: 20rem;
+    /* Further reduce height for extra small screens */
   }
 }
 
@@ -377,9 +404,9 @@ border: 2px solid yellow;
   align-items: center;
 }
 .embla__slide:nth-child(n) { */
-  /* //Slide covers 30% of the viewport */
-  /* flex: 0 0 30%;  */
-  /* min-width: 0; */
+/* //Slide covers 30% of the viewport */
+/* flex: 0 0 30%;  */
+/* min-width: 0; */
 /* }  */
 
 
@@ -388,7 +415,7 @@ border: 2px solid yellow;
 
 
 .arc {
- 
+
   transform: rotate(275deg);
   --b: 37px;
   --a: 174deg;
@@ -413,7 +440,7 @@ border: 2px solid yellow;
 /* fix nav bar bottom nav bar drop shadow  */
 
 .custom-shadow {
-box-shadow: 32px 8px 5px 14px rgb(118 113 113 / 10%);
+  box-shadow: 32px 8px 5px 14px rgb(118 113 113 / 10%);
 }
 
 

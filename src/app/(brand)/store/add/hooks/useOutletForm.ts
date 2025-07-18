@@ -104,7 +104,7 @@ export const useOutletForm = () => {
                 title: "Success",
                 description: "All outlets created successfully!",
             });
-            createOutlet.isSuccess && router.push("/store/all");
+            router.push("/store/all");
         } catch (error) {
             console.error("Error creating outlets:", error);
             toast({

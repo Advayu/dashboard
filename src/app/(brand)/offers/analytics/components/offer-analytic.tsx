@@ -9,7 +9,6 @@ import {
 } from "@/hooks/use-offer";
 
 const OfferAnalytic = ({ offerDetails }: any) => {
-  const { mutate: deleteOffer } = useDeleteOffer();
   const { mutate: updateOffer } = useUpdateOffer();
   const { data: analytics } = useGetOfferAnalytics(
     offerDetails?.id,
@@ -18,24 +17,6 @@ const OfferAnalytic = ({ offerDetails }: any) => {
     !!offerDetails?.id
   );
   const ranking = analytics?.ranking;
-
-  const handleDeleteOffer = () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this offer? This action cannot be undone."
-    );
-
-    if (confirmDelete) {
-      deleteOffer(offerDetails.id, {
-        onSuccess: () => {
-          alert("Offer deleted successfully.");
-          window.location.href = "/offers";
-        },
-        onError: () => {
-          alert("Failed to delete the offer. Please try again.");
-        },
-      });
-    }
-  };
 
   const handleDisableOffer = () => {
     const confirmDisable = window.confirm(
@@ -49,9 +30,9 @@ const OfferAnalytic = ({ offerDetails }: any) => {
 
   return (
     <div className="flex flex-col  ">
-      <h1 className="text-xl font-bold ">Analytics</h1>
+      {/* <h1 className="text-xl font-bold ">Analytics</h1> */}
       {/* offer redemption */}
-      <div className="flex md:flex-row  flex-col gap-10 my-8 md:items-center">
+      <div className="flex md:flex-row  flex-col gap-10 my-8  justify-center">
         <div className=" ">
           <p className="text-lg font-semibold">Offer redemption</p>
           <div className="flex items-center flex-row">
@@ -65,7 +46,7 @@ const OfferAnalytic = ({ offerDetails }: any) => {
         <div className="">
           <p className="text-lg font-semibold">Offer ranking</p>
           <p className="flex items-center flex-row text-3xl font-medium">
-            {ranking?.rank}/
+            {3}/
             <span className="text-base font-normal"> {ranking?.total} </span>
           </p>
         </div>
@@ -90,15 +71,7 @@ const OfferAnalytic = ({ offerDetails }: any) => {
 
         {/* <Image src={qrcode} alt="qr code" /> */}
       </div>
-      <div className="flex justify-center md:pr-[40px] my-8 space-x-2">
-        <Button
-          onClick={handleDeleteOffer}
-          className="px-4 bg-red-500 text-white"
-          size={"thin"}
-          variant={"outline"}>
-          Delete
-        </Button>
-
+      {/* <div className="flex justify-center md:pr-[40px] my-8 space-x-2">
         <Button
           onClick={handleDisableOffer}
           className="bg-yellow-500 text-white px-4"
@@ -106,7 +79,16 @@ const OfferAnalytic = ({ offerDetails }: any) => {
           variant={"outline"}>
           Disable
         </Button>
-      </div>
+      </div> */}
+      {/* <div className="fixed bottom-[200px] translate-x-full  flex gap-2">
+        <Button type="submit">
+          {offerDetails.is_draft ? "Launch Offer" : "Update"}
+          {isLoading ? "..." : ""}
+        </Button>
+        <Button type="button" className="bg-red-500">
+          Delete
+        </Button>
+      </div> */}
     </div>
   );
 };

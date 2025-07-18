@@ -51,7 +51,7 @@ const OutletDetails = () => {
               />
             ))}
           </Accordion>
-          <div className="fixed md:bottom-8 bottom-0 left-0 w-full  px-4 py-3 flex justify-center gap-4 ">
+          <div className="fixed  bottom-0 left-0 w-full  px-4 py-3 flex justify-center gap-4 backdrop-blur-sm shadow-md shadow-black-400">
             <Button
               onClick={addNewOutlet}
               type="button"

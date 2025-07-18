@@ -5,6 +5,8 @@ import { jwtVerify } from "jose"; // Use `jose` to verify JWT
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
   const token = request.cookies.get("access_token")?.value;
   if (!token) {
     // No token = Unauthorized
@@ -14,7 +16,11 @@ export async function middleware(request: NextRequest) {
   try {
     // Validate the token
     const secret = new TextEncoder().encode(JWT_SECRET);
-    await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret);
+
+    if (pathname.startsWith("/manage-users") && payload.role !== "admin") {
+      return NextResponse.redirect(new URL("/404", request.url));
+    }
     // Token is valid → continue
     return NextResponse.next();
   } catch (err) {

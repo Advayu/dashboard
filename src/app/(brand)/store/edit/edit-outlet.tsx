@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FormProvider, useForm } from "react-hook-form";
 import Map from "@/components/ui/Map";
-import { PhoneNumberInput } from "@/components/ui/phone-number-input";
+import PhoneNumberInput from "@/components/ui/phone-number-input";
 import { DynamicInputList } from "@/components/DynamicInputList";
 import DaysOpenSelector from "@/components/WeekdaySelector";
 import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSelector";
@@ -16,7 +16,8 @@ import { useImageUpload } from "@/hooks/use-image";
 import { OUTLET_BUCKET_NAME } from "@/utils/constants";
 import { useGetOutlet, useUpdateOutlet } from "@/hooks/use-outlet";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 type OutletFormValues = {
   name: string;
   address: string;
@@ -33,6 +34,7 @@ type OutletFormValues = {
   services: string[];
   amenities: string[];
   accessibility_features: Record<string, boolean>;
+
   // Add other fields here as needed
 };
 
@@ -42,7 +44,11 @@ const OutletDetails = ({ id }: { id: string }) => {
     data,
     isLoading: outletGetLoading,
     error: outletGetError,
+    isPending: outletGetPending,
   } = useGetOutlet(id);
+
+  const role = useSelector((state: RootState) => state.brandUser.role)
+
 
   // update outlet api hook
   const {
@@ -64,9 +70,12 @@ const OutletDetails = ({ id }: { id: string }) => {
     reset,
   } = method;
 
-  // populating outlet form with inital data
   useEffect(() => {
-    if (data) {
+    if (
+      data &&
+      typeof data.opening_hours === "object" &&
+      data.opening_hours !== null
+    ) {
       const schedule = data.opening_hours;
 
       const weekdays = Object.keys(schedule).sort(
@@ -95,16 +104,21 @@ const OutletDetails = ({ id }: { id: string }) => {
       const [openingTime, closingTime] =
         typeof firstTimeRange === "string" ? firstTimeRange.split(" - ") : [];
 
-      data.opening_hours = openingTime;
-      data.closing_hours = closingTime;
-      data.days_open = weekdays;
+      const initialFormValues = {
+        ...data,
+        opening_hours: openingTime,
+        closing_hours: closingTime,
+        days_open: weekdays,
+      };
 
-      reset(data); //  update form with loaded data
+      reset(initialFormValues); //  update form with loaded data
     }
   }, [data, reset]);
 
   // submit function
   function onSubmit(data: any) {
+    delete data.longitude;
+    delete data.latitude;
     // need to uplaod images to bucket if it's file. if it's not file means it's already has filekey no need to do anything
     const images = data.images;
 
@@ -134,18 +148,18 @@ const OutletDetails = ({ id }: { id: string }) => {
   // Remove outlet from the outlets
 
   const { lat, lng } = watch("location") || {
-    lat: 77.6408,
-    lng: 12.9784,
+    lat: data?.latitude || 77.6408,
+    lng: data?.longitude || 12.9784,
   };
+
+
 
   const onLocationChange = (coords: [number, number]) => {
-    setValue("location", [coords[1], coords[0]]);
-    // setValue("location", [77.6408, 12.9784]);
+    const [lat, lng] = coords;
+    setValue("location", { lat, lng });
   };
 
-  useEffect(() => {
-    console.log("errors", errors);
-  }, [errors]);
+
 
   return (
     <div className="flex md:flex-row flex-col min-h-screen md:ml-10 mx-auto md:mx-0">
@@ -163,7 +177,7 @@ const OutletDetails = ({ id }: { id: string }) => {
           </div>
         )}
         <FormProvider {...method}>
-          {outletGetLoading && (
+          {outletGetLoading || outletGetPending && (
             <div className="space-y-4 mt-8">
               <Skeleton className="h-6 w-1/2" />
               <Skeleton className="h-10 w-full" />
@@ -328,7 +342,7 @@ const OutletDetails = ({ id }: { id: string }) => {
 
             {/* list of services */}
             <DynamicInputList
-              fieldName={`service`}
+              fieldName={`services`}
               label="Add services"
               placeholder="Enter a service"
               index={1}
@@ -336,7 +350,7 @@ const OutletDetails = ({ id }: { id: string }) => {
 
             {/* list of amenities */}
             <DynamicInputList
-              fieldName={`amenity`}
+              fieldName={`amenities`}
               label="Add amenities"
               placeholder="Enter an amenity"
               index={2}
@@ -346,33 +360,34 @@ const OutletDetails = ({ id }: { id: string }) => {
             <AccessibilityFeaturesSelector name="accessibility_features" />
 
             {/* Outlet Timing */}
-            <div className="my-6">
-              <label className="text-base md:text-lg font-bold">
-                Outlet Timing
-              </label>
-              <div className="flex flex-row items-center space-x-2">
-                <TimeSelector
-                  name="opening_hours"
-                  label="Opening Time"
-                  times={times}
-                />
-                <TimeSelector
-                  name="closing_hours"
-                  label="Closing Time"
-                  times={times}
-                />
-              </div>
+
+
+            <div className="flex flex-row items-center space-x-2 my-6">
+              <TimeSelector
+                name="opening_hours"
+                label="Opening Time"
+                times={times}
+              />
+              <TimeSelector
+                name="closing_hours"
+                label="Closing Time"
+                times={times}
+              />
             </div>
 
-            <DaysOpenSelector name="days_open" />
+            <div className="my-6">
+              <Label className="md:text-lg text-sm font-bold" htmlFor="days_open">Days Open</Label>
+              <DaysOpenSelector name="days_open" />
+            </div>
             {/* upload images of this outlet */}
-            <h4>Upload Outlet Images</h4>
-            <ImageUploader name="images" multiple={true} />
-
+            <div className="my-6">
+              <Label className="md:text-lg text-sm font-bold" htmlFor="images">Upload Outlet Images</Label>
+              <ImageUploader name="images" multiple={true} />
+            </div>
             {/* preview all the images here */}
 
             {/* Add Outlet Button */}
-            <Button type="submit" className="w-auto my-4 ">
+            <Button type="submit" className={`w-auto my-4 ${role === "admin" ? "" : "hidden"}`}>
               {outletUpdatePending ? "Updating Outlet..." : "Update Outlet"}
             </Button>
             {/* Navigation Buttons */}

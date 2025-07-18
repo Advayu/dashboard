@@ -28,16 +28,16 @@ const NumericInput: React.FC<NumericInputProps> = ({
   };
 
   return (
-    <div>
+
       <Input
         type="text"
         inputMode="numeric"
         onKeyDown={blockNonNumericKeys}
         {...register}
         {...rest}
-        className="w-48 md:w-40"
+   
       />
-    </div>
+
   );
 };
 

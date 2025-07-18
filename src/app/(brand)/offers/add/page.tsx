@@ -115,7 +115,10 @@ function OfferCreationLayout() {
           variant="outline"
           className="w-40"
           size="thin"
-          onClick={methods.handleSubmit((data) => handleFormSubmit(data, true))}
+          onClick={() => {
+            const data = methods.getValues(); // no validation here
+            handleFormSubmit(data, true); // pass isDraft = true
+          }}
           disabled={isLoadingOffer || isLoadingCoupon}>
           {isSubmittingDraft ? "Saving Draft..." : "Save as Draft"}
         </Button>

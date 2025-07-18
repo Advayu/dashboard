@@ -45,7 +45,7 @@ export function useUpdateOutlet() {
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['outlets'] });
             queryClient.invalidateQueries({ queryKey: ['outlet', variables.id] });
-            window.location.reload();
+            // window.location.reload();
         },
     });
 }

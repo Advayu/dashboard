@@ -9,6 +9,8 @@ import { ToastProvider } from "./ui/toast";
 import { Toaster } from "./ui/toaster";
 import { ErrorBoundary } from "./ErrorBoundary";
 import store, { persistor } from "@/store/store";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ConfirmDialogProvider } from "@/components/ui/confirm-dialog/ConfirmDialogProvider";
 
 interface Props {
   children: React.ReactNode;
@@ -17,8 +19,10 @@ interface Props {
 const UIProviders = ({ children }: { children: React.ReactNode }) => (
   <ToastProvider>
     <TooltipProvider>
-      <Toaster />
-      {children}
+      <ConfirmDialogProvider>
+        <Toaster />
+        {children}
+      </ConfirmDialogProvider>
     </TooltipProvider>
   </ToastProvider>
 );
@@ -32,9 +36,11 @@ const AppProviders = ({ children }: Props) => {
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={queryClient}>
           <UIProviders>{children}</UIProviders>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </PersistGate>
     </Provider>
+
     // </ErrorBoundary>
   );
 };

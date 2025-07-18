@@ -11,6 +11,8 @@ import TransferAdmin from "./components/transfer-admin";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import { useQueryClient } from "@tanstack/react-query";
+import { ChevronLeft } from "lucide-react";
+import { navigateToPreviousPage } from "@/functions/function";
 
 const ManageUsersPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,7 +44,7 @@ const ManageUsersPage = () => {
     <main className="w-full max-w-6xl mx-auto px-6 py-10">
       {/* Header */}
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">Manage Users</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 inline-flex items-center cursor-pointer" onClick={navigateToPreviousPage}> <ChevronLeft /> Manage Users</h1>
         <div className="flex items-center gap-2">
           <TransferAdmin
             trigger={
@@ -90,13 +92,14 @@ const ManageUsersPage = () => {
               </tr>
             )}
             {users?.map((user: any) => (
-              <tr key={user.id} className="border-b hover:bg-gray-50">
+              <tr key={user.id} className={`border-b hover:bg-gray-50 ${user.role === "admin" ? "hidden" : ""}`}>
                 <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.phone}</td>
                 <td className="px-6 py-4 capitalize">{user.role}</td>
                 <td className="px-6 py-4">
                   <Switch
+
                     checked={user.is_active}
                     onCheckedChange={(checked) =>
                       setStatus({ id: user.id, status: checked })

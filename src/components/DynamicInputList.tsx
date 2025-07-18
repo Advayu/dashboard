@@ -34,7 +34,7 @@ export const DynamicInputList: React.FC<DynamicInputListProps> = ({
   };
 
   return (
-    <div className={`my-4 ${className}`}>
+    <div className={`my-4 ${className} `}>
       <label className="text-base md:text-lg font-semibold block mb-2">
         {label}
       </label>
@@ -57,7 +57,7 @@ export const DynamicInputList: React.FC<DynamicInputListProps> = ({
       </div>
 
       {/* Value List */}
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 space-y-2 max-h-[80px] overflow-y-auto ">
         {values.map((val, i) => (
           <li
             key={i}

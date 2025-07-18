@@ -3,6 +3,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { login, logout, passwordResetConfirm, resetPassword } from "@/services/auth-service";
 import { toast } from "@/hooks/use-toast"; // Assuming you're using ShadCN or similar
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 // Replace `any` with your actual user type
 type User = {
@@ -32,6 +33,7 @@ export function useLogin() {
 
     onSuccess: (data) => {
 
+      console.log("data", data);
       localStorage.setItem("brandUser", JSON.stringify(data.user));
 
     },
@@ -43,9 +45,9 @@ export function useLogin() {
 
 // logout 
 export function useLogout() {
-
+  const router = useRouter();
   const clearSession = useCallback(() => {
-    localStorage.removeItem("brandUser");
+    localStorage.clear();
   }, []);
 
   return useMutation<void, Error, void>({
@@ -54,24 +56,15 @@ export function useLogout() {
     onSuccess: () => {
       clearSession();
 
-      toast({
-        title: "Logged Out",
-        description: "You've been successfully logged out.",
-        variant: "default",
-      });
+
+      router.replace("/login")
 
     },
 
     onError: (error) => {
       clearSession();
-
-      toast({
-        title: "Logout Error",
-        description: error.message || "Unable to logout cleanly.",
-        variant: "destructive",
-      });
-
-
+      console.error("Logout error:", error);
+      router.replace("/login")
     },
   });
 }

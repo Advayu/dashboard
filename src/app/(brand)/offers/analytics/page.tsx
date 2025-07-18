@@ -84,7 +84,7 @@ const Header = () => {
         className="flex items-center hover:pointer"
         onClick={handleBackClick}>
         <ChevronLeft />
-        <h2 className="text-xl font-semibold">Offer analytics</h2>
+        <h2 className="text-xl font-semibold">Offer details</h2>
       </button>
     </div>
   );

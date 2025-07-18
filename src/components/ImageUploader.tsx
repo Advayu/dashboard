@@ -8,12 +8,13 @@ interface ImageUploadProps {
   name: string;
   multiple?: boolean;
 }
-
+const MAX_FILE_SIZE_MB = 3;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ImageUploader: React.FC<ImageUploadProps> = ({
   name,
   multiple = false,
 }) => {
-  const { control } = useFormContext();
+  const { control, setError, clearErrors } = useFormContext();
 
   const handleFileInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -23,10 +24,24 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
   ) => {
     const newFiles = Array.from(e.target.files || []);
     if (newFiles.length === 0) return;
+    const validFiles = newFiles.filter(
+      (file) => file.size <= MAX_FILE_SIZE_BYTES
+    );
+    const invalidFiles = newFiles.filter(
+      (file) => file.size > MAX_FILE_SIZE_BYTES
+    );
 
+    if (invalidFiles.length > 0) {
+      setError(name, {
+        type: "manual",
+        message: `${invalidFiles.length} file(s) were too large and not added. Max size is ${MAX_FILE_SIZE_MB}MB.`,
+      });
+    } else {
+      clearErrors(name);
+    }
     const updatedFiles = allowMultiple
-      ? [...existingFiles, ...newFiles]
-      : [newFiles[0]];
+      ? [...existingFiles, ...validFiles]
+      : validFiles.slice(0, 1);
 
     onChange(updatedFiles);
     e.target.value = "";

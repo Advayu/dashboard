@@ -13,7 +13,7 @@ import { toast } from "./use-toast";
 
 const queryClient = new QueryClient();
 
-// ✅ 1. Hook to fetch offers with pagination
+//  1. Hook to fetch offers with pagination
 type getOffersParams = {
     brand_id: string;
     outlet_id?: string;
@@ -57,7 +57,7 @@ export const useGetOffers = (
     });
 };
 
-// ✅ 2. Hook to fetch single offer
+// 2. Hook to fetch single offer
 export const useGetOffer = (id: string) => {
     const { data, error, isLoading } = useQuery({
         queryKey: ['offer', id],
@@ -72,7 +72,7 @@ export const useGetOffer = (id: string) => {
     };
 };
 
-// ✅ 3. Hook to create offer
+//  3. Hook to create offer
 export const useCreateOffer = () => {
     const {
         mutate,
@@ -93,7 +93,7 @@ export const useCreateOffer = () => {
     };
 };
 
-// ✅ 4. Hook to update offer
+//  4. Hook to update offer
 export const useUpdateOffer = () => {
     const { mutate, error, isPending, isSuccess } = useMutation({
         mutationFn: ({ id, data }: { id: string; data: any }) => updateOffer(id, data),
@@ -112,7 +112,7 @@ export const useUpdateOffer = () => {
     };
 };
 
-// ✅ 5. Hook to delete offer
+//  5. Hook to delete offer
 export const useDeleteOffer = () => {
     const { mutate, error, isPending, isSuccess } = useMutation({
         mutationFn: (id: string) => deleteOffer(id),
@@ -135,7 +135,7 @@ export const useDeleteOffer = () => {
     };
 };
 
-// ✅ 6. Hook to get offer by outlet ID with pagination
+//  6. Hook to get offer by outlet ID with pagination
 export const useGetOfferByOutletId = (
     outletId: string,
     limit: number = 10,
@@ -167,10 +167,6 @@ export const useGetOfferByOutletId = (
 
 export function useGetOfferUsingParams(params: any): any {
     const { searchType, filters, page, limit } = params;
-    console.log("searchType", searchType);
-    console.log("filters", filters);
-    console.log("page", page);
-    console.log("limit", limit);
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['offers', searchType, filters, page, limit],

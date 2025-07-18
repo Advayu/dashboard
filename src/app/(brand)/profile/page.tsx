@@ -9,6 +9,9 @@ import { RootState } from "@/store/store";
 import { useForm } from "react-hook-form";
 import { useGetBrandUser, useUpdateBrandUser } from "@/hooks/use-brand-user";
 import Loading from "@/components/loading";
+import { ChevronLeft } from "lucide-react";
+import { navigateToPreviousPage } from "@/functions/function";
+import NumericInput from "@/components/ui/NumericInput";
 
 function Page() {
   const {
@@ -20,7 +23,7 @@ function Page() {
 
   const brandUser = useSelector((state: RootState) => state.brandUser);
   const { data: fetchedUser, isLoading } = useGetBrandUser(brandUser.id);
-  const { mutate: updateBrandUser } = useUpdateBrandUser(brandUser.id);
+  const { mutate: updateBrandUser, isPending } = useUpdateBrandUser(brandUser.id);
 
   useEffect(() => {
     console.log("fetchedUser", fetchedUser);
@@ -35,17 +38,16 @@ function Page() {
   }, [fetchedUser, reset]);
 
   if (isLoading) {
-    return <Loading />;
+    return <div className="flex justify-center items-center h-40"></div>
   }
 
   const onSubmit = (data: any) => {
-    console.log("data", data);
     updateBrandUser(data);
   };
 
   return (
     <div className="md:w-[40%] w-full px-10 mt-10">
-      <h2 className="text-2xl font-semibold mb-4">Profile Settings</h2>
+      <button onClick={navigateToPreviousPage} type="button" className="text-2xl font-semibold mb-4 inline-flex items-center cursor-pointer" ><ChevronLeft/> Profile Settings</button>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Name Field */}
         <div className="mb-4">
@@ -88,8 +90,8 @@ function Page() {
             className="block text-sm font-medium text-gray-700">
             Phone
           </Label>
-          <Input
-            {...register("phone")}
+          <NumericInput
+           register={{...register("phone")}} 
             type="tel"
             id="phone"
             placeholder="Enter your phone with country code"
@@ -116,8 +118,8 @@ function Page() {
         </div>
 
         <div className="flex justify-between items-center">
-          <Button type="submit" className=" text-white px-4 py-2 rounded-md ">
-            Update
+          <Button disabled={isPending} type="submit" className=" text-white px-4 py-2 rounded-md " size={"lg"}>
+          {isPending ? "Updating..." : "Update"}
           </Button>
         </div>
       </form>

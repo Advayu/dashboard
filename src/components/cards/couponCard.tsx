@@ -88,7 +88,9 @@ const CouponCard: React.FC<any> = ({
 
   // expiry soon check
   const expirySoon: boolean =
-    new Date(expiry_date).getTime() - Date.now() < 86400000 * 7;
+    !!expiry_date && !isNaN(new Date(expiry_date).getTime())
+      ? new Date(expiry_date).getTime() - Date.now() < 86400000 * 7
+      : false;
 
   // start date convert to months and date only
   var start_date_months = dayjs(start_date)

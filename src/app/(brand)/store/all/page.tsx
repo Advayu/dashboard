@@ -50,7 +50,7 @@ const AllOutletPage = () => {
         <div className="flex justify-between my-10 mx-8 items-center">
           <div className="flex items-center">
             <button
-              className="flex  items-center"
+              className="flex cursor-pointer  items-center"
               onClick={navigateToPreviousPage}>
               <ChevronLeft />
               <h1 className="md:text-3xl	font-black"> All Outlets</h1>
@@ -107,7 +107,7 @@ const AllOutletPage = () => {
             {/* Table */}
             {!isLoading && !isError && outlets?.length > 0 && (
               <table className="min-w-full text-left border-collapse">
-                <thead className="bg-blueTilt/60">
+                <thead className="bg-blueTilt/10">
                   <tr>
                     <th className="px-4 py-2">Name</th>
                     <th className="px-4 py-2">Address</th>

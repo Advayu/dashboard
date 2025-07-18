@@ -8,13 +8,9 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { Power } from "lucide-react";
-import { LAMBDA_URL } from "@/utils/constants";
-import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosInstance";
-
+import { useLogout } from "@/hooks/use-auth";
+import { useRole } from "@/hooks/use-role";
 interface SettingProps {
   // Define your props here
 }
@@ -38,24 +34,10 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export default function Page() {
-  const router = useRouter();
-  const brand_user = useSelector((state: RootState) => state.brandUser);
+  const { isAdmin } = useRole();
+  const { mutate: logout } = useLogout()
 
-  // const brandId = reduxBrandId || localStorage.getItem("brandId");
-  const brandId = brand_user?.brand_id || "";
 
-  const handleLogoutClick = async () => {
-    console.log("Logout clicked");
-
-    // Clear localStorage items
-    localStorage.clear();
-
-    const response = await axiosInstance.post(`${LAMBDA_URL}/auth/logout`, {});
-    // Redirect to login
-    if (response.status === 200) {
-      router.replace("/auth");
-    }
-  };
 
   return (
     <div className="md:w-[93%] w-full flex flex-col md:pl-[2.5rem] mt-[4rem] md:pr-[1rem] px-5">
@@ -63,18 +45,10 @@ export default function Page() {
         <h1 className="text-3xl font-bold">Settings</h1>
         <div className="flex space-x-[1.5rem] items-center mt-[1rem] md:mt-0">
           <div className="flex items-center relative">
-            {/* <Input
-              type="text"
-              placeholder=""
-              className="pl-[2.5rem] w-[18rem] md:w-[22rem] py-[1.25rem] border-gray-400"
-            />
-            <Search
-              width={16}
-              height={16}
-              className="text-gray-500 absolute left-[0.75rem] top-1/2 transform -translate-y-1/2"
-            /> */}
+
             <button
-              onClick={handleLogoutClick}
+              type="button"
+              onClick={() => logout()}
               className="flex gap-2 items-center bg-gray-100 px-4 py-2 rounded-lg cursor-pointer">
               <Power /> Logout
             </button>
@@ -82,7 +56,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col w-full md:w-[55rem] bg-[#F3F3F3] p-[1.5rem] rounded-lg mt-[0.9375rem]">
+      <div className="flex flex-col w-full md:max-w-[60vw] bg-[#F3F3F3] p-[1.5rem] rounded-lg mt-[0.9375rem]">
         <h2 className="text-[1.3125rem] font-bold">Profile completion</h2>
         <p className="font-normal text-[1rem] mt-[0.9375rem]">
           Maximize your visibility: Complete your profile and watch your brand
@@ -107,7 +81,7 @@ export default function Page() {
             { name: "Profile", link: "profile" },
             {
               name: "Brand",
-              link: `brand/edit?brand_id=${brandId}`,
+              link: `brand/edit`,
             },
             { name: "Offers", link: "offers" },
           ].map((item, idx) => (
@@ -127,7 +101,7 @@ export default function Page() {
             <span className="text-xl text-gray-900">{"Outlets"}</span>
             <ChevronRight className="group-hover:translate-x-2 transition-transform ease-in-out h-[1.5rem] w-[1.5rem]" />
           </Link>
-          {brand_user.role === "admin" && (
+          {isAdmin && (
             <Link
               href={`/manage-users`}
               className=" group w-full max-w-md flex items-center justify-between px-[1rem] py-[0.75rem] rounded-xl border border-black bg-white">

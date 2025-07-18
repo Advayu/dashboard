@@ -29,16 +29,16 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
   console.log("offerQuery", offerQuery);
   const { data, isLoading, isError } = offerQuery;
 
-  const offers = data?.data || [];
-  const total = data?.total || 0;
+  const offers = Array.isArray(data?.data) ? data.data : [];
+  const totalPages = Number(data?.totalPages) || 1;
   const page = Number(data?.page) || 1;
-  const totalPages = data?.totalPages || 1;
+  const total = data?.total || 0;
 
   function onNextPage() {
     onPageChange(
       value as "active" | "draft" | "upcoming" | "expired",
       "next",
-      offers?.totalPages ?? 1
+      totalPages
     );
   }
 
@@ -46,7 +46,7 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
     onPageChange(
       value as "active" | "draft" | "upcoming" | "expired",
       "prev",
-      offers?.totalPages ?? 1
+      totalPages
     );
   }
 

@@ -20,7 +20,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ name, label, times }) => {
     );
 
   return (
-    <div className="my-6">
+    <div className="">
       <label className="text-base md:text-lg font-bold">{label}</label>
       <select
         {...register(name)}

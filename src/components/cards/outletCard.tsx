@@ -1,7 +1,9 @@
 import React from "react";
-import { Trash, Pencil } from "lucide-react";
+import { Trash, Pencil, Eye } from "lucide-react";
 import OutletDetailsDialog from "../Outlet-details-dialog";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useRole } from "@/hooks/use-role";
 interface OutletCardProps {
   id: string;
   name: string;
@@ -25,6 +27,7 @@ const OutletCard = ({
   onEdit,
   onDelete,
 }: OutletCardProps) => {
+  const { isAdmin } = useRole()
   return (
     <tr className="border-b border-gray-200 hover:bg-gray-50">
       <td className="px-4 py-3 text-sm font-medium text-gray-800">{name}</td>
@@ -39,18 +42,20 @@ const OutletCard = ({
           trigger={
             <button
               onClick={(e) => e.stopPropagation()}
-              className="p-2 rounded-full hover:bg-blue-100 text-gray-500 hover:text-blue-500"
+              className="p-2 rounded-full hover:bg-blueTilt/20 text-blueTilt/80 hover:text-blueTilt"
               aria-label="Edit">
-              <Pencil />
+              {isAdmin ? <Pencil /> : <Eye />}
             </button>
           }
         />
-        <button
-          onClick={() => onDelete(id)}
-          className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100"
-          title="Delete">
-          <Trash />
-        </button>
+        {isAdmin &&
+          <button
+            onClick={() => onDelete(id)}
+            className={`text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100 `}
+            title="Delete">
+            <Trash />
+          </button>
+        }
       </td>
     </tr>
   );

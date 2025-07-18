@@ -5,15 +5,16 @@ import { LAMBDA_URL } from "@/utils/constants";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const LoginWithGoogle: React.FC = () => {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   const handleSuccess = async (credentialResponse: any) => {
-    console.log("🟢 Google login success:", credentialResponse);
+    // console.log("🟢 Google login success:", credentialResponse);
 
     const idToken = credentialResponse.credential;
-    console.log("🪪 ID Token:", idToken);
+    // console.log("🪪 ID Token:", idToken);
 
     try {
       const res = await axios.post(
@@ -25,14 +26,14 @@ const LoginWithGoogle: React.FC = () => {
       );
 
       const data = await res.data;
-      console.log("✅ Login success response:", data);
-      console.log("User data:", data);
+      // console.log("✅ Login success response:", data);
+      // console.log("User data:", data);
       toast({
         variant: "success",
         title: "Login successful",
       });
 
-      console.log("logged in user", res.data);
+      // console.log("logged in user", res.data);
 
       router.replace(`/`);
     } catch (error) {
@@ -46,8 +47,9 @@ const LoginWithGoogle: React.FC = () => {
         {" "}
         <GoogleLogin
           onSuccess={handleSuccess}
-          onError={() => console.error("❌ Google Login Failed")}
+          onError={() => setError("error")}
         />
+        {error && <p className="text-red-500">{"user denied access"}</p>}
       </GoogleOAuthProvider>
     </div>
   );

@@ -12,8 +12,7 @@ import ImageUploader from "@/components/ImageUploader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useImageUpload } from "@/hooks/use-image";
-import { LAMBDA_URL, OUTLET_BUCKET_NAME } from "@/utils/constants";
-import { toast } from "@/hooks/use-toast";
+import { OUTLET_BUCKET_NAME } from "@/utils/constants";
 import {
   useGetCategoriesByIndustry,
   useGetIndustries,
@@ -21,8 +20,10 @@ import {
 import { DynamicInputList } from "@/components/DynamicInputList";
 import { resolveImageUpload } from "@/utils/image-utils";
 import { sanitizeBrandDetails } from "@/utils/brand-utils";
+import { useRouter } from "next/navigation";
 
 const BrandDetails: React.FC<any> = () => {
+  const router = useRouter();
   // getting brand user details form redux store
   const [globalLoading, setGlobalLoading] = useState(false);
   const brand_user = useSelector((state: RootState) => state.brandUser);
@@ -35,10 +36,11 @@ const BrandDetails: React.FC<any> = () => {
     formState: { errors },
     reset,
     watch,
+    getValues
   } = method;
 
   // update brand user details
-  const { mutate: updateBrand } = useUpdateBrand();
+  const { mutate: updateBrand, isSuccess: isUpdateSuccess, isPending: isUpdating, error: updateError } = useUpdateBrand();
 
   // upload image and receive fileKey
   const imageUploadMutation = useImageUpload(OUTLET_BUCKET_NAME);
@@ -74,6 +76,10 @@ const BrandDetails: React.FC<any> = () => {
     brand.banner_url = bannerKey;
 
     updateBrand({ id: brand_id, data: brand });
+
+    if (isUpdateSuccess) {
+      router.push("/");
+    }
   };
 
   const { data: brandDetails } = useGetBrand(brand_id);
@@ -81,19 +87,12 @@ const BrandDetails: React.FC<any> = () => {
   useEffect(() => {
     if (!industryLoading || !categoryLoading) {
       if (brandDetails) {
-        (brandDetails.logo_url =
-          typeof brandDetails.logo_url === "string" &&
-          brandDetails.logo_url !== null &&
-          brandDetails.logo_url != ""
-            ? [brandDetails.logo_url]
-            : []),
-          (brandDetails.banner_url =
-            typeof brandDetails.banner_url === "string" &&
-            brandDetails.banner_url !== null &&
-            brandDetails.banner_url != ""
-              ? [brandDetails.banner_url]
-              : []),
-          reset(brandDetails);
+        const formattedDetails = {
+          ...brandDetails,
+          logo_url: typeof brandDetails.logo_url === "string" && brandDetails.logo_url !== "" ? [brandDetails.logo_url] : [],
+          banner_url: typeof brandDetails.banner_url === "string" && brandDetails.banner_url !== "" ? [brandDetails.banner_url] : [],
+        };
+        reset(formattedDetails);
       }
     }
   }, [brandDetails, reset, categoryLoading, industryLoading]);
@@ -260,7 +259,6 @@ const BrandDetails: React.FC<any> = () => {
                 <ImageUploader name="logo_url" multiple={false} />
               </div>
             </div>
-
             {/* Banner URL */}
             <div className="py-3">
               <h3 className="text-base md:text-lg font-bold">
@@ -296,8 +294,8 @@ const BrandDetails: React.FC<any> = () => {
             />
 
             <div className="flex space-x-3 my-8">
-              <Button type="submit" className="w-28" size="thin">
-                save
+              <Button type="submit" className="w-28" size="thin" disabled={isUpdating}>
+                {isUpdating ? "Updating..." : "Update"}
               </Button>
             </div>
           </div>

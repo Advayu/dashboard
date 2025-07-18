@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFormContext } from "react-hook-form";
-import { PhoneNumberInput } from "@/components/ui/phone-number-input";
+import  PhoneNumberInput  from "@/components/ui/phone-number-input";
 import { DynamicInputList } from "@/components/DynamicInputList";
 import WeekdaySelector from "@/components/WeekdaySelector";
 import AccessibilityFeaturesSelector from "@/components/AccessibilityFeaturesSelector";
@@ -16,6 +16,7 @@ import TimeSelector from "@/components/TimeSelector";
 import ImageUploader from "@/components/ImageUploader";
 import OutletLocationSection from "./OutletLocationSection";
 import { Trash2 } from "lucide-react";
+import NumericInput from "@/components/ui/NumericInput";
 interface OutletFormSectionProps {
   index: number;
   remove: (index: number) => void;
@@ -116,15 +117,28 @@ const OutletFormSection = ({
         {/* Postal Code */}
         <div className="my-3">
           <Label htmlFor="postal_code">Postal Code</Label>
-          <Input
-            inputMode="numeric"
-            {...register(`outlet.${index}.postal_code`, {
-              required: "Postal code is required",
-              pattern: {
-                value: /^\d{5}$/,
-                message: "Postal code must be 5 digits",
-              },
-            })}
+          <NumericInput
+          className="w-full"
+            maxLength={6}
+            pattern="\d{6}"
+            placeholder="Postal code"
+            register={{
+              ...register(`outlet.${index}.postal_code`, {
+                required: "Postal code is required",
+                pattern: {
+                  value: /^\d{6}$/,
+                  message: "Postal code must be 6 digits",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Postal code must be 6 digits",
+                },
+                maxLength: {
+                  value: 6,
+                  message: "Postal code must be 6 digits",
+                },
+              }),
+            }}
           />
           {errors.outlet?.[index]?.postal_code && (
             <p className="text-red-500 text-xs italic">
@@ -135,12 +149,18 @@ const OutletFormSection = ({
 
         {/* Phone */}
         <div className="my-3">
-          <Label htmlFor="manager_phone">Manager Phone</Label>
+          <Label htmlFor="manager_phone">Manager Phone <span className="text-red-500">*</span></Label>
           <PhoneNumberInput
-            {...register(`outlet.${index}.manager_phone`, { required: true })}
+            required
+            {...register(`outlet.${index}.manager_phone`, { required:{value:true, message:"Manager number is required "} })}
             id="manager_phone"
             placeholder="Enter phone number"
           />
+          {errors.outlet?.[index]?.manager_phone && (
+            <p className="text-red-500 text-xs italic">
+              {errors.outlet?.[index]?.manager_phone?.message}
+            </p>
+          )}
         </div>
 
         {/* Manager Name */}
@@ -174,10 +194,10 @@ const OutletFormSection = ({
         <AccessibilityFeaturesSelector
           name={`outlet.${index}.accessibility_features`}
         />
-
+<div className="border p-4 rounded-md">
         {/* Timing */}
-        <div className="my-6">
-          <Label>Outlet Timing</Label>
+        <div className="my-2">
+      
           <div className="flex space-x-2">
             <TimeSelector
               name={`outlet.${index}.opening_hours`}
@@ -193,12 +213,20 @@ const OutletFormSection = ({
         </div>
 
         {/* Days Open */}
+        <label className="text-base md:text-lg font-semibold block mb-2">
+          Days Open
+        </label>
         <WeekdaySelector name={`outlet.${index}.days_open`} />
-
+</div>
         {/* Images */}
         <div className="my-3">
-          <h4>Upload Outlet Images</h4>
+          <label className="md:text-lg text-sm font-bold">Upload Outlet Images</label>
           <ImageUploader name={`outlet.${index}.images`} multiple={true} />
+          {errors.outlet?.[index]?.images?.message && (
+            <p className="text-red-500 text-xs italic">
+              {errors.outlet?.[index]?.images?.message}
+            </p>
+          )}
         </div>
       </AccordionContent>
     </AccordionItem>
