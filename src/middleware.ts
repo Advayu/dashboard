@@ -8,19 +8,22 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const token = request.cookies.get("access_token")?.value;
-  if (!token) {
-    // No token = Unauthorized
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+
+  console.log("token", token);
+
+  // if (!token) {
+  //   // No token = Unauthorized
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
   try {
     // Validate the token
-    const secret = new TextEncoder().encode(JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
+    // const secret = new TextEncoder().encode(JWT_SECRET);
+    // const { payload } = await jwtVerify(token, secret);
 
-    if (pathname.startsWith("/manage-users") && payload.role !== "admin") {
-      return NextResponse.redirect(new URL("/404", request.url));
-    }
+    // if (pathname.startsWith("/manage-users") && payload.role !== "admin") {
+    //   return NextResponse.redirect(new URL("/404", request.url));
+    // }
     // Token is valid → continue
     return NextResponse.next();
   } catch (err) {
