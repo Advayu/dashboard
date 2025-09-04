@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 export const decodeJWT = async () => {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
+    console.log("token>>>", token);
 
     if (!token) return null;
 

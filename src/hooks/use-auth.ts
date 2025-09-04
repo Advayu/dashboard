@@ -4,6 +4,7 @@ import { login, logout, passwordResetConfirm, resetPassword } from "@/services/a
 import { toast } from "@/hooks/use-toast"; // Assuming you're using ShadCN or similar
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 // Replace `any` with your actual user type
 type User = {
@@ -19,8 +20,8 @@ type LoginVariables = {
 };
 
 type LoginResponse = {
-  token: string;
-  user: User;
+  access_token: string;
+  // user: User;
 };
 
 
@@ -31,13 +32,15 @@ export function useLogin() {
   return useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: login,
 
-    onSuccess: (data) => {
+    // onSuccess: (data) => {
 
-      console.log("data", data);
-      localStorage.setItem("brandUser", JSON.stringify(data.user));
+    // console.log("data", data);
+    // decode the token 
+    // const user = jwtDecode<any>(data.access_token);
+    // console.log("user", user)
+    // localStorage.setItem("brandUser", JSON.stringify(user));
 
-    },
-
+    // },
 
   });
 }
