@@ -9,16 +9,10 @@ const initialState: BrandUser = {
     name: "",
     email: "",
     phone: "",
-    password_hash: "",
     role: "",
-    permissions: {
-        view_orders: false,
-        manage_products: false,
-    },
     is_password_changed: false,
     is_active: false,
-    created_at: "",
-    updated_at: "",
+
 };
 
 // Create the slice

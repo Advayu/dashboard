@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import store from "@/store/store";
 import { Toaster } from "@/components/ui/toaster";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ProtectedRoute } from "@/components/protected-route";
 
 const PartnerDashboard = ({
   children,
@@ -22,10 +23,12 @@ const PartnerDashboard = ({
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <div className="flex pb-[calc(3rem+16px)]">
-          {!condition && <Sidebar />}
-          {children}
-        </div>
+        <ProtectedRoute>
+          <div className="flex pb-[calc(3rem+16px)]">
+            {!condition && <Sidebar />}
+            {children}
+          </div>
+        </ProtectedRoute>
       </QueryClientProvider>
     </Provider>
   );

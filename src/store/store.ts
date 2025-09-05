@@ -5,12 +5,6 @@ import storage from "redux-persist/lib/storage";
 // Reducers
 import brandUserReducer from "./globalSlice/brandUserSlice";
 
-// Persist configuration for brand
-const brandPersistConfig = {
-  key: "brand",
-  storage,
-
-};
 
 // Persist configuration for brandUser
 const brandUserPersistConfig = {

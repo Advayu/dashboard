@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 import { useDispatch } from "react-redux";
+import { create } from 'zustand';
+
+
 
 // Replace `any` with your actual user type
 type User = {
@@ -40,32 +43,26 @@ export function useLogin() {
       // decode the token 
       const user = jwtDecode<any>(data.access_token);
       //   {
-      //     "email": "shivam@advayu.club",
-      //     "brand_id": "210a9200-7af3-457d-a71c-846df347357c",
-      //     "role": "admin",
-      //     "isActive": true,
-      //     "brandName": "Advayu-shivam",
-      //     "userId": "afb60727-db03-412b-8e91-9fc0589a097a",
-      //     "iat": 1757057405,
-      //     "exp": 1757061005
+      //     "email": "",
+      //     "brand_id": "",
+      //     "role": "",
+      //     "isActive": boolean,
+      //     "brandName": "",
+      //     "userId": "",
+      //     "iat": ,
+      //     "exp": 
       // }
       console.log("user", user)
+      useAuth.getState().setAuthenticated(true)
       dispatch(setBrandUser({
         id: user.userId,
         brand_id: user.brand_id,
         name: user.brandName,
         email: user.email,
         phone: "",
-        password_hash: "",
         role: user.role,
-        permissions: {
-          view_orders: false,
-          manage_products: false,
-        },
         is_password_changed: false,
         is_active: true,
-        created_at: "",
-        updated_at: "",
       }));
     },
 
@@ -86,13 +83,14 @@ export function useLogout() {
     onSuccess: () => {
       clearSession();
 
-
+      useAuth.getState().setAuthenticated(false)
       router.replace("/login")
 
     },
 
     onError: (error) => {
       clearSession();
+      useAuth.getState().setAuthenticated(false)
       console.error("Logout error:", error);
       router.replace("/login")
     },
@@ -187,3 +185,18 @@ export function useConfirmPasswordReset(
     ...options, // Spread last to allow overriding other options like retry, etc.
   });
 }
+
+
+interface AuthStore {
+  isAuthenticated: boolean;
+  loading: boolean;
+  setAuthenticated: (value: boolean) => void;
+  setLoading: (value: boolean) => void;
+}
+
+export const useAuth = create<AuthStore>((set: any) => ({
+  isAuthenticated: false,
+  loading: true,
+  setAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
+  setLoading: (value: boolean) => set({ loading: value }),
+}));

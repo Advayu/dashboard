@@ -4,16 +4,11 @@ export type BrandUser = {
   name: string;
   email: string;
   phone: string;
-  password_hash: string;
   role: string;
-  permissions: {
-    view_orders: boolean;
-    manage_products: boolean;
-  };
+
   is_password_changed: boolean;
   is_active: boolean;
-  created_at: string;
-  updated_at: string;
+
 };
 
 

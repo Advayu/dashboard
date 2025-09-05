@@ -7,22 +7,21 @@ import GaugeComponent from "@/components/ui/ProgressBar";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/store";
-import { useDispatch } from "react-redux";
 import { useGetOffers } from "@/hooks/use-offer";
 import { useLogout } from "@/hooks/use-auth";
-import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 import { CouponCardSkeleton } from "../ui/skeleton";
 import PaginationButton from "../pagination-button";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const { mutate: logout } = useLogout();
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false); // menu : like profile, logout
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
   //  Pagination states
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
+
+  // Getting user details like brand name, email, phone 
   const user = useSelector((state: RootState) => state.brandUser);
   console.log("dashboard: user:", user);
   // Get active offers
@@ -54,18 +53,7 @@ const Dashboard = () => {
     }
   };
 
-
-  //   {
-  //     "email": "shivam@advayu.club",
-  //     "brand_id": "210a9200-7af3-457d-a71c-846df347357c",
-  //     "role": "admin",
-  //     "isActive": true,
-  //     "brandName": "Advayu-shivam",
-  //     "userId": "afb60727-db03-412b-8e91-9fc0589a097a",
-  //     "iat": 1757057405,
-  //     "exp": 1757061005
-  // }
-
+  // close the menu when clicking outside
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
