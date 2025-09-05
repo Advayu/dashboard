@@ -2,10 +2,6 @@
 import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
-import { useSelector } from "react-redux";
-import { setOfferfield } from "@/store/offerSlice/offerDetailsSlice";
-import { useDispatch } from "react-redux";
 import { generateOfferTitle } from "./generateOfferTitle";
 import BuyNGetNDetails from "./components/offer-templates/BuyNGetNDetails";
 import PercentageOffDetails from "./components/offer-templates/PercentageOffDetails";
