@@ -14,8 +14,8 @@ import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 import { CouponCardSkeleton } from "../ui/skeleton";
 import PaginationButton from "../pagination-button";
 
-const Dashboard = ({ user }: any) => {
-  console.log("dashboard: user:", user);
+const Dashboard = () => {
+  // console.log("dashboard: user:", user);
   const dispatch = useDispatch();
   const router = useRouter();
   const { mutate: logout } = useLogout();
@@ -24,6 +24,9 @@ const Dashboard = ({ user }: any) => {
   //  Pagination states
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
+  const user = useSelector((state: RootState) => state.brandUser);
+  console.log("dashboard: user:", user);
+
   // Get active offers
   const { data, error, isLoading } = useGetOffers(
     {
@@ -74,8 +77,8 @@ const Dashboard = ({ user }: any) => {
   useEffect(() => {
     dispatch(
       setBrandUser({
-        id: user?.userId ?? "",
-        name: user?.brandName ?? "",
+        id: user?.brand_id ?? "",
+        name: user?.name ?? "",
         email: user?.email ?? "",
         phone: user?.phone ?? "",
         password_hash: user?.password_hash ?? "",
@@ -136,7 +139,7 @@ const Dashboard = ({ user }: any) => {
       <div className="md:pl-10 md:mt-16 mt-[2rem]">
         <div className="flex justify-between items-center">
           <h1 className="md:text-3xl text-xl font-bold">
-            Advayu X {user?.brandName}
+            Advayu X {user?.name}
           </h1>
           <button
             onClick={toggleMenu}
