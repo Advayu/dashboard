@@ -3,13 +3,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 // Reducers
-import brandReducer from "./globalSlice/brandSlice";
-import userReducer from "./globalSlice/userSlice";
-import outletReducer from "./slices/outletSlice";
-import offerDetailsReducer from "./offerSlice/offerDetailsSlice";
-import outletReducer2 from "./globalSlice/outletSlice";
 import brandUserReducer from "./globalSlice/brandUserSlice";
-import OfferDetails from "./offerSlice/offerDetailsSlice";
 
 // Persist configuration for brand
 const brandPersistConfig = {
@@ -27,7 +21,6 @@ const brandUserPersistConfig = {
 };
 
 // Wrap brandReducer and brandUserReducer with persistReducer
-const persistedBrandReducer = persistReducer(brandPersistConfig, brandReducer);
 const persistedBrandUserReducer = persistReducer(
   brandUserPersistConfig,
   brandUserReducer
@@ -35,13 +28,8 @@ const persistedBrandUserReducer = persistReducer(
 
 // Combine all reducers
 const rootReducer = combineReducers({
-  // brand: persistedBrandReducer, // Persist this slice
-  user: userReducer,
-  // outlets: outletReducer,
-  // offerDetails: offerDetailsReducer,
-  // outlet2: outletReducer2,
+
   brandUser: persistedBrandUserReducer,
-  // offer: OfferDetails,
 });
 
 // Configure store
