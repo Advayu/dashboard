@@ -14,7 +14,7 @@ import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 import { CouponCardSkeleton } from "../ui/skeleton";
 import PaginationButton from "../pagination-button";
 
-const Dashboard = ({ user }: any) => {
+const Dashboard = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { mutate: logout } = useLogout();
@@ -23,6 +23,8 @@ const Dashboard = ({ user }: any) => {
   //  Pagination states
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
+  const user = useSelector((state: RootState) => state.brandUser);
+  console.log("dashboard: user:", user);
   // Get active offers
   const { data, error, isLoading } = useGetOffers(
     {
@@ -31,7 +33,7 @@ const Dashboard = ({ user }: any) => {
       limit,
       page,
     },
-    { enabled: !!user?.userId }
+    { enabled: !!user?.id }
   ) as {
     data: { data: any[]; total: number; totalPages: number } | undefined;
     error: any;
@@ -84,25 +86,7 @@ const Dashboard = ({ user }: any) => {
     if (page < totalPages) setPage((prev) => prev + 1);
   };
 
-  useEffect(() => {
-    dispatch(
-      setBrandUser({
-        id: user?.userId ?? "",
-        name: user?.brandName ?? "",
-        email: user?.email ?? "",
-        phone: user?.phone ?? "",
-        password_hash: user?.password_hash ?? "",
-        brand_id: user?.brand_id ?? "",
-        is_password_changed: user?.is_password_changed ?? false,
-        created_at: user?.created_at ?? "",
-        updated_at: user?.updated_at ?? "",
-        role: user?.role ?? "",
-        permissions: user?.permissions ?? [],
-        is_active: user?.is_active ?? false,
-        // Add any other required fields with sensible defaults if needed
-      })
-    );
-  }, [user]);
+
 
   const renderOfferCards = () => {
     if (isLoading) {
@@ -149,7 +133,7 @@ const Dashboard = ({ user }: any) => {
       <div className="md:pl-10 md:mt-16 mt-[2rem]">
         <div className="flex justify-between items-center">
           <h1 className="md:text-3xl text-xl font-bold">
-            Advayu X {user?.brandName}
+            Advayu X {user?.name}
           </h1>
           <button
             onClick={toggleMenu}

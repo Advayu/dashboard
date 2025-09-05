@@ -50,7 +50,23 @@ export function useLogin() {
       //     "exp": 1757061005
       // }
       console.log("user", user)
-      dispatch(setBrandUser(user));
+      dispatch(setBrandUser({
+        id: user.userId,
+        brand_id: user.brand_id,
+        name: user.brandName,
+        email: user.email,
+        phone: "",
+        password_hash: "",
+        role: user.role,
+        permissions: {
+          view_orders: false,
+          manage_products: false,
+        },
+        is_password_changed: false,
+        is_active: true,
+        created_at: "",
+        updated_at: "",
+      }));
     },
 
   });
