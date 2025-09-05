@@ -27,7 +27,6 @@ const INITIAL_PAGINATION: Record<OfferStatus, PaginationState> = {
 
 export default function Page() {
   const brandUser = useSelector((state: RootState) => state.brandUser);
-
   // Outlets
   const {
     data: outlets,

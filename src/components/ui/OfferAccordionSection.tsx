@@ -26,7 +26,6 @@ const OfferAccordionSection: React.FC<OfferAccordionSectionProps> = ({
   offerQuery,
   onPageChange,
 }) => {
-  console.log("offerQuery", offerQuery);
   const { data, isLoading, isError } = offerQuery;
 
   const offers = Array.isArray(data?.data) ? data.data : [];
