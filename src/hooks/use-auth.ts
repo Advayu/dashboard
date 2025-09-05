@@ -32,15 +32,15 @@ export function useLogin() {
   return useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: login,
 
-    // onSuccess: (data) => {
+    onSuccess: (data) => {
 
-    // console.log("data", data);
-    // decode the token 
-    // const user = jwtDecode<any>(data.access_token);
-    // console.log("user", user)
-    // localStorage.setItem("brandUser", JSON.stringify(user));
+      // console.log("data", data);
+      // decode the token 
+      const user = jwtDecode<any>(data.access_token);
+      console.log("user", user)
+      localStorage.setItem("brandUser", JSON.stringify(user));
 
-    // },
+    },
 
   });
 }
