@@ -39,6 +39,16 @@ export function useLogin() {
       // console.log("data", data);
       // decode the token 
       const user = jwtDecode<any>(data.access_token);
+      //   {
+      //     "email": "shivam@advayu.club",
+      //     "brand_id": "210a9200-7af3-457d-a71c-846df347357c",
+      //     "role": "admin",
+      //     "isActive": true,
+      //     "brandName": "Advayu-shivam",
+      //     "userId": "afb60727-db03-412b-8e91-9fc0589a097a",
+      //     "iat": 1757057405,
+      //     "exp": 1757061005
+      // }
       console.log("user", user)
       dispatch(setBrandUser(user));
     },

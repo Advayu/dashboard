@@ -31,7 +31,7 @@ const Dashboard = ({ user }: any) => {
       limit,
       page,
     },
-    { enabled: !!user?.brand_id }
+    { enabled: !!user?.userId }
   ) as {
     data: { data: any[]; total: number; totalPages: number } | undefined;
     error: any;
@@ -52,12 +52,26 @@ const Dashboard = ({ user }: any) => {
     }
   };
 
+
+  //   {
+  //     "email": "shivam@advayu.club",
+  //     "brand_id": "210a9200-7af3-457d-a71c-846df347357c",
+  //     "role": "admin",
+  //     "isActive": true,
+  //     "brandName": "Advayu-shivam",
+  //     "userId": "afb60727-db03-412b-8e91-9fc0589a097a",
+  //     "iat": 1757057405,
+  //     "exp": 1757061005
+  // }
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
 
   //  Pagination controls
   // const totalPages = offers?.totalPages;
