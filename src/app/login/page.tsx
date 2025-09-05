@@ -41,7 +41,8 @@ const Auth = () => {
     login(
       { email, password },
       {
-        onSuccess: () => router.push("/"), // Or whatever your redirect path is
+        onSuccess: () => { console.log("login: onSuccess"); router.push("/") },
+
       }
     );
 
