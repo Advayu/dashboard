@@ -63,6 +63,7 @@ export function useLogin() {
         role: user.role,
         is_password_changed: false,
         is_active: true,
+        isAuthenticated: true
       }));
     },
 

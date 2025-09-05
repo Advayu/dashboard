@@ -5,10 +5,9 @@ export type BrandUser = {
   email: string;
   phone: string;
   role: string;
-
   is_password_changed: boolean;
   is_active: boolean;
-
+  isAuthenticated: boolean
 };
 
 

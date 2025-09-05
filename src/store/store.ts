@@ -10,7 +10,7 @@ import brandUserReducer from "./globalSlice/brandUserSlice";
 const brandUserPersistConfig = {
   key: "brandUser",
   storage,
-  whitelist: ["brand_id", "name", "email", "phone", "is_password_changed", "id", "role"], // Only persist `name` and `email` fields
+  whitelist: ["brand_id", "name", "email", "phone", "is_password_changed", "id", "role", "isAuthenticated"], // Only persist `name` and `email` fields
 
 };
 

@@ -12,6 +12,7 @@ const initialState: BrandUser = {
     role: "",
     is_password_changed: false,
     is_active: false,
+    isAuthenticated: false,
 
 };
 
