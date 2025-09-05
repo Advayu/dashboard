@@ -35,13 +35,13 @@ const persistedBrandUserReducer = persistReducer(
 
 // Combine all reducers
 const rootReducer = combineReducers({
-  brand: persistedBrandReducer, // Persist this slice
+  // brand: persistedBrandReducer, // Persist this slice
   user: userReducer,
-  outlets: outletReducer,
-  offerDetails: offerDetailsReducer,
-  outlet2: outletReducer2,
-  brandUser: persistedBrandUserReducer, // Persist only this slice
-  offer: OfferDetails,
+  // outlets: outletReducer,
+  // offerDetails: offerDetailsReducer,
+  // outlet2: outletReducer2,
+  brandUser: persistedBrandUserReducer,
+  // offer: OfferDetails,
 });
 
 // Configure store

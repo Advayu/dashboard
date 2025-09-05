@@ -1,13 +1,14 @@
 // middleware.ts
 import { NextResponse, type NextRequest } from "next/server";
 
+
 export async function middleware(request: NextRequest) {
   // const token = request.cookies.get("access_token")?.value;
   // if (!token) {
   //   // No token = Unauthorized
   //   return NextResponse.redirect(new URL("/login", request.url));
   // }
-  console.log("middleware: request: ", request.cookies);
+  console.log("middleware: request: ", request.cookies.get("access_token")?.value);
   // try {
   //   // Validate the token
   //   const secret = new TextEncoder().encode(JWT_SECRET);
