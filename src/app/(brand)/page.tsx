@@ -14,7 +14,7 @@ export default async function Page() {
 
   return (
     <div className="w-full md:w-[96vw] md:px-0 px-4  ">
-      <Dashboard />
+      <Dashboard user={data} />
 
       <div className="flex md:flex-row flex-col gap-10">
         <div className="flex flex-row  md:ml-10  md:mb-0 mb-20">

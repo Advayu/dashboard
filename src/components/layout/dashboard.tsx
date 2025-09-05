@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import CouponCard, { NoActiveOffers } from "@/components/cards/couponCard";
 import { UserRound } from "lucide-react";
 import GaugeComponent from "@/components/ui/ProgressBar";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
@@ -13,8 +14,7 @@ import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
 import { CouponCardSkeleton } from "../ui/skeleton";
 import PaginationButton from "../pagination-button";
 
-const Dashboard = () => {
-  // console.log("dashboard: user:", user);
+const Dashboard = ({ user }: any) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { mutate: logout } = useLogout();
@@ -23,11 +23,6 @@ const Dashboard = () => {
   //  Pagination states
   const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(1);
-  const brandUserStr = localStorage.getItem("brandUser");
-  const user = brandUserStr ? JSON.parse(brandUserStr) : null;
-  console.log("dashboard: user:", user, " brandUserStr:", brandUserStr);
-
-
   // Get active offers
   const { data, error, isLoading } = useGetOffers(
     {
@@ -78,8 +73,8 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(
       setBrandUser({
-        id: user?.brand_id ?? "",
-        name: user?.name ?? "",
+        id: user?.userId ?? "",
+        name: user?.brandName ?? "",
         email: user?.email ?? "",
         phone: user?.phone ?? "",
         password_hash: user?.password_hash ?? "",
@@ -137,11 +132,10 @@ const Dashboard = () => {
 
   return (
     <>
-
       <div className="md:pl-10 md:mt-16 mt-[2rem]">
         <div className="flex justify-between items-center">
           <h1 className="md:text-3xl text-xl font-bold">
-            Advayu X {user?.name}
+            Advayu X {user?.brandName}
           </h1>
           <button
             onClick={toggleMenu}

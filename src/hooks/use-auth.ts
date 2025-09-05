@@ -5,6 +5,8 @@ import { toast } from "@/hooks/use-toast"; // Assuming you're using ShadCN or si
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { setBrandUser } from "@/store/globalSlice/brandUserSlice";
+import { useDispatch } from "react-redux";
 
 // Replace `any` with your actual user type
 type User = {
@@ -27,7 +29,7 @@ type LoginResponse = {
 
 // login
 export function useLogin() {
-
+  const dispatch = useDispatch();
 
   return useMutation<LoginResponse, Error, LoginVariables>({
     mutationFn: login,
@@ -38,8 +40,7 @@ export function useLogin() {
       // decode the token 
       const user = jwtDecode<any>(data.access_token);
       console.log("user", user)
-      localStorage.setItem("brandUser", JSON.stringify(user));
-
+      dispatch(setBrandUser(user));
     },
 
   });
