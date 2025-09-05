@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   //   // No token = Unauthorized
   //   return NextResponse.redirect(new URL("/login", request.url));
   // }
-
+  console.log("middleware: request: ", request.cookies);
   // try {
   //   // Validate the token
   //   const secret = new TextEncoder().encode(JWT_SECRET);

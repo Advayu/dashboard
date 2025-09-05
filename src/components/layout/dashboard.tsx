@@ -15,6 +15,7 @@ import { CouponCardSkeleton } from "../ui/skeleton";
 import PaginationButton from "../pagination-button";
 
 const Dashboard = ({ user }: any) => {
+  console.log("dashboard: user:", user);
   const dispatch = useDispatch();
   const router = useRouter();
   const { mutate: logout } = useLogout();

@@ -10,6 +10,7 @@ import DashboardGraphs from "@/components/dashboard-graphs";
 export default async function Page() {
   // getting decoded jwt token from cookies to get details like {email, brand_id}
   const data = await decodeJWT();
+  console.log("pre: dashboard", data);
 
   return (
     <div className="w-full md:w-[96vw] md:px-0 px-4  ">
